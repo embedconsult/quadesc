@@ -1,0 +1,7 @@
+*.kicad_sch text eol=crlf
+*.kicad_pcb text eol=crlf
+*.kicad_mod text eol=crlf
+*.csv text eol=crlf
+fp-lib-table text eol=crlf
+.gitattributes text eol=lf
+.gitignore text eol=lf

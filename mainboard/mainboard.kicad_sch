@@ -1,0 +1,296 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "8ee60709-b137-4b38-9741-362103a631fd")
+	(paper "USLetter")
+	(title_block
+		(title "AM13E QuadESC Mainboard — Root / block diagram")
+		(date "2026-08-06")
+		(rev "A")
+		(comment 1 "Root / block diagram")
+	)
+	(lib_symbols)
+	(sheet
+		(at 102.87 20.32)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "0f800f3f-298b-45fd-8a4f-33d5262ba0df")
+		(property "Sheetname" "M1"
+			(at 102.87 15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "motor1.kicad_sch"
+			(at 102.87 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 99.06)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "66d0181b-2e41-446a-8ab8-617c72582e82")
+		(property "Sheetname" "M3"
+			(at 13.97 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "motor3.kicad_sch"
+			(at 13.97 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 191.77 20.32)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b03d805f-ef11-42a0-a6f5-a318e83b0aaa")
+		(property "Sheetname" "M2"
+			(at 191.77 15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "motor2.kicad_sch"
+			(at 191.77 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 102.87 99.06)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "b4f1fd93-2122-4e5b-9ddd-a2c98cf2befd")
+		(property "Sheetname" "M4"
+			(at 102.87 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "motor4.kicad_sch"
+			(at 102.87 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 191.77 99.06)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "ec5aa362-6f83-4c2f-af9a-8850db10cbf4")
+		(property "Sheetname" "interface"
+			(at 191.77 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "interface.kicad_sch"
+			(at 191.77 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 20.32)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "f5eae4fc-87f6-4441-9a0b-21e4c281e085")
+		(property "Sheetname" "power"
+			(at 13.97 15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 13.97 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

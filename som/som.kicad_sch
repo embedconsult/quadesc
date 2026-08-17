@@ -1,0 +1,204 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "e4559485-d7d4-484b-a95c-f1b86ccdac46")
+	(paper "USLetter")
+	(title_block
+		(title "AM13E QuadESC SoM — Root / block diagram")
+		(date "2026-08-06")
+		(rev "A")
+		(comment 1 "Root / block diagram")
+	)
+	(lib_symbols)
+	(sheet
+		(at 13.97 20.32)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "254b4af2-cb70-43f9-8504-936c37d84b89")
+		(property "Sheetname" "mcu-core"
+			(at 13.97 15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu-core.kicad_sch"
+			(at 13.97 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "som"
+				(path "/e4559485-d7d4-484b-a95c-f1b86ccdac46"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 102.87 20.32)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "42e4fcf3-735d-4282-a598-f4243dbc0439")
+		(property "Sheetname" "power"
+			(at 102.87 15.24 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 102.87 88.9 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "som"
+				(path "/e4559485-d7d4-484b-a95c-f1b86ccdac46"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 99.06)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "aafe9dc4-6a34-4ba7-928f-a9b87af9ffd8")
+		(property "Sheetname" "can-transceiver"
+			(at 13.97 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "can-transceiver.kicad_sch"
+			(at 13.97 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "som"
+				(path "/e4559485-d7d4-484b-a95c-f1b86ccdac46"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 102.87 99.06)
+		(size 73.66 66.04)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "e1741323-6621-4c5d-bb79-f02f59327956")
+		(property "Sheetname" "io-connectors"
+			(at 102.87 93.98 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "io-connectors.kicad_sch"
+			(at 102.87 167.64 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "som"
+				(path "/e4559485-d7d4-484b-a95c-f1b86ccdac46"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
