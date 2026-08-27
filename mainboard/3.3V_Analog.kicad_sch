@@ -2148,7 +2148,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TPS7A4701RGWR_new:RGW0020A-MFG"
+		(property "Footprint" "TPS7A:RGW0020A-IPC_A"
 			(at 119.38 76.2 0)
 			(hide yes)
 			(show_name no)
