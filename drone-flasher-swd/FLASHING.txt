@@ -1,0 +1,41 @@
+Share flash-swd.sh and am13-jetson.cfg together in the same directory.
+
+Run on drone-flasher (Tegra234 Jetson ARM64), with the target already powered.
+Wiring: Jetson J12 physical pin 3 -> SoM SWDIO, pin 5 -> SoM SWCLK,
+and common ground. GPIO mapping: gpiochip1, SWDIO line 22, SWCLK line 21.
+Dependencies: bash, python3, util-linux/flock, busybox/devmem, and OpenOCD
+built with linuxgpiod and am13 flash drivers. This Jetson now has a verified
+AM13-enabled build at /usr/local/bin/openocd-am13, selected automatically.
+Its original OpenOCD 0.11.0 remains installed as openocd.
+
+Check prerequisites without accessing hardware:
+  bash ./flash-swd.sh --check
+
+Flash a raw combined loader/application image linked at zero:
+  sudo bash ./flash-swd.sh combined.bin 0x00000000
+
+Select a different OpenOCD build:
+  sudo OPENOCD=/absolute/path/to/openocd bash ./flash-swd.sh combined.bin 0x00000000
+
+The caller must supply the correct image and its linked load address.
+Images must start on 2-KiB erase boundaries. The last sector is padded
+with 0xff and erased/programmed in full. Calibration at 0x78000..0x7ffff
+and NONMAIN are excluded. Writing at zero replaces the existing loader.
+This script does not issue PSU or CAN commands, or enter ROM BSL.
+
+On success: flash readback verification, reset/run, pinmux/I2C restoration.
+On error: no automatic retry; inspect the OpenOCD output before recovery.
+Do not SIGKILL the wrapper; that prevents restoration traps from running.
+
+Hardware validation passed on 2026-10-08: erased/programmed/verified the
+installed application's first 2-KiB sector at 0x8000 using Jetson 3.3 V.
+Full application readback matched the original schema7 image. Loader,
+calibration, metadata, and NONMAIN hashes matched before/after. CAN returned
+schema7 with drivers/PWM off during a brief PSU-powered check; PSU left off.
+This test rewrote one sector with identical bytes, not a full combined image.
+Detailed evidence: /home/flasher/Work/projects/drone-esc/reports/swd-openocd-20261008/
+
+AM13 flash driver documentation:
+https://openocd.org/doc/html/Flash-Commands.html
+Upstream target configuration:
+https://github.com/openocd-org/openocd/blob/master/tcl/target/ti/am13e230x.cfg

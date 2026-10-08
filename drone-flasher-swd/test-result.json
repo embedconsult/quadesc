@@ -1,0 +1,135 @@
+{
+  "passed": true,
+  "flash_address": "0x8000",
+  "flash_bytes": 2048,
+  "psu_before": {
+    "VSET1": 9.0,
+    "ISET1": 0.5,
+    "VOUT1": 0.0,
+    "IOUT1": 0.0,
+    "STATUS": 16
+  },
+  "before": {
+    "application.bin": "a94b3eac319f5d5b03c6710d7cd8d60fa951e09fa0573e9de0bfbaf4cca2c2e7",
+    "loader.bin": "c0070f2a5e1b463c08cd7561b3c95811af44597797c2f780319396b93828b503",
+    "calibration.bin": "2d864c0b789a43214eee8524d3182075125e5ca2cd527f3582ec87ffd94076bc",
+    "metadata.bin": "d95779cac133d9d1cdaec8d71b8b5db3c13e8ac73eca4fb73923776da2c53d58",
+    "nonmain.bin": "7cb48c5e468ca716111d4cb7043607e709af61ce8c4832c82142b40aa6f64b58"
+  },
+  "test_image_sha256": "71a4bf341b19137ff1bc66def47789bb7e203d2a41f0c3bde4dd78ced4a60836",
+  "flash_exit": 0,
+  "after": {
+    "application.bin": "a94b3eac319f5d5b03c6710d7cd8d60fa951e09fa0573e9de0bfbaf4cca2c2e7",
+    "loader.bin": "c0070f2a5e1b463c08cd7561b3c95811af44597797c2f780319396b93828b503",
+    "calibration.bin": "2d864c0b789a43214eee8524d3182075125e5ca2cd527f3582ec87ffd94076bc",
+    "metadata.bin": "d95779cac133d9d1cdaec8d71b8b5db3c13e8ac73eca4fb73923776da2c53d58",
+    "nonmain.bin": "7cb48c5e468ca716111d4cb7043607e709af61ce8c4832c82142b40aa6f64b58"
+  },
+  "psu_after_flash": {
+    "VSET1": 9.0,
+    "ISET1": 0.5,
+    "VOUT1": 0.0,
+    "IOUT1": 0.0,
+    "STATUS": 16
+  },
+  "can_link_before": {
+    "ifindex": 9,
+    "ifname": "canfd0",
+    "flags": [
+      "NOARP",
+      "ECHO"
+    ],
+    "mtu": 16,
+    "qdisc": "noop",
+    "operstate": "DOWN",
+    "linkmode": "DEFAULT",
+    "group": "default",
+    "txqlen": 10,
+    "link_type": "can",
+    "promiscuity": 0,
+    "min_mtu": 0,
+    "max_mtu": 0,
+    "linkinfo": {
+      "info_kind": "can",
+      "info_data": {
+        "state": "STOPPED",
+        "restart_ms": 0,
+        "bittiming_const": {
+          "name": "gs_usb",
+          "tseg1": {
+            "min": 2,
+            "max": 256
+          },
+          "tseg2": {
+            "min": 2,
+            "max": 128
+          },
+          "sjw": {
+            "min": 1,
+            "max": 128
+          },
+          "brp": {
+            "min": 1,
+            "max": 512
+          },
+          "brp_inc": 1
+        },
+        "data_bittiming_const": {
+          "name": "gs_usb",
+          "tseg1": {
+            "min": 1,
+            "max": 32
+          },
+          "tseg2": {
+            "min": 1,
+            "max": 16
+          },
+          "sjw": {
+            "min": 1,
+            "max": 16
+          },
+          "brp": {
+            "min": 1,
+            "max": 32
+          },
+          "brp_inc": 1
+        },
+        "clock": 170000000
+      }
+    },
+    "num_tx_queues": 1,
+    "num_rx_queues": 1,
+    "gso_max_size": 65536,
+    "gso_max_segs": 65535,
+    "parentbus": "usb",
+    "parentdev": "1-2.2:1.0"
+  },
+  "psu_powered": {
+    "VSET1": 9.0,
+    "ISET1": 0.5,
+    "VOUT1": 9.0,
+    "IOUT1": 0.021,
+    "STATUS": 81
+  },
+  "can_readback": {
+    "schema_version": 7,
+    "pwm_applied_route_mask": 0,
+    "drv_applied_enable_mask": 0,
+    "bench_effective_mode": 0
+  },
+  "psu_after_can": {
+    "VSET1": 9.0,
+    "ISET1": 0.5,
+    "VOUT1": 0.0,
+    "IOUT1": 0.0,
+    "STATUS": 16
+  },
+  "final_psu": {
+    "VSET1": 9.0,
+    "ISET1": 0.5,
+    "VOUT1": 0.0,
+    "IOUT1": 0.0,
+    "STATUS": 16
+  },
+  "finished_utc": "2026-10-08T16:26:33Z"
+}
