@@ -1,0 +1,45 @@
+{
+  "format": 1,
+  "contract_bundle": {
+    "name": "contracts-s0-v0.1.1",
+    "archive_sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db"
+  },
+  "accepted_inputs": {
+    "t08_protocol": {
+      "repository": "bloxide-com/bloxide-xcp",
+      "commit": "55ee09ae6820f43151644f079769dbb27fee7420",
+      "tree": "8cb3acaf8bfa158824255d8acf0c71bf0e542421",
+      "role": "branch baseline and transport-neutral Session"
+    },
+    "t10_interop": {
+      "repository": "bloxide-com/bloxide-xcp",
+      "commit": "8272bbec14f5336c4838b17b55ffbb547ee299de",
+      "tree": "e00e30bbde848161856befc7f600390e9d07a2e9",
+      "interop_tree": "748e879ac540f2e417c683a220506b6c8f390824",
+      "source": "original-inputs/bloxide-xcp",
+      "import": "exact interop subtree from local reviewed Git object"
+    }
+  },
+  "framework": {
+    "repository": "bloxide-com/bloxide",
+    "commit": "43c4faa14a934fc96b73c39978084220a273d5d0"
+  },
+  "selected_composition": {
+    "framework_commit": "2b4ec83a1aa3dcbddeb001fc34d0074fa68cd132",
+    "framework_tree": "907b0e4a910ec636b41ed04bb62a7408d8d63e4b",
+    "scope": "local integration source; framework public publication and global acceptance pending"
+  },
+  "independent_tools": {
+    "pyxcp": "016cf3e44364e9cd93966d144a39d342578a0391",
+    "pya2ldb": "c19c3ad2f285d1230e334bad81eeb09cbaaa3031"
+  },
+  "profile_p_host": {
+    "scope": "bounded I6 host source only; no MCU image or release identity",
+    "persistence_commit": "5d67c9977c94ab74edde4821f5f880fe15ed65ac",
+    "persistence_tree": "da668f8949691982b4053654582113b192eb52cf",
+    "calibration_commit": "c0a693a8811d920d05850cfc2ebcfd7956a2741b",
+    "dependency_mode": "reviewed pinned local read-only source; verify with tools/check_profile_p_inputs.py",
+    "review": "review-t17-p-open-r1 D1/D2 approved"
+  },
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

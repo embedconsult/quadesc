@@ -1,0 +1,18 @@
+[package]
+name = "led-context"
+version = "0.1.0"
+edition = "2021"
+[features]
+host-supervision-trace = []
+[dependencies]
+led-messages = { path = "../led-messages" }
+bloxide-calibration = { path = "../../../inputs/bloxide-calibration" }
+critical-section = "1"
+xcp-profile-p = { path = "../../../bloxide-xcp/crates/xcp-profile-p" }
+bloxide-persistence = { path = "../../../inputs/bloxide-persistence" }
+bloxide-persistence-calibration = { path = "../../../inputs/bloxide-persistence/crates/bloxide-persistence-calibration" }
+xcp-messages = { path = "../../../bloxide-xcp/crates/xcp-messages" }
+xcp-core = { path = "../../../bloxide-xcp/crates/xcp-core" }
+[dev-dependencies]
+critical-section = { version = "1", features = ["std"] }
+bloxide-persistence-sim = { path = "../../../inputs/bloxide-persistence/crates/bloxide-persistence-sim" }

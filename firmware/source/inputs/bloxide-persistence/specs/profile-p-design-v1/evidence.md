@@ -1,0 +1,31 @@
+# Public evidence assessment
+
+Facts below describe the named source, not full XCP/ASAM requirements. Retrieval
+identities are in [sources.json](../../evidence/profile-p-design-v1/sources.json).
+Publisher URLs and immutable digests identify the original manuals/source.
+The technical assessment was performed 2026-09-25 UTC; source identity records
+retain that revision scope. Original notices remain attached to publisher material.
+
+| Source | Observed fact and locator | Limit / design use |
+|---|---|---|
+| [NI ECU M&C manual 371601F-01, September 2008](https://download.ni.com/support/manuals/371601f.pdf), SHA256 7aab55713dcdacbf01ab2219f1c5b8d5584405d2ee8df2edf200f47f316e2809 | Printed 5-147/148 and 6-108/109: store request bit0 pending, reset on fulfillment, optional EV_STORE_CAL. Printed 5-162 (function begins 5-161) / 6-119: SET_SEGMENT_MODE chooses FREEZE. | Does not specify our late failure, uncertain completion, single virtual page or reconnect policy. Earlier proposal's 5-150/151 and 6-76/77 are not the relevant GET_STATUS locators in this retrieved edition. |
+| [Vector XCPlite xcplite.c](https://github.com/vectorgrp/XCPlite/blob/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcplite.c#L2243), pin 88e3cbeec79318f50067eede2502bcf4d34dab5f | SET_REQUEST length4; mode STORE_CAL calls selected-segment freeze or application callback; errors propagate before positive response. PAG dispatch at 2408ff. CONNECT at 2068ff resets session status. | Synchronous implementation, no accepted-then-failed lifecycle demonstrated. Actual pinned source differs from web search's cached master, so all conclusions use retrieved pinned bytes. |
+| [Vector cal.c](https://github.com/vectorgrp/XCPlite/blob/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/cal.c#L953) | GET_SEGMENT_INFO unconditionally assigns MAX_PAGES=2; GET_PAGE_INFO conditionally accepts only page0; shipped OPTION_CAL_SEGMENTS_SINGLE_PAGE is commented out; working-page flags3F; INIT_SEGMENT assigned default-page constant. XcpSetCalSegMode/XcpFreezeSelectedCalSegs at1100ff select FREEZE segments; file failure -> CRC_ACCESS_DENIED. | Evidence for explicit selection and a conditional guard, not a qualified internally consistent one-page configuration or general permission to omit pages. Empty selected set returns success in this implementation; candidate intentionally rejects freeze=0 to avoid a vacuous apparent save. Its INIT_SEGMENT assignment is not copied as authority. |
+| [Vector persistence.c](https://github.com/vectorgrp/XCPlite/blob/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/persistence.c#L322) | Freeze locks ECU page and uses file writes; open/seek/write failure can return false. | Does not establish full flash durability, XCP-vs-ECU-page selection or asynchronous completion. No T16 inference. |
+| [Vector xcp.h](https://github.com/vectorgrp/XCPlite/blob/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcp.h#L612) | PAG offsets/lengths, STORE_CAL mode01, request len4, response len1; reserved response bytes visible in layout. | Candidate exact-zero reserved fields are selected narrow policy, not inferred from uninitialized implementation storage. |
+| [pyXCP Master](https://github.com/christoph2/pyxcp/blob/016cf3e44364e9cd93966d144a39d342578a0391/pyxcp/master/master.py#L553), 0.29.18 | setRequest packs ID with `>H` unconditionally and returns raw body; status decoder consumes five bytes after PID; page/segment methods at1396–1518 encode the table directly. | ID0 avoids endian discrepancy. GET_STATUS.stateNumber is the parser's name for byte3 of full CTO; candidate zero, not a new failure code. Transport strips positive PID; `b''` is successful F9 body. |
+| [pyXCP types](https://github.com/christoph2/pyxcp/blob/016cf3e44364e9cd93966d144a39d342578a0391/pyxcp/types.py#L307) | Error numeric identities; PAGE_NOT_VALID26, MODE_NOT_VALID27, SEGMENT_NOT_VALID28; status and page decoders; EV_STORE_CAL03. | Numeric support does not validate when an endpoint should send each code or event. FE32 broad admission mapping rejected by this design; FE24 remains a reviewed-policy candidate. |
+| [pyXCP errormatrix](https://github.com/christoph2/pyxcp/blob/016cf3e44364e9cd93966d144a39d342578a0391/pyxcp/errormatrix.py#L161) | SET_REQUEST timeout -> SYNCH then repeat twice; Busy -> repeated attempts. FE24 absent from this command's matrix. config General.disable_error_handling defaults false; Master init applies it through public errorhandler control. | Default client behavior violates no-automatic-save-retry policy. Explicit General.disable_error_handling=True for dedicated P process, plus application no-retry guard. The underlying control is process-global: do not create another Master that re-enables it. max_retries alone is not our selected control. |
+| [pyXCP transport/base.py](https://github.com/christoph2/pyxcp/blob/016cf3e44364e9cd93966d144a39d342578a0391/pyxcp/transport/base.py#L367) | Events have a generic handling path; their enum presence is not proof of P storage completion handling. | No event required in candidate. No inferred negative EV_STORE_CAL payload. |
+| [pyA2L classes.py](https://github.com/christoph2/pyA2L/blob/c19c3ad2f285d1230e334bad81eeb09cbaaa3031/pya2l/classes.py#L539), pya2ldb1.0.353 | BLOB has name/description/address/size, CALIBRATION_ACCESS and ECU_ADDRESS_EXTENSION; no READ_ONLY child. Model Blob mirrors these fields at2149ff; module-level import_a2l accepts fixture. | Select BLOB NO_CALIBRATION and explicit host descriptor. Parser syntax support does not provide latch semantics or reject wire writes. No IF_DATA expansion or parser change. |
+
+Public web searches for STORE_CAL_REQ failure and EV_STORE_CAL error primarily
+returned third-party copies of ASAM documents and secondary articles. These are
+not used as authority; no licensed text purchased or republished. P-OPEN-2 is
+still open, not filled by a code enumeration. The proposed late-failure sticky
+bit/session policy and single-page INIT_SEGMENT require independent disposition.
+
+The command-sink probe calls unchanged Master methods and real decoders with
+literal responses, verifies the public no-retry control, and parses the A2L.
+It is deliberately only a codec/metadata test: no actual endpoint, transport,
+flash service, event loop, hardware, or interoperability acceptance is represented.

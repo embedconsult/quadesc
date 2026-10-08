@@ -1,0 +1,14 @@
+[package]
+name = "bloxide-persistence-calibration"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+description = "Optional T07 owner snapshot and bounded client broker adapter"
+
+[dependencies]
+bloxide-persistence = { path = "../.." }
+bloxide-calibration = { path = "../../../bloxide-calibration" }
+
+[lints]
+workspace = true
+

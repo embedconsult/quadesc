@@ -1,0 +1,140 @@
+{
+  "format": 1,
+  "captured_utc": "2026-09-24T20:54:53.892455+00:00",
+  "host": {
+    "hostname": "bloxide1",
+    "machine": "x86_64",
+    "os": "Ubuntu 26.04.1 LTS",
+    "python": "3.14.4",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)\nbinary: rustc\ncommit-hash: 4a4ef493e3a1488c6e321570238084b38948f6db\ncommit-date: 2026-03-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.94.0\nLLVM version: 21.1.8\n",
+    "target_available": "thumbv8m.main-none-eabi",
+    "target_build_executed": false
+  },
+  "archive": {
+    "path": "original-inputs/contracts-s0-v0.1.1.tar",
+    "sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db"
+  },
+  "repositories": [
+    {
+      "name": "bloxide-calibration",
+      "commit": "c0a693a8811d920d05850cfc2ebcfd7956a2741b",
+      "tree": "e4458460f1533c8b6656fe060b65c94fbbe0a5f2",
+      "observed_head": "c0a693a8811d920d05850cfc2ebcfd7956a2741b",
+      "observed_dirty": false,
+      "files": [
+        {
+          "path": "src/transaction.rs",
+          "sha256": "d04b40fdca67cc3417d2d2386d63984714bf0751240576bee20775654d59f78a",
+          "git_blob": "6ba01d6215c20c5e04f15e619324d326501fbd02"
+        },
+        {
+          "path": "src/lib.rs",
+          "sha256": "c0121648eb8984b55d442bc9253dcc31dae752c0799156623e7868cdf626097a",
+          "git_blob": "788fb1505bcb20e8b138124b35dd783aa26b191f"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ee62f3644d767dc97787834dc399ceb5151d0bb97034fb24f0087bfe3132ba75",
+          "git_blob": "83a208136e085400965a63347eb8f8bd83adc743"
+        },
+        {
+          "path": "Cargo.toml",
+          "sha256": "1b870ec783722aeaa5217050fd2f064b59e02c1364193279667f93960b0f9616",
+          "git_blob": "f825bdcc32f9404ab739931f47984d4faab704a5"
+        }
+      ]
+    },
+    {
+      "name": "pyxcp",
+      "commit": "016cf3e44364e9cd93966d144a39d342578a0391",
+      "tree": "86927186407436c385dc6c1c3f1b933a2b8e9ce4",
+      "observed_head": "016cf3e44364e9cd93966d144a39d342578a0391",
+      "observed_dirty": false,
+      "files": [
+        {
+          "path": "pyxcp/master/master.py",
+          "sha256": "9529e0b3a02de08eafef6900a52b77a0894832c784ca9b447a10216b97d4fb20",
+          "git_blob": "7f5188504243fe82545aa33e0a95a362a08e9957"
+        },
+        {
+          "path": "pyxcp/types.py",
+          "sha256": "288570b1d3ac7c70920ca71133186cf6d3376d7c7082db9c4d2fad0edeb9db04",
+          "git_blob": "73f49f74b4847d0a6096397c9620007469f8e803"
+        },
+        {
+          "path": "pyxcp/tests/test_master.py",
+          "sha256": "50cbd656c03871dee4c4b05b3b50054dc05d00a8844cbb20f3eb124b5f5a95d6",
+          "git_blob": "2042f78b22721bf24153cd24b8f96e48ba215b0b"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "fbb1494c7a03c01578edce3bbe6395c8304f296e8f6b7c0ca7af8418ac6178a0",
+          "git_blob": "1f3f462d7e9cf182c8a813522e2297f323546138"
+        }
+      ]
+    },
+    {
+      "name": "bloxide",
+      "commit": "43c4faa14a934fc96b73c39978084220a273d5d0",
+      "tree": "55933cf4a6e8efcc511e7957b9a9addaa03d9a15",
+      "observed_head": "43c4faa14a934fc96b73c39978084220a273d5d0",
+      "observed_dirty": false,
+      "files": [
+        {
+          "path": "skills/building-with-bloxide/SKILL.md",
+          "sha256": "8c7f18607ec74c987ca50b340ed4b628f50352d6ef6eb347677f355c2f507890",
+          "git_blob": "7c24257bb851d1128e133c1af7d072936127048b"
+        }
+      ]
+    },
+    {
+      "name": "source-baseline",
+      "commit": "e9c87dc2ed34ee16cf7a8e0c539cb093e35d37ed",
+      "tree": "c9e2173297b90a3e7bdf1131637941f88d08f447",
+      "observed_head": "e9c87dc2ed34ee16cf7a8e0c539cb093e35d37ed",
+      "observed_dirty": false,
+      "files": [
+        {
+          "path": "README.md",
+          "sha256": "77d76328cb2e74571d0c0bc57765073fdbbd5d3d5e45471857014ff6e29bf5d4",
+          "git_blob": "e61cd1971b0fe71300481b39cb523fb46b4803eb"
+        },
+        {
+          "path": "PACKAGE-PLACEMENT.md",
+          "sha256": "906338f2584c3106727d487fdc41ba2a602158023a9fddca43c044bd8a40b9a5",
+          "git_blob": "049382e0da66ed937f71c304e67a346edfac1e34"
+        },
+        {
+          "path": "locks/source-lock-v1.json",
+          "sha256": "a9c6bd90cf92b14256c4ca708a6e8d4ff2050937296d904c5839201bcd74cc1d",
+          "git_blob": "3a85280c61bfb686d398cbdc63b4091251121028"
+        }
+      ]
+    }
+  ],
+  "public_primary_references": [
+    {
+      "id": "NI-371601F",
+      "url": "https://download.ni.com/support/manuals/371601f.pdf",
+      "local_cache": "original-inputs/references/ni-371601f.pdf",
+      "sha256": "7aab55713dcdacbf01ab2219f1c5b8d5584405d2ee8df2edf200f47f316e2809",
+      "text_cache_sha256": "967a86344afcda99d9a594da130977957078cd6bcde705f42b45e3ca75c164ba",
+      "cache_in_git": false,
+      "sections": [
+        "MC XCP Get Status (pending bit/fulfillment)",
+        "MC XCP Set Request",
+        "MC XCP Set Segment Mode"
+      ],
+      "limitations": "No complete XCP normative failure/page behavior; original notices retained in unmodified cache."
+    }
+  ],
+  "other_accepted_pins_not_linked": {
+    "bloxide-measurement": "ad6c8c8ad7f788ff31bcfda5adfc4d4db7ecc488",
+    "bloxide-motor-control": "346b66a9341242435624d3b81c134c9d013d34a5",
+    "pya2ldb": "c19c3ad2f285d1230e334bad81eeb09cbaaa3031"
+  },
+  "scope": "source identity ledger, not a Cargo or Bloxide package lock",
+  "historical_scope": "Preserved original design evidence, not current correction execution",
+  "current_correction_evidence": "portable-test-report.json",
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

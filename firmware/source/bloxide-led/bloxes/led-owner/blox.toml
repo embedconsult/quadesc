@@ -1,0 +1,149 @@
+[actor]
+name = "LedOwner"
+[package.features]
+default = []
+[context]
+name = "LedOwnerCtx"
+imports = ["led_context::LedController"]
+on_init = "led_context::on_lifecycle_stop(&mut ctx.controller);"
+[[context.uses]]
+field = "controller"
+field_type = "LedController"
+role = "ctor"
+[[context.actions]]
+name = "apply"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "request"
+impl_required = false
+[[context.actions]]
+name = "read"
+crate = "led_context"
+fields = ["controller:mut"]
+impl_required = false
+[[context.actions]]
+name = "read_saved"
+crate = "led_context"
+fields = ["controller:mut"]
+impl_required = false
+[[context.actions]]
+name = "release"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "key"
+impl_required = false
+[[context.actions]]
+name = "profile_p"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "request"
+impl_required = false
+[[context.actions]]
+name = "profile_reset"
+crate = "led_context"
+fields = ["controller:mut"]
+impl_required = false
+[[context.actions]]
+name = "profile_lost"
+crate = "led_context"
+fields = ["controller:mut"]
+impl_required = false
+[[context.actions]]
+name = "save"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "now_us"
+impl_required = false
+[[context.actions]]
+name = "resolve_save"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "key"
+impl_required = false
+[[context.actions]]
+name = "xcp_provider"
+crate = "led_context"
+fields = ["controller:mut"]
+event_payload = "request"
+impl_required = false
+[[context.actions]]
+name = "output_completed"
+crate = "led_context"
+fields = ["controller:mut"]
+[[context.actions]]
+name = "output_faulted"
+crate = "led_context"
+fields = ["controller:mut"]
+[event]
+name = "LedOwnerEvent"
+[[event.mailboxes]]
+variant = "Msg"
+message = "LedMsg"
+message_path = "led_messages::LedMsg"
+[topology]
+[[topology.states]]
+name = "Ready"
+initial = true
+[[topology.states]]
+name = "OutputFault"
+error = true
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::Apply(_)"
+target = "stay"
+actions = ["Self::apply"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::Read"
+target = "stay"
+actions = ["Self::read"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::ReadSaved"
+target = "stay"
+actions = ["Self::read_saved"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::Release(_)"
+target = "stay"
+actions = ["Self::release"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::ProfileP(_)"
+target = "stay"
+actions = ["Self::profile_p"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::ProfileReset"
+target = "stay"
+actions = ["Self::profile_reset"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::ProfileLost"
+target = "stay"
+actions = ["Self::profile_lost"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::Save(_)"
+target = "stay"
+actions = ["Self::save"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::ResolveSave(_)"
+target = "stay"
+actions = ["Self::resolve_save"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::XcpProvider(_)"
+target = "stay"
+actions = ["Self::xcp_provider"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::OutputCompleted(_)"
+target = "stay"
+actions = ["Self::output_completed"]
+[[topology.transitions]]
+state = "Ready"
+event = "LedMsg::OutputFaulted(_)"
+target = "OutputFault"
+actions = ["Self::output_faulted"]

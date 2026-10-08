@@ -1,0 +1,115 @@
+{
+  "status": "hardware-qualified-2026-09-25",
+  "loader_version": "0.1.0",
+  "abi": 1,
+  "board_id": "0x13e23019",
+  "target": "thumbv8m.main-none-eabi",
+  "cpu_clock_hz": 32000000,
+  "crystal_hz": 25000000,
+  "can_clock": "25MHz HFCLK *16 VCO400MHz /20 CLK0=20MHz /2 CANCLK=10MHz; CPU SYSOSC32MHz",
+  "transport": {
+    "type": "CAN-FD",
+    "extended_id": false,
+    "request_id": 1808,
+    "response_id": 1809,
+    "nominal_bitrate": 500000,
+    "data_bitrate": 2000000,
+    "brs": true,
+    "max_cto": 64,
+    "max_dto": 64,
+    "address_granularity_bytes": 1,
+    "byte_order": "little",
+    "block_mode": false
+  },
+  "layout": {
+    "loader_start": 0,
+    "loader_end_exclusive": 32768,
+    "app_start": 32768,
+    "app_end_exclusive": 260096,
+    "metadata_start": 260096,
+    "metadata_end_exclusive": 262144,
+    "reserved_bank1_start": 262144,
+    "flash_end_exclusive": 524288,
+    "ram_start": 536870912,
+    "ram_end_exclusive": 536969216,
+    "erase_bytes": 2048,
+    "program_bytes": 16
+  },
+  "preserve": [
+    {
+      "start": 491520,
+      "length": 2048,
+      "name": "CAL_A"
+    },
+    {
+      "start": 507904,
+      "length": 2048,
+      "name": "CAL_B"
+    }
+  ],
+  "header": {
+    "size": 32,
+    "format": "<4s7I",
+    "magic": "AB01",
+    "fields": [
+      "magic",
+      "board_id",
+      "abi",
+      "app_base",
+      "padded_image_length",
+      "crc32_ieee_padded_image",
+      "app_version",
+      "reserved_zero"
+    ]
+  },
+  "sequence": [
+    "CONNECT mode0",
+    "GET_ID type0; UPLOAD discriminator",
+    "PROGRAM_START",
+    "SET_MTA metadata_start extension0",
+    "PROGRAM 32-byte header staged in RAM",
+    "SET_MTA app_start extension0",
+    "PROGRAM_CLEAR absolute0 with sector-rounded image length; metadata invalidated first",
+    "SET_MTA app_start extension0",
+    "PROGRAM sequential image chunks at most62bytes; last=True in pyXCP",
+    "PROGRAM count0 verifies image CRC and vectors",
+    "UPLOAD image readback optional",
+    "PROGRAM_RESET re-verifies, commits, responds then resets"
+  ],
+  "unsupported": [
+    "PROGRAM_NEXT",
+    "PROGRAM_MAX",
+    "PROGRAM_FORMAT",
+    "PROGRAM_PREPARE",
+    "PROGRAM_VERIFY",
+    "GET_SECTOR_INFO",
+    "seed/key",
+    "signature",
+    "rollback protection",
+    "nonsequential programming",
+    "compression",
+    "encryption",
+    "DAQ",
+    "calibration resource"
+  ],
+  "hardware_pending": [],
+  "reset_window_ms": 3000,
+  "session_timeout": "CONNECT holds residence until external reset; client command timeout5s; no block transfer",
+  "commit": {
+    "offset": 32,
+    "size": 16,
+    "format": "<8sII",
+    "magic": "COMMIT01",
+    "fields": [
+      "magic",
+      "crc32_ieee_header",
+      "complement_header_crc"
+    ],
+    "write_order": "erase metadata before app; header32bytes then commit16bytes last"
+  },
+  "physical_limits": [
+    "factory NONMAIN bootclock not restored/tested; runtime clocks initialized explicitly",
+    "UART ROM bootstrap untested",
+    "no power-cut mid-16byte-granule test; deliberate interruption/reset at finite partial-upload boundary passed"
+  ]
+}

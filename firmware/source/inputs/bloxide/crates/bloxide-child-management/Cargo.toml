@@ -1,0 +1,21 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "bloxide-child-management"
+version.workspace = true
+edition.workspace = true
+description = "Child group tracking, restart strategies, and health checking — the reusable child-management platform primitive for bloxide supervisors."
+repository.workspace = true
+license.workspace = true
+
+[features]
+default = []
+std = ["bloxide-core/std", "bloxide-log/log"]
+
+[dependencies]
+bloxide-core = { workspace = true }
+bloxide-log = { workspace = true }
+
+[dev-dependencies]
+bloxide-core = { workspace = true, features = ["std"] }
+bloxide-spawn = { workspace = true }
+bloxide-test-runtime = { workspace = true }

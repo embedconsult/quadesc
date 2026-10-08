@@ -1,0 +1,11 @@
+[package]
+name = "xcp-sxi-endpoint"
+version = "0.0.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+xcp-core = { path = "../../crates/xcp-core" }
+xcp-messages = { path = "../../crates/xcp-messages" }
+xcp-sxi = { path = "../../crates/xcp-sxi" }

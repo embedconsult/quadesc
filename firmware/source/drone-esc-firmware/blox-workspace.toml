@@ -1,0 +1,33 @@
+format = 1
+[packages.framework]
+package = "bloxide"
+path = "../inputs/bloxide"
+[packages.calibration]
+package = "bloxide-calibration"
+path = "../inputs/bloxide-calibration"
+[packages.led]
+package = "bloxide-led"
+path = "../bloxide-led"
+
+
+[packages.xcp]
+package = "bloxide-xcp"
+path = "../bloxide-xcp"
+
+
+
+[packages.diagnostic_parser]
+package = "am13-diagnostic-parser"
+path = "diagnostic-parser"
+
+[packages.diagnostic_transport]
+package = "am13-diagnostic-transport"
+path = "diagnostic-transport"
+
+[packages.mcu_xcp_platform]
+package = "am13-xcp-control-platform"
+path = "mcu-xcp-platform"
+
+[packages.mainboard]
+package = "mainboard-characterization"
+path = "characterization"

@@ -1,0 +1,10 @@
+format = 1
+
+[package]
+name = "bloxide-calibration"
+version = "0.1.0"
+blox-schema = 1
+
+[[crates]]
+name = "bloxide-calibration"
+path = "Cargo.toml"

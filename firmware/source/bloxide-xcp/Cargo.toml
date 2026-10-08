@@ -1,0 +1,35 @@
+[workspace]
+members = [
+    "crates/xcp-messages",
+    "crates/xcp-core",
+    "crates/xcp-sxi",
+    "crates/blox-ctx-xcp",
+    "crates/xcp-profile-p",
+]
+exclude = ["fixtures/standalone-consumer", "fixtures/sxi-endpoint"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/bloxide-com/bloxide-xcp"
+
+[workspace.dependencies]
+xcp-messages = { path = "crates/xcp-messages" }
+xcp-core = { path = "crates/xcp-core" }
+xcp-sxi = { path = "crates/xcp-sxi" }
+blox-ctx-xcp = { path = "crates/blox-ctx-xcp" }
+xcp-profile-p = { path = "crates/xcp-profile-p" }
+bloxide-persistence = { path = "../inputs/bloxide-persistence" }
+bloxide-persistence-calibration = { path = "../inputs/bloxide-persistence/crates/bloxide-persistence-calibration" }
+bloxide-calibration = { path = "../inputs/bloxide-calibration" }
+bloxide-persistence-sim = { path = "../inputs/bloxide-persistence/crates/bloxide-persistence-sim" }
+bloxide-core = { path = "../inputs/bloxide/crates/bloxide-core", default-features = false }
+bloxide-test-runtime = { path = "../inputs/bloxide/runtimes/bloxide-test-runtime" }
+
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"

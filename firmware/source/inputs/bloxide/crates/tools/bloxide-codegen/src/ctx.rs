@@ -1,0 +1,419 @@
+// Copyright 2025 Bloxide, all rights reserved.
+//! Generate a plain context struct with a plain constructor from `ContextConfig`.
+//!
+//! Handles `[[context.uses]]` entries (composable context crates) and
+//! auto-emits the universal `self_id` field. Every `use` statement is a
+//! direct 1:1 mapping from the TOML — the codegen never guesses imports.
+//!
+//! When `context.feature` is set, emits paired `#[cfg]` variants: one under
+//! `#[cfg(not(feature = "..."))")]` with `generics` and one under
+//! `#[cfg(feature = "..."))]` with `feature_generics`. Feature-gated fields
+//! and uses entries appear only in the feature variant.
+
+use quote::{format_ident, quote};
+
+use crate::schema::ContextConfig;
+use crate::util::{DOC_FROM_BLOX_TOML, HEADER};
+
+/// A field descriptor for constructor generation.
+struct FieldDesc {
+    name: syn::Ident,
+    ty: syn::Type,
+    is_state: bool,
+    /// Optional `#[cfg(feature = "...")]` attribute for feature-gated fields.
+    cfg_attr: Option<proc_macro2::TokenStream>,
+}
+
+/// Generate a single variant of the context struct.
+///
+/// `generics` — the generics for this variant.
+/// `feature_filter` — When `Some(feat)`, only include fields/uses with
+///   `feature == Some(feat)`. When `None`, only include fields/uses with
+///   `feature == None`.
+/// `cfg_attr` — When `Some("not(feature = ...))")` or `Some("feature = ...))")`,
+///   wrap the entire output in `#[cfg(...)]`.
+fn generate_variant(
+    config: &ContextConfig,
+    _crate_name: &str,
+    generics: &syn::Generics,
+    feature_filter: Option<&str>,
+    cfg_attr: Option<&str>,
+) -> anyhow::Result<proc_macro2::TokenStream> {
+    let ctx_ident = format_ident!("{}", config.name);
+    let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
+
+    let mut use_stmts = Vec::new();
+
+    // ── User-specified imports ─────────────────────────────────────────────
+    // Non-feature imports always emitted; feature_imports only in feature variant.
+    for import in &config.imports {
+        let tree = syn::parse_str::<syn::UseTree>(import)
+            .map_err(|e| anyhow::anyhow!("invalid import '{}': {}", import, e))?;
+        use_stmts.push(quote! { use #tree; });
+    }
+    if feature_filter.is_some() {
+        for import in &config.feature_imports {
+            let tree = syn::parse_str::<syn::UseTree>(import)
+                .map_err(|e| anyhow::anyhow!("invalid feature import '{}': {}", import, e))?;
+            use_stmts.push(quote! { use #tree; });
+        }
+    }
+
+    // ── Auto-detected framework imports ───────────────────────────────────
+    {
+        let mut all_field_types: Vec<String> = Vec::new();
+        for u in &config.uses {
+            if match feature_filter {
+                None => u.feature.is_none(),
+                Some(_) => true, // feature variant includes all uses
+            } {
+                if let Some(ref ft) = u.field_type {
+                    all_field_types.push(ft.clone());
+                }
+                for sub in &u.fields {
+                    all_field_types.push(sub.ty.clone());
+                }
+            }
+        }
+        let all_field_types: String = all_field_types.join(" ");
+        let generics_str = config.generics.clone().unwrap_or_default();
+        // ActorId is not imported separately — the auto-emitted self_id field
+        // uses the fully-qualified path ::bloxide_core::ActorId directly.
+        let needs_actor_ref = all_field_types.contains("ActorRef");
+        let needs_runtime =
+            generics_str.contains("BloxRuntime") || all_field_types.contains("BloxRuntime");
+
+        let mut core_module_imports: Vec<syn::Path> = Vec::new();
+        if needs_runtime {
+            core_module_imports.push(syn::parse_str("capability::BloxRuntime").unwrap());
+        }
+        if needs_actor_ref {
+            core_module_imports.push(syn::parse_str("messaging::ActorRef").unwrap());
+        }
+        if !core_module_imports.is_empty() {
+            use_stmts.push(quote! {
+                use ::bloxide_core::{#(#core_module_imports),*};
+            });
+        }
+    }
+
+    // ── Collect field descriptors ──────────────────────────────────────────
+    // Fields are collected in order: self_id first, then uses fields, then
+    // context.fields. Each field is tagged as "ctor" (constructor param) or
+    // "state" (zero-initialized).
+    let mut fields: Vec<FieldDesc> = Vec::new();
+
+    // 0: Auto-emit self_id FIRST so it appears first in struct and constructor.
+    fields.push(FieldDesc {
+        name: format_ident!("self_id"),
+        ty: syn::parse_str("::bloxide_core::ActorId").unwrap(),
+        is_state: false,
+        cfg_attr: None,
+    });
+
+    // 1: Fields from [[context.uses]]
+    for u in &config.uses {
+        if !match feature_filter {
+            None => u.feature.is_none(),
+            Some(_) => true, // feature variant includes all uses
+        } {
+            continue;
+        }
+
+        // Per-use feature gate for single-field uses. Mirrors the sub-field
+        // logic below: when building the feature variant, the whole variant
+        // is already under #[cfg(feature = "...")], so no per-field attr is
+        // needed. Otherwise, emit #[cfg(feature = #feat)] for feature-gated
+        // uses. Sub-fields without their own feature inherit this via
+        // `field_cfg.clone()`.
+        let field_cfg = if let Some(ref feat) = u.feature {
+            if feature_filter.is_some() {
+                None
+            } else {
+                Some(quote! { #[cfg(feature = #feat)] })
+            }
+        } else {
+            None
+        };
+
+        // Single-field accessor: has `field` and `field_type`.
+        if let Some(ref field_name) = u.field {
+            if let Some(ref field_ty_str) = u.field_type {
+                let field_ident = format_ident!("{}", field_name);
+                let field_ty = syn::parse_str::<syn::Type>(field_ty_str).map_err(|e| {
+                    anyhow::anyhow!("invalid field_type '{}' in uses: {}", field_ty_str, e)
+                })?;
+
+                // Single-field accessor uses are ctor params (not state).
+                // The `role` field may be "ctor" or "state".
+                if let Some(role) = u.role.as_deref() {
+                    anyhow::ensure!(
+                        matches!(role, "ctor" | "state"),
+                        "invalid role '{role}' in [[context.uses]] (field '{}') — \
+                         expected \"ctor\" or \"state\"",
+                        field_name
+                    );
+                }
+                let is_state = u.role.as_deref() == Some("state");
+
+                fields.push(FieldDesc {
+                    name: field_ident,
+                    ty: field_ty,
+                    is_state,
+                    cfg_attr: field_cfg.clone(),
+                });
+            }
+        }
+
+        // Multi-field sub-fields.
+        for sub in &u.fields {
+            let field_ident = format_ident!("{}", sub.name);
+            let field_ty = syn::parse_str::<syn::Type>(&sub.ty).map_err(|e| {
+                anyhow::anyhow!("invalid field type '{}' in uses.fields: {}", sub.ty, e)
+            })?;
+
+            if let Some(role) = sub.role.as_deref() {
+                anyhow::ensure!(
+                    matches!(role, "ctor" | "state"),
+                    "invalid role '{role}' in [[context.uses.fields]] (field '{}') — \
+                     expected \"ctor\" or \"state\"",
+                    sub.name
+                );
+            }
+            let is_state = sub.role.as_deref() == Some("state");
+
+            // Per-sub-field feature gate.
+            let sub_cfg = if let Some(ref feat) = sub.feature {
+                if feature_filter.is_some() {
+                    None
+                } else {
+                    Some(quote! { #[cfg(feature = #feat)] })
+                }
+            } else {
+                field_cfg.clone()
+            };
+
+            fields.push(FieldDesc {
+                name: field_ident,
+                ty: field_ty,
+                is_state,
+                cfg_attr: sub_cfg,
+            });
+        }
+    }
+
+    // 2: State fields from [[context.fields]]
+    for field in &config.fields {
+        let field_ident = format_ident!("{}", field.name);
+        let field_ty = syn::parse_str::<syn::Type>(&field.r#type).map_err(|e| {
+            anyhow::anyhow!("invalid type '{}' in context.fields: {}", field.r#type, e)
+        })?;
+        fields.push(FieldDesc {
+            name: field_ident,
+            ty: field_ty,
+            is_state: true,
+            cfg_attr: None,
+        });
+    }
+
+    // ── Struct definition ──────────────────────────────────────────────────
+    let field_defs: Vec<proc_macro2::TokenStream> = fields
+        .iter()
+        .map(|f| {
+            let name = &f.name;
+            let ty = &f.ty;
+            if let Some(ref cfg) = f.cfg_attr {
+                quote! {
+                    #cfg
+                    pub #name: #ty,
+                }
+            } else {
+                quote! {
+                    pub #name: #ty,
+                }
+            }
+        })
+        .collect();
+
+    let struct_def = quote! {
+        pub struct #ctx_ident #generics #where_clause {
+            #(#field_defs)*
+        }
+    };
+
+    // ── Constructor ────────────────────────────────────────────────────────
+    // Ctor fields (is_state == false) become constructor params.
+    // State fields (is_state == true) are zero-initialized via Default::default().
+    let ctor_params: Vec<proc_macro2::TokenStream> = fields
+        .iter()
+        .filter(|f| !f.is_state)
+        .map(|f| {
+            let name = &f.name;
+            let ty = &f.ty;
+            quote! { #name: #ty }
+        })
+        .collect();
+
+    let field_inits: Vec<proc_macro2::TokenStream> = fields
+        .iter()
+        .map(|f| {
+            let name = &f.name;
+            if f.is_state {
+                quote! { #name: ::core::default::Default::default() }
+            } else {
+                quote! { #name }
+            }
+        })
+        .collect();
+
+    let constructor = quote! {
+        impl #impl_generics #ctx_ident #ty_generics #where_clause {
+            pub fn new(#(#ctor_params),*) -> Self {
+                Self {
+                    #(#field_inits),*
+                }
+            }
+        }
+    };
+
+    // ── Extra impl blocks (e.g. helper methods) ─────────────────────────────
+    // Each entry is a raw impl body. The codegen wraps it as:
+    //   impl #generics #body
+    let mut extra_impl_blocks = Vec::new();
+    {
+        // Build the ctx type string for this variant: CtxName<P0, P1, ...>
+        let ty_params: Vec<String> = generics
+            .type_params()
+            .map(|tp| tp.ident.to_string())
+            .collect();
+        let ctx_type = if ty_params.is_empty() {
+            config.name.clone()
+        } else {
+            format!("{}<{}>", config.name, ty_params.join(", "))
+        };
+
+        for impl_body in &config.extra_impls {
+            let resolved = impl_body.replace("{ctx}", &ctx_type);
+            let body_ts: proc_macro2::TokenStream = resolved
+                .parse()
+                .map_err(|e| anyhow::anyhow!("invalid extra_impl body '{}': {}", impl_body, e))?;
+            extra_impl_blocks.push(quote! {
+                impl #impl_generics #body_ts #where_clause
+            });
+        }
+    }
+
+    // When cfg_attr is set, wrap each item individually
+    let cfg_wrapped_extra_impls: Vec<_> = extra_impl_blocks
+        .iter()
+        .map(|b| {
+            if let Some(ref cfg) = cfg_attr {
+                let cfg_ts: proc_macro2::TokenStream = cfg.parse().unwrap_or_else(|e| {
+                    eprintln!("bloxide: warning: invalid cfg attr '{}': {}", cfg, e);
+                    quote! {}
+                });
+                quote! { #[cfg(#cfg_ts)] #b }
+            } else {
+                quote! { #b }
+            }
+        })
+        .collect();
+
+    Ok(match cfg_attr {
+        Some(cfg) => {
+            let cfg_ts: proc_macro2::TokenStream = cfg
+                .parse()
+                .map_err(|e| anyhow::anyhow!("invalid cfg attr '{}': {}", cfg, e))?;
+            // Wrap each use statement, struct, and constructor in #[cfg]
+            let wrapped_uses = use_stmts.iter().map(|u| {
+                quote! {
+                    #[cfg(#cfg_ts)]
+                    #u
+                }
+            });
+            quote! {
+                #(#wrapped_uses)*
+                #[cfg(#cfg_ts)]
+                #struct_def
+                #[cfg(#cfg_ts)]
+                #constructor
+                #(#cfg_wrapped_extra_impls)*
+            }
+        }
+        None => {
+            quote! {
+                #(#use_stmts)*
+                #struct_def
+                #constructor
+                #(#cfg_wrapped_extra_impls)*
+            }
+        }
+    })
+}
+
+pub fn generate(config: &ContextConfig, crate_name: &str) -> anyhow::Result<String> {
+    // Check if feature-gated generation is needed.
+    let has_feature = config.feature.is_some();
+
+    if !has_feature {
+        // Single-variant mode — no feature gating.
+        let generics = if let Some(ref g) = config.generics {
+            syn::parse_str::<syn::Generics>(g)
+                .map_err(|e| anyhow::anyhow!("invalid generics '{}': {}", g, e))?
+        } else {
+            syn::Generics::default()
+        };
+
+        let tokens = generate_variant(config, crate_name, &generics, None, None)?;
+
+        let raw = tokens.to_string();
+        let file = syn::parse_str::<syn::File>(&raw)
+            .map_err(|e| anyhow::anyhow!("syn parsing failed: {}", e))?;
+        let formatted = prettyplease::unparse(&file);
+        return Ok(format!("{}{}{}", HEADER, DOC_FROM_BLOX_TOML, formatted));
+    }
+
+    // Paired-variant mode.
+    let feat_name = config
+        .feature
+        .as_deref()
+        .ok_or_else(|| anyhow::anyhow!("context.feature is set but feature name is missing"))?;
+
+    // Non-feature variant: use `generics`, exclude feature-gated fields/uses.
+    let base_generics = if let Some(ref g) = config.generics {
+        syn::parse_str::<syn::Generics>(g)
+            .map_err(|e| anyhow::anyhow!("invalid generics '{}': {}", g, e))?
+    } else {
+        syn::Generics::default()
+    };
+    let base_cfg = format!("not(feature = \"{}\")", feat_name);
+    let base_tokens = generate_variant(config, crate_name, &base_generics, None, Some(&base_cfg))?;
+
+    // Feature variant: use `feature_generics`, include all fields/uses.
+    let feature_generics = if let Some(ref g) = config.feature_generics {
+        syn::parse_str::<syn::Generics>(g)
+            .map_err(|e| anyhow::anyhow!("invalid feature_generics '{}': {}", g, e))?
+    } else {
+        syn::Generics::default()
+    };
+    let feature_cfg = format!("feature = \"{}\"", feat_name);
+    let feature_tokens = generate_variant(
+        config,
+        crate_name,
+        &feature_generics,
+        Some(feat_name),
+        Some(&feature_cfg),
+    )?;
+
+    let tokens = quote! {
+        #base_tokens
+        #feature_tokens
+    };
+
+    let raw = tokens.to_string();
+    let file = syn::parse_str::<syn::File>(&raw)
+        .map_err(|e| anyhow::anyhow!("syn parsing failed: {}", e))?;
+    let formatted = prettyplease::unparse(&file);
+
+    Ok(format!("{}{}{}", HEADER, DOC_FROM_BLOX_TOML, formatted))
+}

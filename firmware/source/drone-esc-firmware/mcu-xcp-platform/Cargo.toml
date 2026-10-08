@@ -1,0 +1,27 @@
+[package]
+name = "am13-xcp-control-platform"
+version = "0.1.0"
+edition = "2024"
+[dependencies]
+am13-diagnostic-parser = { path = "../diagnostic-parser" }
+am13-diagnostic-transport = { path = "../diagnostic-transport" }
+am13-rs = { path = "../../inputs/am13-rs", features = ["embassy"] }
+esc-som-board = { path = "../../inputs/esc-som-board" }
+led-context = { path = "../../bloxide-led/crates/led-context" }
+led-messages = { path = "../../bloxide-led/crates/led-messages" }
+bloxide-calibration = { path = "../../inputs/bloxide-calibration" }
+xcp-core = { path = "../../bloxide-xcp/crates/xcp-core", features = ["calibration-store"] }
+xcp-messages = { path = "../../bloxide-xcp/crates/xcp-messages" }
+blox-ctx-xcp = { path = "../../bloxide-xcp/crates/blox-ctx-xcp" }
+xcp-sxi = { path = "../../bloxide-xcp/crates/xcp-sxi" }
+bloxide-core = { path = "../../inputs/bloxide/crates/bloxide-core" }
+bloxide-embassy = { path = "../../inputs/bloxide/runtimes/bloxide-embassy" }
+embassy-executor = { version = "=0.9.1", features = ["arch-cortex-m", "executor-thread"] }
+embassy-time = "=0.5.1"
+static_cell = "2"
+embedded-io-async = "=0.6.1"
+critical-section = "=1.2.0"
+cortex-m = { version = "=0.7.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "=0.7.6", features = ["set-sp", "set-vtor", "zero-init-ram"] }
+mainboard-characterization = { path = "../characterization" }
+mainboard-messages = { path = "../characterization/messages" }

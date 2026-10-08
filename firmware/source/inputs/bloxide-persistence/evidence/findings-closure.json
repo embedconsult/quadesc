@@ -1,0 +1,225 @@
+{
+  "scope": "portable correction; no acceptance",
+  "findings": [
+    {
+      "id": "F1",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F1",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 771,
+        "title": "Third healthy save falsely quarantines unchanged media",
+        "observed": "Three consecutive Save/drive/Release calls on one service (nonzero service_epoch, recovery authorization true) yield Durable seq1, Durable seq2, then Failed(Qualification, RecoveryChanged). finish_durable caches the original snapshot with persistence operation.service_epoch=17; the decoder intentionally reconstructs that nonpersistent field as zero. Re-reading slot A for save3 fails derived Record equality even though physical bytes are unchanged. Worker wear tests reconstruct the service for each save, masking this defect.",
+        "required": "R4\u2013R6 require repeated saves without reboot, comparing durable media identities while retaining the complete live operation key separately.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial three_live_saves_must_not_quarantine_unchanged_media -- --nocapture",
+        "actionable_fix": "Canonicalize the recovery cache using the decoded physical record or compare every persisted field/byte while excluding only the intentionally nonpersistent service epoch. Preserve the full original key in pending/retained operation outcomes. Test at least three alternating saves, same-value saves and resume without reconstructing the service.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Canonical persistent identity excludes only service_epoch; full live key retained",
+      "location": "src/record.rs: persistent_identity_eq; src/service.rs: QualifyErase",
+      "adversarial_coverage": "8 healthy alternating saves, 1000 same snapshots, resume, all stored identity components",
+      "regression": "correction::f1_live_alternation_same_value_resume_and_full_persistent_identity",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F2",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F2",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 693,
+        "title": "Read/ECC error after commit falsely asserts NoNewCommit",
+        "observed": "The read issue branch unconditionally calls finish_failed(..., true, true). A valid, fully committed new thermostat record remains on media while the service reports Failed(no_new_commit=true). Independent all-read-position sweep across G1/8/16 E1024 and G64/256 E4096 injected Io/corrected/uncorrectable errors: 528 injections, 132 false NoNewCommit outcomes.",
+        "required": "R6: after marker issue, unreadable media is Indeterminate with write lock. NoNewCommit requires a definite absence of the new commit after qualified reconciliation.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial all_geometry_all_read_positions_preserve_truth_after_commit -- --nocapture; also post_commit_ecc_must_be_indeterminate_not_no_new_commit",
+        "actionable_fix": "Make outcome truth depend on marker publication/history and qualified readback. Preserve uncertainty on every post-marker read/ECC error; test every chunk and all three issue variants.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Marker possible at publication; post-marker unreadable is Indeterminate, healthy invalid target alone can prove absence",
+      "location": "src/service.rs: take_command/complete/finish_scan",
+      "adversarial_coverage": "528 read issues over all positions/geometries; 5784 command/timeout traces",
+      "regression": "correction::c11_all_command_geometry_failures_timeouts_quiesce_and_late_completion",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F3",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F3",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 870,
+        "title": "Failed reconciliation reads restart forever",
+        "observed": "Once marker_may_have_changed is true, every matching Failed{quiescent:true} completion, including a VerifyCommitted read failure, resets scan offset to zero and re-enters VerifyCommitted. Twenty failed reads issue twenty fresh read commands with no retained outcome; mode remains Running. There is no finite reconciliation-attempt flag or deadline path.",
+        "required": "R6 bounds reconciliation to at most one quiesce and one full target scan, with unreadable/failed reconciliation ending Indeterminate/quarantined. No automatic read retry loop.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial reconciliation_read_failure_must_not_retry_forever -- --nocapture",
+        "actionable_fix": "Distinguish the initial failed marker acknowledgement from failure during reconciliation, consume a bounded reconciliation allowance, and retain Indeterminate on further read failure. Provide the portable timeout/quiescence transition rather than relying on an absent runtime to bound this loop.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "One consumed verification allowance and one quiesce attempt; explicit publication deadlines",
+      "location": "src/service.rs: start_verification/advance_time/take_quiesce_request",
+      "adversarial_coverage": "Failed scan cannot restart; silent and failed quiesce, three terminal retries",
+      "regression": "correction::f3_no_reconciliation_restart_and_f7_no_destructive_progress",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F4",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F4",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 675,
+        "title": "Unquiesced command is forgotten and cannot be reconciled after Reset",
+        "observed": "complete clears outstanding before handling Failed{quiescent:false}; finish_failed then takes pending. With an issued commit still able to complete, Reset only calls request_quiesce, which does nothing in ReadOnlyFault. When that exact commit later completes and the independent oracle sees valid seq1, complete returns NothingOutstanding. The terminal can be released despite the unresolved engine. CommandKind has no quiesce request and no timeout API can recover the ownership state.",
+        "required": "R5/R6 retain actual outstanding work until hardware idle and completion reconciliation; Reset must preserve command/capture/result/fences and cannot acknowledge or forget uncertain work. Absence of a physical backend does not exempt the portable lifecycle seam.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial unquiesced_command_must_remain_reconcilable_after_reset -- --nocapture",
+        "actionable_fix": "Separate an indeterminate notification from ownership retirement. Keep the header/capture and quarantine until a bounded quiescence/late-completion handshake resolves them; block release/drain acknowledgement until required reconciliation, retain nonwrapping epochs, and test silent timeout plus late completion at every mutation phase.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Diagnostic uncertainty never retires actual command/capture; release requires settled ownership",
+      "location": "src/service.rs: begin_uncertain/complete_quiesce/ownership_settled/release",
+      "adversarial_coverage": "All-command late completion/idle and failed quiesce; 40 silent-engine phase/geometry cases;120 lifecycle traces",
+      "regression": "correction::f4_silent_engine_never_releases_or_acknowledges_drain",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F5",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F5",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 401,
+        "title": "Snapshot validated under another schema can destroy recovery availability",
+        "observed": "Snapshot is not parameterized by its validator and save never checks it against self.schema. A valid schema99 snapshot passed to the schema2 service is accepted, consumes wear, erases/programs/commits and only fails in VerifyCommitted. Starting with valid schema2 seq7, reboot sees Unsupported schema99 and defaults/locks both-slot recovery, hiding the valid old configuration.",
+        "required": "R1/R4 require fixed registration and complete registered-schema validation before capture/admission; R5 VerifyBody must validate the intended schema before marker publication. A private validated Snapshot from another registration is insufficient.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial foreign_schema_must_not_displace_previously_valid_configuration -- --nocapture; also service_must_revalidate_snapshot_against_registered_schema_before_wear",
+        "actionable_fix": "Before acceptance/wear, require matching schema ID and length and run the registered validator (or bind Snapshot to that registration in the type system). Verify planned body/schema before commit as specified. Test foreign IDs, same-ID different lengths/validators and invalid semantic captures.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Registered ID/length/validator before admission/wear; supported exact body validated before marker",
+      "location": "src/record.rs: validate_for; src/service.rs: save/VerifyBody",
+      "adversarial_coverage": "Foreign ID, same ID incompatible length/semantic validator, old recovery remains selected",
+      "regression": "correction::f5_f9_registration_bounds_semantics_and_fresh_admission_clock",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F6",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F6",
+        "severity": "P2",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 505,
+        "title": "Duplicate release violates the idempotent retirement contract",
+        "observed": "After a successful Save/Release, repeating Release for that same retired key returns OutstandingResult. The same occurs for an old fenced release while a newer result is retained; no retired-key check exists in release.",
+        "required": "R4 and accepted S0 ownership: duplicate release for an already fenced key is an idempotent no-op, while future/unrelated/pending keys cannot be released.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial duplicate_release_is_idempotent -- --nocapture",
+        "actionable_fix": "Classify exact retained and live retired keys before returning errors; accept duplicate fenced releases without modifying any newer result. Preserve stale-epoch semantics and test reordered duplicate acknowledgements.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Classify live retired fence before inspecting newer result; unresolved/stale/future release cannot retire it",
+      "location": "src/service.rs: release",
+      "adversarial_coverage": "Duplicate old release during new pending and new retained; stale/future errors",
+      "regression": "correction::f6_release_fences_do_not_clear_newer_result_or_pending",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F7",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F7",
+        "severity": "P1",
+        "file": "bloxide-persistence/src/service.rs",
+        "line": 586,
+        "title": "ReadOnlyFault continues issuing new destructive commands",
+        "observed": "A wrong-epoch completion for the initial qualifying read latches correlation_fault/write_locked and mode ReadOnlyFault. After the exact outstanding read is reconciled, take_command ignores mode and drives the remaining workflow through a fresh wear permit, erase and all programs to Durable. The independent probe observes one new erase after the fault. Product stale-completion tests actually assert all 99 commands still finish.",
+        "required": "R5 ReadOnlyFault permits reads/diagnostics only. Correlation faults may reconcile already-issued work, but must not authorize fresh destructive work.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial read_only_fault_must_not_issue_fresh_erase_after_correlated_read -- --nocapture",
+        "actionable_fix": "After reconciling the real outstanding command, terminate or enter bounded read-only reconciliation according to whether a marker could have changed. Gate new permit/erase/program publication on fault state, without preventing an already-issued command from returning.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Write lock gates new permit/erase/program publication and exact completion continuation; reads only for already possible marker",
+      "location": "src/service.rs: take_command/complete/reconcile_idle",
+      "adversarial_coverage": "99 positions x4 wrong-header forms; malformed kinds/lengths; destructive counts cannot advance after fault",
+      "regression": "correction::f3_no_reconciliation_restart_and_f7_no_destructive_progress",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F8",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F8",
+        "severity": "P1",
+        "file": "bloxide-persistence/crates/bloxide-persistence-sim/src/lib.rs",
+        "line": 106,
+        "title": "Reused boot-local receipt identity bypasses lifetime erase allowance",
+        "observed": "The persistent simulator authority identifies receipts by fixed provisioning/slot plus caller io_epoch/command_sequence/issuance. Reconstructing the MCU service with its boot-local epochs reset to1 recreates the receipt; contains returns WearGranted again and Erase has no consumed-receipt fence. With power loss before each erase acknowledgement, 101 physical erase executions leave 99 of 100 permits remaining. The worker test supplies fresh loop-index io_epoch values instead of proving their crash-durable origin.",
+        "required": "R8 requires non-reissued lifetime permits despite lost acknowledgements/repeated interrupted erases, outside the simulated MCU reset domain. R4/S0 do not assume globally unique MCU boot IDs. Duplicate receipt replay must never authorize a second erase.",
+        "reproducer": "review-adapter: cargo +1.94.0 test --locked --test wear_adapter repeated_interrupted_erase_does_not_reuse_boot_local_receipt_identity -- --nocapture",
+        "actionable_fix": "Have the external authority allocate/validate a nonwrapping provisioning-lifetime issuance or boot lease and enforce single consumption at erase admission. Replay may report the original operation but cannot fund another erase. Deny unreconciled identities. Add repeated cut/lost-ack tests with restarted MCU counters; a test-supplied ever-increasing epoch is not authority evidence.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "External authority allocates durable-session lease and unique permit; consumption precedes erase admission and is single-use",
+      "location": "crates/bloxide-persistence-sim/src/lib.rs: open_session/consume_erase",
+      "adversarial_coverage": "Identical MCU counters every reboot; original101-boot witness;200 normal saves then denial;150 charged erases incl50 interrupted;100 receipt replays per acquisition;lost ack",
+      "regression": "workloads::c10_lifetime_allowance_interruptions_duplicates_and_lost_ack",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F9",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F9",
+        "severity": "P2",
+        "file": "bloxide-persistence/src/record.rs",
+        "line": 81,
+        "title": "Invalid schema length panics before checked constructor rejects it",
+        "observed": "A Schema with payload_len=257 and defaults returning Ok causes recover(Empty,Empty,...) to panic when Snapshot::defaults slices its 256-byte array. Snapshot::new checks the length, but that check is reached too late. The independent catch_unwind probe expects InvalidDefaults and fails.",
+        "required": "R1/R3 require immutable registration bounds checked before indexing and invalid defaults/startup to fail closed with an explicit error.",
+        "reproducer": "review-consumer: cargo +1.94.0 test --locked --test adversarial invalid_schema_definition_returns_error_without_panicking -- --nocapture",
+        "actionable_fix": "Validate nonzero schema ID and 1..=256 length before invoking/slicing defaults, then validate actual defaults. Apply equivalent returned-length checks before capture_owner slices CanonicalCalibration output. Test zero/257/65535 definitions without panic.",
+        "kind": "blocking_bug"
+      },
+      "implementation": "Validate definitions and returned lengths before callbacks/slices",
+      "location": "src/record.rs: defaults/validate_schema; calibration: capture_owner",
+      "adversarial_coverage": "0/257/65535 schema/default/capture lengths, zero ID, incompatible return length",
+      "regression": "owners::f9_capture_rejects_untrusted_returned_lengths_without_indexing",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    },
+    {
+      "id": "F10",
+      "status": "implemented_ready_for_review",
+      "original_witness": {
+        "id": "F10",
+        "severity": "P1",
+        "file": "bloxide-persistence/evidence/portable-test-report.json",
+        "line": 86,
+        "title": "Required portable acceptance campaigns are incomplete or overstated",
+        "observed": "C06/C11/C13 explicitly remain partial, yet completion/RESULT summarize I1\u2013I4 delivered and A3 portable passed. C06 runs 30 Reset traces, not120 lifecycle traces; C11 omits the required all-command/all-geometry error/timeout matrix; C13 lacks1000 scheduler permutations. C07 wrap test at adapter.rs:217 only manipulates a local SnapshotForWrap, never Owner/capture/service. C08 10000 outcomes are sequential invented Cancelled results, not interleaved saves/disconnects/saturation. C10 skips interrupted-erase lifetime accounting. C19 100 cycles call recovery.plan/encode and assign complete images, bypassing PersistenceService. C18 5992 excludes command/completion slots/trace and is not linker/runtime evidence.",
+        "required": "Frozen task explicitly requires C01\u2013C20 portable portions. Host lifecycle, scheduler, fault, repeated-wear and real adapter cases belong to I1\u2013I4; only real runtime allocator/generation/linker/platform portions may wait for I5/T36/I7.",
+        "reproducer": "Inspect tests/test-catalogue.json, evidence/portable-test-report.json:86\u2013100, crates/bloxide-persistence-calibration/tests/adapter.rs:217, :226, crates/bloxide-persistence-sim/tests/service.rs:383, :546; worker-consumer-evidence/src/lib.rs:205. Independent failures F1\u2013F9 demonstrate consequential gaps. Logs and COVERAGE.md audit the counts.",
+        "actionable_fix": "Complete the specified portable workloads against actual exported service/adapter APIs with independent oracles, full capture/key comparisons and deterministic bounded schedules. Correct evidence/acceptance labels and keep remaining host gaps distinct from genuine I5\u2013I7 gates. Re-review corrected source and exact consumers.",
+        "kind": "unmet_task_acceptance"
+      },
+      "implementation": "Replace overstated synthetic campaigns with executable actual service/Owner/broker workloads and scoped capacity accounting",
+      "location": "tests/correction.rs, tests/workloads.rs, tests/owners.rs and exact Git thermostat consumer",
+      "adversarial_coverage": "120 lifecycle;1000 scheduler;1000 capture;10000 outcomes;2^32 actual Owner wrap;100 service/reboot;47160 cut branches;7608-byte capacity",
+      "regression": "COVERAGE.md",
+      "source_commit": "9e8a74f5dedc94639f6aebabe05d876b6bac18f7",
+      "source_tree": "48a714d843289fd32182c926611eeae5f48c7be5"
+    }
+  ]
+}

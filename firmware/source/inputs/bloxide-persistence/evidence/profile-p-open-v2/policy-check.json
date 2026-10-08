@@ -1,0 +1,121 @@
+{
+  "scope": "design-only",
+  "traces": 5,
+  "literal_PAG_pairs": 5,
+  "mutation_controls": [
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 0,
+      "field": "status",
+      "rejected_at": "receipt_is_not_acceptance"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 1,
+      "field": "response",
+      "rejected_at": "second_or_negative_response"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 2,
+      "field": "freeze",
+      "rejected_at": "acceptance"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 3,
+      "field": "capture_hex",
+      "rejected_at": "identity_capture"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 3,
+      "field": "key",
+      "rejected_at": "identity_capture"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 3,
+      "field": "durable_hex",
+      "rejected_at": "old_durable_preserved"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 4,
+      "field": "ownership_settled",
+      "rejected_at": "durable_proof"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 4,
+      "field": "durable_hex",
+      "rejected_at": "durable_proof"
+    },
+    {
+      "trace": "receipt-stage-accepted-durable",
+      "step": 6,
+      "field": "backend_idle",
+      "rejected_at": "durable_proof"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 3,
+      "field": "status",
+      "rejected_at": "pending_disposition"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 3,
+      "field": "response",
+      "rejected_at": "second_or_negative_response"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 3,
+      "field": "events",
+      "rejected_at": "event"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 3,
+      "field": "custody",
+      "rejected_at": "release"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 6,
+      "field": "wire_drained",
+      "rejected_at": "drain"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 6,
+      "field": "all_clients_drained",
+      "rejected_at": "drain"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 7,
+      "field": "status",
+      "rejected_at": "new_connection_bits"
+    },
+    {
+      "trace": "accepted-failed-diagnostic-reconnect",
+      "step": 7,
+      "field": "freeze",
+      "rejected_at": "new_connection_bits"
+    },
+    {
+      "trace": "accepted-uncertain-late-durable",
+      "step": 3,
+      "field": "custody",
+      "rejected_at": "late_custody"
+    },
+    {
+      "trace": "accepted-uncertain-late-durable",
+      "step": 4,
+      "field": "status",
+      "rejected_at": "pending_disposition"
+    }
+  ]
+}

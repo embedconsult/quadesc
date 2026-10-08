@@ -1,0 +1,867 @@
+// Copyright 2025 Bloxide, all rights reserved
+//! `cargo blox lint` — friendly TOML validation for blox.toml files (issues
+//! #114, #122).
+//!
+//! Codegen validates some of these errors, but they surface as codegen
+//! failures or Rust compile errors — not actionable messages. Lint collects
+//! diagnostics across every blox.toml in the workspace and reports them with
+//! did-you-mean suggestions.
+//!
+//! Checks (errors):
+//! - transition `state` / `target` / guard `target` / entry / exit / parent
+//!   referencing undeclared states (`state = "root"` is the VirtualRoot
+//!   keyword, not a state reference; no user state may be named `root`)
+//! - duplicate state names and duplicate transitions (same state + event +
+//!   feature gate — feature-gated variants of a transition are distinct)
+//! - duplicate `[[context.actions]]` names, duplicate `[[context.fields]]`
+//!   names, and duplicate `[[context.uses]]` field names
+//! - action `returns` values other than "ActionResult" (anything else is a
+//!   hard codegen error — spec/architecture/15-blox-toml-source-of-truth.md)
+//! - event patterns referencing unknown variants of KNOWN enums (the blox's
+//!   own event enum, workspace message enums, framework enums)
+//! - `Self::` actions not declared in `[[context.actions]]`; bare action
+//!   functions missing from `spec_imports`
+//! - guard conditions referencing undeclared `ctx.<field>` fields
+//!
+//! Warnings (do not fail the run):
+//! - unreachable states (nothing targets them, not initial, not error)
+//! - states with no outgoing transitions (events bubble to parents)
+//! - blox specs (`spec/bloxes/<name>.md`) missing template sections
+//!   (`## blox.toml`, `## Open Questions`) or using stale `Guard::`
+//!   vocabulary (the current vocabulary is `Decision::`)
+//! - spec files referencing backtick-quoted workspace paths that do not
+//!   exist (dead doc references)
+
+use std::collections::{BTreeMap, BTreeSet};
+use std::path::{Path, PathBuf};
+
+use bloxide_codegen::schema::{BloxConfig, ContextConfig, TopologyConfig, ROOT_STATE_KEYWORD};
+use walkdir::WalkDir;
+
+const TARGET_KEYWORDS: [&str; 5] = ["stay", "reset", "stop", "done", "fail"];
+
+enum Level {
+    Error,
+    Warning,
+}
+
+struct Diagnostic {
+    path: PathBuf,
+    level: Level,
+    message: String,
+}
+
+impl Diagnostic {
+    fn error(path: &Path, message: String) -> Self {
+        Self {
+            path: path.to_path_buf(),
+            level: Level::Error,
+            message,
+        }
+    }
+    fn warning(path: &Path, message: String) -> Self {
+        Self {
+            path: path.to_path_buf(),
+            level: Level::Warning,
+            message,
+        }
+    }
+}
+
+pub fn lint() -> anyhow::Result<()> {
+    let root = crate::toml_helpers::discovery_root();
+    let files = discover_blox_tomls(&root);
+    if files.is_empty() {
+        println!("bloxide: no blox.toml files found");
+        return Ok(());
+    }
+
+    // Phase 1: parse every file; build the message enum registry.
+    let mut configs: Vec<(PathBuf, BloxConfig)> = Vec::new();
+    let mut diags: Vec<Diagnostic> = Vec::new();
+    for path in &files {
+        let content = std::fs::read_to_string(path)?;
+        match toml::from_str::<BloxConfig>(&content) {
+            Ok(config) => configs.push((path.clone(), config)),
+            Err(e) => diags.push(Diagnostic::error(path, format!("TOML parse error: {}", e))),
+        }
+    }
+
+    let message_enums = build_message_registry(&configs);
+
+    // Phase 2: per-file checks.
+    for (path, config) in &configs {
+        if let Some(context) = &config.context {
+            lint_context(path, context, &mut diags);
+        }
+        if let Some(topology) = &config.topology {
+            lint_topology(path, config, topology, &message_enums, &mut diags);
+        }
+    }
+
+    // Phase 3: spec checks (warnings only — never fail the run).
+    lint_spec_conformance(&root, &files, &mut diags);
+    lint_dead_doc_refs(&root, &mut diags);
+
+    // Report.
+    let mut errors = 0;
+    let mut warnings = 0;
+    for d in &diags {
+        match d.level {
+            Level::Error => {
+                errors += 1;
+                eprintln!("error: {}", d.message);
+            }
+            Level::Warning => {
+                warnings += 1;
+                println!("warning: {}", d.message);
+            }
+        }
+        eprintln!("  --> {}", d.path.display());
+    }
+
+    println!();
+    println!(
+        "bloxide lint: {} error(s), {} warning(s) across {} blox.toml files",
+        errors,
+        warnings,
+        configs.len()
+    );
+    if errors > 0 {
+        anyhow::bail!("{} lint error(s)", errors);
+    }
+    Ok(())
+}
+
+fn discover_blox_tomls(root: &Path) -> Vec<PathBuf> {
+    WalkDir::new(root)
+        .max_depth(crate::utils::DISCOVERY_MAX_DEPTH)
+        .into_iter()
+        .filter_entry(|e| e.file_name() != "target")
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_name() == "blox.toml")
+        .map(|e| e.into_path())
+        .collect()
+}
+
+/// Enum name → variant names, from every workspace blox.toml `[[messages]]`
+/// section plus the stable framework enums.
+fn build_message_registry(configs: &[(PathBuf, BloxConfig)]) -> BTreeMap<String, BTreeSet<String>> {
+    let mut registry: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for (_, config) in configs {
+        if let Some(messages) = &config.messages {
+            for en in messages {
+                registry.insert(
+                    en.name.clone(),
+                    en.variants.iter().map(|v| v.name.clone()).collect(),
+                );
+            }
+        }
+    }
+    // Framework enums (stable platform message sets — spec 18).
+    for (name, variants) in [
+        ("LifecycleCommand", vec!["Start", "Reset", "Stop", "Ping"]),
+        (
+            "ChildLifecycleEvent",
+            vec![
+                "Started", "Stopped", "Done", "Failed", "Aborted", "Killed", "Alive",
+            ],
+        ),
+        ("AbortCommand", vec!["Abort"]),
+        ("TimerCommand", vec!["Set", "Cancel"]),
+        ("PeerCtrl", vec!["AddPeer", "RemovePeer"]),
+        (
+            "ChildCtrl",
+            vec!["RegisterChild", "RegisterDynamicChild", "WatchdogTick"],
+        ),
+    ] {
+        registry.insert(
+            name.to_string(),
+            variants.iter().map(|s| s.to_string()).collect(),
+        );
+    }
+    registry
+}
+
+fn lint_topology(
+    path: &Path,
+    config: &BloxConfig,
+    topology: &TopologyConfig,
+    message_enums: &BTreeMap<String, BTreeSet<String>>,
+    diags: &mut Vec<Diagnostic>,
+) {
+    let state_names: BTreeSet<String> = topology.states.iter().map(|s| s.name.clone()).collect();
+
+    // Duplicate state names + the reserved VirtualRoot keyword.
+    let mut seen = BTreeSet::new();
+    for s in &topology.states {
+        if !seen.insert(&s.name) {
+            diags.push(Diagnostic::error(
+                path,
+                format!("duplicate state name \"{}\"", s.name),
+            ));
+        }
+        if s.name == ROOT_STATE_KEYWORD {
+            diags.push(Diagnostic::error(
+                path,
+                format!(
+                    "state name \"{}\" is reserved (root-level rules use state = \"root\")",
+                    ROOT_STATE_KEYWORD
+                ),
+            ));
+        }
+    }
+
+    // Parent references.
+    for s in &topology.states {
+        if let Some(parent) = &s.parent {
+            if !state_names.contains(parent) {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!(
+                        "state \"{}\" has unknown parent \"{}\"{}",
+                        s.name,
+                        parent,
+                        did_you_mean(parent, &state_names)
+                    ),
+                ));
+            }
+        }
+    }
+
+    // The blox's own event enum variants: Lifecycle + mailbox variants.
+    let mut event_variants: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    if let Some(event) = &config.event {
+        let mut variants: BTreeSet<String> =
+            event.mailboxes.iter().map(|m| m.variant.clone()).collect();
+        variants.insert("Lifecycle".to_string());
+        event_variants.insert(event.name.clone(), variants);
+    }
+
+    // Context field names for guard ctx.<field> checks.
+    let ctx_fields = collect_ctx_fields(config);
+
+    // Declared action names for Self:: checks.
+    let action_names: BTreeSet<String> = config
+        .context
+        .as_ref()
+        .map(|c| c.actions.iter().map(|a| a.name.clone()).collect())
+        .unwrap_or_default();
+
+    // Transitions. `state = "root"` is the VirtualRoot keyword: the rule is a
+    // root-level fallback for domain events, not a user-state reference.
+    let mut transition_keys = BTreeSet::new();
+    for t in &topology.transitions {
+        if t.state != ROOT_STATE_KEYWORD && !state_names.contains(&t.state) {
+            diags.push(Diagnostic::error(
+                path,
+                format!(
+                    "transition references unknown state \"{}\"{}",
+                    t.state,
+                    did_you_mean(&t.state, &state_names)
+                ),
+            ));
+        }
+        check_target(
+            path,
+            &format!("transition in state \"{}\"", t.state),
+            &t.target,
+            &state_names,
+            diags,
+        );
+        if !transition_keys.insert((t.state.clone(), t.event.clone(), t.feature.clone())) {
+            diags.push(Diagnostic::error(
+                path,
+                match &t.feature {
+                    Some(feat) => format!(
+                        "duplicate transition in state \"{}\" for event pattern `{}` (feature \"{}\")",
+                        t.state, t.event, feat
+                    ),
+                    None => format!(
+                        "duplicate transition in state \"{}\" for event pattern `{}`",
+                        t.state, t.event
+                    ),
+                },
+            ));
+        }
+        check_event_pattern(path, &t.event, &event_variants, message_enums, diags);
+        for g in &t.guards {
+            check_target(
+                path,
+                &format!("guard in state \"{}\"", t.state),
+                &g.target,
+                &state_names,
+                diags,
+            );
+            check_guard_condition(path, &t.state, &g.condition, &ctx_fields, diags);
+        }
+        for a in &t.actions {
+            check_action_ref(path, a, &action_names, &topology.spec_imports, diags);
+        }
+    }
+
+    // Entry / exit.
+    for ee in topology.entry.iter().chain(topology.exit.iter()) {
+        if !state_names.contains(&ee.state) {
+            diags.push(Diagnostic::error(
+                path,
+                format!(
+                    "entry/exit references unknown state \"{}\"{}",
+                    ee.state,
+                    did_you_mean(&ee.state, &state_names)
+                ),
+            ));
+        }
+        for a in &ee.actions {
+            check_action_ref(path, a, &action_names, &topology.spec_imports, diags);
+        }
+    }
+
+    // Unreachable / dead states (warnings).
+    let initial = topology
+        .states
+        .iter()
+        .find(|s| s.initial.unwrap_or(false))
+        .or_else(|| {
+            topology
+                .states
+                .iter()
+                .find(|s| !s.composite.unwrap_or(false))
+        });
+    let targeted: BTreeSet<&str> = topology
+        .transitions
+        .iter()
+        .flat_map(|t| {
+            std::iter::once(t.target.as_str()).chain(t.guards.iter().map(|g| g.target.as_str()))
+        })
+        .filter(|t| !TARGET_KEYWORDS.contains(t))
+        .collect();
+    for s in &topology.states {
+        let is_error = s.error.unwrap_or(false);
+        let is_initial = initial.map(|i| i.name == s.name).unwrap_or(false);
+        let is_composite = s.composite.unwrap_or(false);
+        if !is_initial && !is_error && !is_composite && !targeted.contains(s.name.as_str()) {
+            diags.push(Diagnostic::warning(
+                path,
+                format!(
+                    "state \"{}\" is unreachable (no transition targets it)",
+                    s.name
+                ),
+            ));
+        }
+        if !is_error && !is_composite && !topology.transitions.iter().any(|t| t.state == s.name) {
+            diags.push(Diagnostic::warning(
+                path,
+                format!(
+                    "state \"{}\" has no outgoing transitions (events bubble to parent)",
+                    s.name
+                ),
+            ));
+        }
+    }
+}
+
+/// Context-section checks: duplicate `[[context.actions]]` names, duplicate
+/// `[[context.fields]]` / `[[context.uses]]` field names, and the `returns`
+/// contract (only "ActionResult" is recognized — anything else is a hard
+/// codegen error, mirrored here as a lint error).
+fn lint_context(path: &Path, context: &ContextConfig, diags: &mut Vec<Diagnostic>) {
+    let mut seen = BTreeSet::new();
+    for a in &context.actions {
+        if !seen.insert(&a.name) {
+            diags.push(Diagnostic::error(
+                path,
+                format!("duplicate action name \"{}\"", a.name),
+            ));
+        }
+        if let Some(returns) = &a.returns {
+            if returns != "ActionResult" {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!(
+                        "action \"{}\" has returns = \"{}\" — the only recognized value is \"ActionResult\"",
+                        a.name, returns
+                    ),
+                ));
+            }
+        }
+    }
+
+    let mut seen = BTreeSet::new();
+    for f in &context.fields {
+        if !seen.insert(&f.name) {
+            diags.push(Diagnostic::error(
+                path,
+                format!("duplicate context field name \"{}\"", f.name),
+            ));
+        }
+    }
+
+    // `[[context.uses]]` entries contribute one field each (single-field
+    // shape: `field = "..."`) or one per `[[context.uses.fields]]` sub-entry
+    // (multi-field shape) — all become context struct fields, so any
+    // duplicate name is a codegen compile error.
+    let mut seen = BTreeSet::new();
+    for u in &context.uses {
+        if let Some(f) = &u.field {
+            if !seen.insert(f) {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!("duplicate context uses field name \"{}\"", f),
+                ));
+            }
+        }
+        for f in &u.fields {
+            if !seen.insert(&f.name) {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!("duplicate context uses field name \"{}\"", f.name),
+                ));
+            }
+        }
+    }
+}
+
+fn check_target(
+    path: &Path,
+    context: &str,
+    target: &str,
+    state_names: &BTreeSet<String>,
+    diags: &mut Vec<Diagnostic>,
+) {
+    if TARGET_KEYWORDS.contains(&target) || state_names.contains(target) {
+        return;
+    }
+    diags.push(Diagnostic::error(
+        path,
+        format!(
+            "{} references unknown target state \"{}\"{}",
+            context,
+            target,
+            did_you_mean(target, state_names)
+        ),
+    ));
+}
+
+/// Scan an event pattern for `Ident::Ident` pairs and validate them against
+/// known enums: the blox's own event enum first, then workspace message
+/// enums and framework enums. Unknown enum names are skipped (they may be
+/// context or payload types).
+fn check_event_pattern(
+    path: &Path,
+    pattern: &str,
+    event_variants: &BTreeMap<String, BTreeSet<String>>,
+    message_enums: &BTreeMap<String, BTreeSet<String>>,
+    diags: &mut Vec<Diagnostic>,
+) {
+    for (enum_name, variant) in scan_path_pairs(pattern) {
+        if let Some(variants) = event_variants.get(&enum_name) {
+            if !variants.contains(&variant) {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!(
+                        "event pattern references unknown variant `{}::{}`{}",
+                        enum_name,
+                        variant,
+                        did_you_mean(&variant, variants)
+                    ),
+                ));
+            }
+        } else if let Some(variants) = message_enums.get(&enum_name) {
+            if !variants.contains(&variant) {
+                diags.push(Diagnostic::error(
+                    path,
+                    format!(
+                        "event pattern references unknown variant `{}::{}`{}",
+                        enum_name,
+                        variant,
+                        did_you_mean(&variant, variants)
+                    ),
+                ));
+            }
+        }
+    }
+}
+
+/// Extract `Ident::Ident` pairs from a match pattern (the leftmost two
+/// segments of each path, e.g. `PingPongMsg::Ping`, `SupervisorEvent::Child`).
+fn scan_path_pairs(pattern: &str) -> Vec<(String, String)> {
+    let mut out = Vec::new();
+    let bytes = pattern.as_bytes();
+    let is_ident = |b: u8| b.is_ascii_alphanumeric() || b == b'_';
+    let mut i = 0;
+    while i < bytes.len() {
+        if is_ident(bytes[i]) && (i == 0 || !is_ident(bytes[i - 1])) {
+            let start = i;
+            while i < bytes.len() && is_ident(bytes[i]) {
+                i += 1;
+            }
+            let first = &pattern[start..i];
+            // Expect `::` followed by another ident, but not `:::`
+            if i + 1 < bytes.len() && &pattern[i..i + 2] == "::" {
+                let mut j = i + 2;
+                if j < bytes.len() && is_ident(bytes[j]) {
+                    let vstart = j;
+                    while j < bytes.len() && is_ident(bytes[j]) {
+                        j += 1;
+                    }
+                    let second = &pattern[vstart..j];
+                    // Skip generic type params (e.g. Option::None stays, but
+                    // Envelope::new etc. — we only validate known enums anyway)
+                    out.push((first.to_string(), second.to_string()));
+                    i = j;
+                    continue;
+                }
+            }
+        } else {
+            i += 1;
+        }
+    }
+    out
+}
+
+fn check_guard_condition(
+    path: &Path,
+    state: &str,
+    condition: &str,
+    ctx_fields: &BTreeSet<String>,
+    diags: &mut Vec<Diagnostic>,
+) {
+    let mut i = 0;
+    while let Some(pos) = condition[i..].find("ctx.") {
+        let start = i + pos + 4;
+        let rest = &condition[start..];
+        let field: String = rest
+            .chars()
+            .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+            .collect();
+        if field.is_empty() {
+            i = start;
+            continue;
+        }
+        // Method calls (e.g. ctx.all_children_stopped()) are allowed — only
+        // bare field accesses are validated against declared fields.
+        let after = rest[field.len()..].trim_start();
+        if !after.starts_with('(') && !ctx_fields.contains(&field) {
+            diags.push(Diagnostic::error(
+                path,
+                format!(
+                    "guard in state \"{}\" references unknown context field `ctx.{}`{}",
+                    state,
+                    field,
+                    did_you_mean(&field, ctx_fields)
+                ),
+            ));
+        }
+        i = start + field.len();
+    }
+}
+
+fn check_action_ref(
+    path: &Path,
+    action: &str,
+    action_names: &BTreeSet<String>,
+    spec_imports: &[String],
+    diags: &mut Vec<Diagnostic>,
+) {
+    if let Some(name) = action.strip_prefix("Self::") {
+        if !action_names.contains(name) {
+            diags.push(Diagnostic::error(
+                path,
+                format!(
+                    "action `{}` is not declared in [[context.actions]]{}",
+                    action,
+                    did_you_mean(name, action_names)
+                ),
+            ));
+        }
+        return;
+    }
+    // Bare function path: its last segment must be brought into scope by a
+    // spec_imports entry — a `use` statement exposes only its leaf segment(s)
+    // (exact match; substring matching would accept names that merely share
+    // a prefix with an imported item, e.g. `stop_all` vs `stop_all_children`).
+    let last = action.rsplit("::").next().unwrap_or(action);
+    let imported = spec_imports
+        .iter()
+        .flat_map(|imp| import_leaves(imp))
+        .any(|leaf| leaf == "*" || leaf == last);
+    if !imported {
+        diags.push(Diagnostic::error(
+            path,
+            format!(
+                "action `{}` does not appear in any spec_imports entry",
+                action
+            ),
+        ));
+    }
+}
+
+/// Leaf names a raw `use` statement brings into scope: each item of a braced
+/// list (`crate::{MAX_ROUNDS, PAUSE_AT_ROUND}`) or the last path segment of a
+/// plain import (`bloxide_core::transition::ActionResult`).
+fn import_leaves(import: &str) -> Vec<&str> {
+    match (import.find('{'), import.rfind('}')) {
+        (Some(open), Some(close)) if open < close => import[open + 1..close]
+            .split(',')
+            .map(|item| item.trim())
+            .filter(|item| !item.is_empty())
+            .map(|item| item.rsplit("::").next().unwrap_or(item))
+            .collect(),
+        _ => vec![import.rsplit("::").next().unwrap_or(import)],
+    }
+}
+
+/// Context field names: auto `self_id`, `[[context.uses]]` single fields and
+/// `fields[]` sub-entries, and `[[context.fields]]` state fields.
+fn collect_ctx_fields(config: &BloxConfig) -> BTreeSet<String> {
+    let mut fields = BTreeSet::from(["self_id".to_string()]);
+    if let Some(ctx) = &config.context {
+        for u in &ctx.uses {
+            if let Some(f) = &u.field {
+                fields.insert(f.clone());
+            }
+            for f in &u.fields {
+                fields.insert(f.name.clone());
+            }
+        }
+        for f in &ctx.fields {
+            fields.insert(f.name.clone());
+        }
+    }
+    fields
+}
+
+/// Levenshtein-based suggestion: returns ` — did you mean "X"?` when a close
+/// candidate exists.
+fn did_you_mean(input: &str, candidates: &BTreeSet<String>) -> String {
+    let mut best: Option<(&String, usize)> = None;
+    for c in candidates {
+        let d = levenshtein(input, c);
+        if best.as_ref().map(|(_, bd)| d < *bd).unwrap_or(true) {
+            best = Some((c, d));
+        }
+    }
+    match best {
+        Some((c, d)) if d <= 3 && d <= input.len().max(c.len()) / 2 => {
+            format!(" — did you mean \"{}\"?", c)
+        }
+        _ => String::new(),
+    }
+}
+
+fn levenshtein(a: &str, b: &str) -> usize {
+    let a: Vec<char> = a.chars().collect();
+    let b: Vec<char> = b.chars().collect();
+    let mut prev: Vec<usize> = (0..=b.len()).collect();
+    let mut cur = vec![0; b.len() + 1];
+    for (i, ca) in a.iter().enumerate() {
+        cur[0] = i + 1;
+        for (j, cb) in b.iter().enumerate() {
+            cur[j + 1] = (prev[j] + usize::from(ca != cb))
+                .min(prev[j + 1] + 1)
+                .min(cur[j] + 1);
+        }
+        std::mem::swap(&mut prev, &mut cur);
+    }
+    prev[b.len()]
+}
+
+// ── Spec checks (warnings only) ─────────────────────────────────────────────
+
+/// Sections every blox spec must carry per the template
+/// (spec/templates/blox-spec.md).
+const REQUIRED_SPEC_SECTIONS: [&str; 2] = ["blox.toml", "Open Questions"];
+
+/// Workspace path prefixes considered checkable doc references. `apps/` is
+/// kept deliberately: the directory is gone, so any remaining reference to it
+/// is a dead doc reference worth flagging.
+const DOC_PATH_PREFIXES: [&str; 6] = [
+    "bloxes/",
+    "crates/",
+    "examples/",
+    "apps/",
+    "runtimes/",
+    "tools/",
+];
+
+/// Spec template conformance: for each `bloxes/<name>/blox.toml` that has a
+/// spec at `spec/bloxes/<name>.md`,
+/// warn when the spec lacks a
+/// template-required section or uses stale `Guard::` vocabulary (the current
+/// vocabulary is `Decision::`). Specs without a matching blox.toml (and blox
+/// crates without a spec) are not checked.
+fn lint_spec_conformance(root: &Path, blox_tomls: &[PathBuf], diags: &mut Vec<Diagnostic>) {
+    for toml_path in blox_tomls {
+        let Some(name) = blox_crate_name(toml_path) else {
+            continue;
+        };
+        let spec_path = root.join("spec/bloxes").join(format!("{}.md", name));
+        if !spec_path.exists() {
+            continue;
+        }
+        let Ok(content) = std::fs::read_to_string(&spec_path) else {
+            continue;
+        };
+
+        let headings = collect_headings(&content);
+        for section in REQUIRED_SPEC_SECTIONS {
+            if !headings.iter().any(|h| h == section) {
+                diags.push(Diagnostic::warning(
+                    &spec_path,
+                    format!(
+                        "spec for blox '{}' lacks the '## {}' section required by the template (spec/templates/blox-spec.md)",
+                        name, section
+                    ),
+                ));
+            }
+        }
+
+        let stale = content.matches("Guard::").count();
+        if stale > 0 {
+            diags.push(Diagnostic::warning(
+                &spec_path,
+                format!(
+                    "spec for blox '{}' uses stale `Guard::` vocabulary ({} occurrence(s)) — the current vocabulary is `Decision::`",
+                    name, stale
+                ),
+            ));
+        }
+    }
+}
+
+/// Extract the blox name from a `…/bloxes/<name>/blox.toml` path. Returns
+/// None for blox.toml files outside a bloxes layout (messages, context,
+/// framework crates).
+fn blox_crate_name(path: &Path) -> Option<String> {
+    let dir = path.parent()?;
+    let bloxes = dir.parent()?;
+    if bloxes.file_name()?.to_str()? == "bloxes" {
+        Some(dir.file_name()?.to_str()?.to_string())
+    } else {
+        None
+    }
+}
+
+/// Heading texts of a markdown document (`## Foo` → "Foo", any level).
+fn collect_headings(content: &str) -> Vec<String> {
+    content
+        .lines()
+        .filter_map(|line| {
+            let t = line.trim_start();
+            if t.starts_with('#') {
+                Some(t.trim_start_matches('#').trim().to_string())
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+/// Dead doc references: warn when a spec file under `spec/` references a
+/// backtick-quoted workspace path that does not exist. Templates are skipped
+/// (their paths are illustrative examples, not references). Extraction is
+/// deliberately conservative — a miss is better than a false positive.
+fn lint_dead_doc_refs(root: &Path, diags: &mut Vec<Diagnostic>) {
+    let spec_root = root.join("spec");
+    if !spec_root.is_dir() {
+        return;
+    }
+    for entry in WalkDir::new(&spec_root).into_iter().filter_map(|e| e.ok()) {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("md") {
+            continue;
+        }
+        if path.components().any(|c| c.as_os_str() == "templates") {
+            continue;
+        }
+        let Ok(content) = std::fs::read_to_string(path) else {
+            continue;
+        };
+        let mut reported: BTreeSet<String> = BTreeSet::new();
+        for (lineno, span) in extract_doc_refs(&content) {
+            let Some(p) = normalize_doc_path(&span) else {
+                continue;
+            };
+            if !root.join(&p).exists() && reported.insert(p) {
+                diags.push(Diagnostic::warning(
+                    path,
+                    format!(
+                        "line {}: spec references `{}` which does not exist in the workspace",
+                        lineno, span
+                    ),
+                ));
+            }
+        }
+    }
+}
+
+/// Extract backtick-quoted workspace paths (single-line inline code spans)
+/// from markdown, skipping fenced code blocks. Returns (line number, span)
+/// pairs, 1-based. Spans containing placeholders (`<…>`), globs, or
+/// whitespace are skipped.
+pub(crate) fn extract_doc_refs(content: &str) -> Vec<(usize, String)> {
+    let mut out = Vec::new();
+    let mut in_fence = false;
+    for (idx, line) in content.lines().enumerate() {
+        let lineno = idx + 1;
+        if line.trim_start().starts_with("```") {
+            in_fence = !in_fence;
+            continue;
+        }
+        if in_fence {
+            continue;
+        }
+        let bytes = line.as_bytes();
+        let mut i = 0;
+        while i < bytes.len() {
+            if bytes[i] == b'`' {
+                if let Some(end) = line[i + 1..].find('`') {
+                    let span = line[i + 1..i + 1 + end].trim();
+                    if DOC_PATH_PREFIXES.iter().any(|p| span.starts_with(p)) && is_plain_path(span)
+                    {
+                        out.push((lineno, span.to_string()));
+                    }
+                    i += end + 2;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+    }
+    out
+}
+
+/// A span is a plain workspace path when it carries no placeholder, glob, or
+/// punctuation characters that mark it as illustrative rather than literal.
+fn is_plain_path(span: &str) -> bool {
+    !span.chars().any(|c| {
+        matches!(
+            c,
+            '<' | '>' | '*' | '{' | '}' | '[' | ']' | '(' | ')' | '|' | ' ' | '\t' | '"' | '\''
+        )
+    })
+}
+
+/// Normalize a raw doc span to a checkable filesystem path: strip Rust path
+/// suffixes (`foo.rs::validate`), line anchors (`foo.rs:42`, `foo.rs#L10`),
+/// and trailing slashes/dots. Returns None for bare roots (`crates/`) and
+/// empty remnants.
+pub(crate) fn normalize_doc_path(span: &str) -> Option<String> {
+    let p = span.split("::").next()?;
+    let p = p.split('#').next()?;
+    let p = match p.rfind(':') {
+        Some(idx) if idx + 1 < p.len() && p[idx + 1..].chars().all(|c| c.is_ascii_digit()) => {
+            &p[..idx]
+        }
+        _ => p,
+    };
+    let p = p.trim_end_matches(['/', '.']);
+    let bare_root = DOC_PATH_PREFIXES
+        .iter()
+        .any(|pre| p == pre.trim_end_matches('/'));
+    if p.len() <= 1 || bare_root {
+        return None;
+    }
+    Some(p.to_string())
+}

@@ -1,0 +1,657 @@
+{
+  "scope": "T17 DESIGN correction only",
+  "design_commit": "a4f5d242e9be1fde5436e3e873d3c38accdd3a14",
+  "base": "c80d8d42ae9e72d7097ca8b0840b7ad7e39e0bfc",
+  "host": {
+    "hostname": "bloxide1",
+    "machine": "x86_64",
+    "kernel": "7.0.0-34-generic",
+    "python": "3.14.4",
+    "os_release": "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04.1 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo\n",
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)\nbinary: rustc\ncommit-hash: 4a4ef493e3a1488c6e321570238084b38948f6db\ncommit-date: 2026-03-02\nhost: x86_64-unknown-linux-gnu\nrelease: 1.94.0\nLLVM version: 21.1.8",
+    "installed_targets": "aarch64-unknown-linux-gnu\nriscv32imc-unknown-none-elf\nthumbv8m.main-none-eabi\nwasm32-unknown-unknown\nx86_64-unknown-linux-gnu\nx86_64-unknown-linux-musl",
+    "tmux": "codex-rs-remediate-t17-design-r1 $148 %159",
+    "rust_builds": 0,
+    "target_builds": 0,
+    "native_arm64_tests": 0,
+    "devices": 0,
+    "nvme_target": "not allocated: no Rust builds"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "tools/check_erase_design.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 28.06,
+      "utc": "2026-09-24T21:42:23.690921+00:00",
+      "evidence_prefix": "original-inputs/corrected-design-check-final",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/check_erase_design.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 27.132,
+      "utc": "2026-09-24T21:38:27.380413+00:00",
+      "evidence_prefix": "original-inputs/corrected-design-check",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "../tools/audit_inputs.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.282,
+      "utc": "2026-09-24T21:42:16.458091+00:00",
+      "evidence_prefix": "original-inputs/input-audit-final",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "../tools/audit_inputs.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.288,
+      "utc": "2026-09-24T21:39:39.010551+00:00",
+      "evidence_prefix": "original-inputs/input-audit",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/check_design.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.12,
+      "utc": "2026-09-24T21:42:46.374456+00:00",
+      "evidence_prefix": "original-inputs/layout-catalogue-delivery",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/check_design.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.117,
+      "utc": "2026-09-24T21:40:47.248601+00:00",
+      "evidence_prefix": "original-inputs/layout-catalogue-final",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/check_design.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.098,
+      "utc": "2026-09-24T21:38:24.541840+00:00",
+      "evidence_prefix": "original-inputs/layout-catalogue",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/original-f1/probes/old_new_assert.py"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.144,
+      "utc": "2026-09-24T21:30:10.194201+00:00",
+      "evidence_prefix": "original-inputs/original-old-new-negative",
+      "interpretation": "EXPECTED exit1: preserved F1 old/new counterexample, not a passing recovery test"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/original-f1/probes/erase_counterexample.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.078,
+      "utc": "2026-09-24T21:30:09.945662+00:00",
+      "evidence_prefix": "original-inputs/original-witness",
+      "interpretation": "exit0 required"
+    },
+    {
+      "command": [
+        "sha256sum",
+        "--check",
+        "original-inputs/SHA256SUMS"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.005,
+      "utc": "2026-09-24T21:41:56.762555+00:00",
+      "evidence_prefix": "original-inputs/s0-manifest",
+      "interpretation": "Invocation error: relative manifest paths resolved in product repo, not S0 root. Correct-root verifier passes all13 S0 entries; original log retained."
+    },
+    {
+      "command": [
+        "python3",
+        "../tools/verify_s0.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.042,
+      "utc": "2026-09-24T21:42:16.036044+00:00",
+      "evidence_prefix": "original-inputs/s0-manifests-correct-root",
+      "interpretation": "exit0 required"
+    }
+  ],
+  "review_artifact_hashes_verified": 90,
+  "exact_original_witness_copies_verified": true,
+  "primary_pdf_and_text_hashes_verified": true,
+  "profile_p_and_source_ledger_unchanged": true,
+  "S0_manifest_entries_verified": 13,
+  "design_checks": {
+    "scope": "finite design algebra and raw-image checks only; no product or physical proof",
+    "pair_checks": {
+      "two_bit_transition_table": [
+        {
+          "before": 0,
+          "after": 0,
+          "erase": true,
+          "program": true
+        },
+        {
+          "before": 0,
+          "after": 1,
+          "erase": true,
+          "program": false
+        },
+        {
+          "before": 0,
+          "after": 2,
+          "erase": true,
+          "program": false
+        },
+        {
+          "before": 0,
+          "after": 3,
+          "erase": true,
+          "program": false
+        },
+        {
+          "before": 1,
+          "after": 0,
+          "erase": false,
+          "program": true
+        },
+        {
+          "before": 1,
+          "after": 1,
+          "erase": true,
+          "program": true
+        },
+        {
+          "before": 1,
+          "after": 2,
+          "erase": false,
+          "program": false
+        },
+        {
+          "before": 1,
+          "after": 3,
+          "erase": true,
+          "program": false
+        },
+        {
+          "before": 2,
+          "after": 0,
+          "erase": false,
+          "program": true
+        },
+        {
+          "before": 2,
+          "after": 1,
+          "erase": false,
+          "program": false
+        },
+        {
+          "before": 2,
+          "after": 2,
+          "erase": true,
+          "program": true
+        },
+        {
+          "before": 2,
+          "after": 3,
+          "erase": true,
+          "program": false
+        },
+        {
+          "before": 3,
+          "after": 0,
+          "erase": false,
+          "program": true
+        },
+        {
+          "before": 3,
+          "after": 1,
+          "erase": false,
+          "program": true
+        },
+        {
+          "before": 3,
+          "after": 2,
+          "erase": false,
+          "program": true
+        },
+        {
+          "before": 3,
+          "after": 3,
+          "erase": true,
+          "program": true
+        }
+      ],
+      "byte_rail_masks": 131072
+    },
+    "directed": {
+      "sequence": {
+        "words": 8,
+        "directed_distinct_pairs": 56,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "format": {
+        "words": 6,
+        "directed_distinct_pairs": 30,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "schema": {
+        "words": 5,
+        "directed_distinct_pairs": 20,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "duplicate_sequence": {
+        "words": 4,
+        "directed_distinct_pairs": 12,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "duplicate_sequence_creation": {
+        "words": 2,
+        "directed_distinct_pairs": 2,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "source_labels_and_request": {
+        "words": 5,
+        "directed_distinct_pairs": 20,
+        "erase_transformations": 0,
+        "program_transformations": 0
+      },
+      "all_logical_field_bits_including_stored_crc": 2560
+    },
+    "witness": {
+      "original_changed_bits": 18,
+      "original_crc_before": "b358488e",
+      "original_crc_after": "b758488e",
+      "r2_class": "Corrupt",
+      "r2_selected_sequence": 7,
+      "fully_valid_promotion_erase_reachable": false,
+      "vector_sha256": {
+        "active-a.bin": "0dd7ac8707c2e0b1c46a49ce0e3bfc64cb234320bfe5e596d5c8fe7f364bb814",
+        "inactive-b.bin": "476d7e992acf81e0c1f641456750017678df21cf5fdb80383abbdcda83d82992",
+        "witness-data-rails.bin": "978a8e6bb40d297f76c0f04bd32c4f3fec72ba54d502ea64fb7ccd07ffd633a8",
+        "valid-promotion-target.bin": "0cd9872b8070952837eb0b8d414c1896372bbd0e91aa28b7ec296fb18ad8c5c8",
+        "intended-new.bin": "a4df68b68bd3afffa39024928d4db1a3dd70c35beaefce2a8f179e0f2f896496"
+      }
+    },
+    "prestate": {
+      "Q_unsafe_repair_negative_controls": 3,
+      "Q_safe_subset_trials": 1280,
+      "nonzero_marker_cannot_erase_to_zero": 255,
+      "edge_controls": "passed"
+    },
+    "cuts": [
+      {
+        "G": 1,
+        "E": 1024,
+        "counts": {
+          "prefix": 6921,
+          "subset": 4096,
+          "g1_masks": 164096
+        }
+      },
+      {
+        "G": 8,
+        "E": 1024,
+        "counts": {
+          "prefix": 5262,
+          "subset": 4096,
+          "g1_masks": 0
+        }
+      },
+      {
+        "G": 16,
+        "E": 1024,
+        "counts": {
+          "prefix": 5166,
+          "subset": 4096,
+          "g1_masks": 0
+        }
+      },
+      {
+        "G": 64,
+        "E": 4096,
+        "counts": {
+          "prefix": 14436,
+          "subset": 4096,
+          "g1_masks": 0
+        }
+      },
+      {
+        "G": 256,
+        "E": 4096,
+        "counts": {
+          "prefix": 15375,
+          "subset": 4096,
+          "g1_masks": 0
+        }
+      }
+    ],
+    "repeated_boundary_pairs": 6889,
+    "single_bit_corruptions": 16384,
+    "status": "passed",
+    "product_tests_executed": 0,
+    "hardware_tests_executed": 0,
+    "theorem": "specs/erase-integrity-proof.md conditional on unqualified R1/T16 model"
+  },
+  "layout_checks": {
+    "status": "passed_design_checks_only",
+    "product_tests_executed": 0,
+    "power_loss_proof": false,
+    "layout_negative_controls": 11,
+    "planned_cases": 23,
+    "acceptance_mapping": {
+      "A1": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C11",
+        "C16",
+        "C19"
+      ],
+      "A2": [
+        "C03",
+        "C04",
+        "C05",
+        "C14",
+        "C15"
+      ],
+      "A3": [
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C15",
+        "C17",
+        "C18",
+        "C20"
+      ],
+      "A4": [
+        "C07",
+        "C21",
+        "C22",
+        "C23"
+      ],
+      "A5": [
+        "C19",
+        "C20",
+        "C23"
+      ]
+    },
+    "all_legal_geometry_checks": [
+      {
+        "G": 1,
+        "minimum_E": 641,
+        "legal_E_count": 64896,
+        "maximum_save_commands": 1667
+      },
+      {
+        "G": 2,
+        "minimum_E": 642,
+        "legal_E_count": 32448,
+        "maximum_save_commands": 1347
+      },
+      {
+        "G": 4,
+        "minimum_E": 644,
+        "legal_E_count": 16224,
+        "maximum_save_commands": 1187
+      },
+      {
+        "G": 8,
+        "minimum_E": 648,
+        "legal_E_count": 8112,
+        "maximum_save_commands": 1107
+      },
+      {
+        "G": 16,
+        "minimum_E": 656,
+        "legal_E_count": 4056,
+        "maximum_save_commands": 1067
+      },
+      {
+        "G": 32,
+        "minimum_E": 672,
+        "legal_E_count": 2028,
+        "maximum_save_commands": 1047
+      },
+      {
+        "G": 64,
+        "minimum_E": 704,
+        "legal_E_count": 1014,
+        "maximum_save_commands": 1037
+      },
+      {
+        "G": 128,
+        "minimum_E": 768,
+        "legal_E_count": 507,
+        "maximum_save_commands": 1032
+      },
+      {
+        "G": 256,
+        "minimum_E": 1024,
+        "legal_E_count": 253,
+        "maximum_save_commands": 1030
+      }
+    ],
+    "geometries": [
+      {
+        "G": 1,
+        "E": 1024,
+        "M": 640,
+        "body_programs": 640,
+        "marker_programs": 1,
+        "erase_commands": 1,
+        "preflight_plus_verification_reads": 16,
+        "commands_including_wear": 659,
+        "prefix_labels_per_initial_state": 2307,
+        "prefix_labels_all_three_initial_states": 6921,
+        "ordered_labels_sha256": "d71b1380147d8fa4af67af213a77682fd91c76e7b48cfbea3600287698eaf382",
+        "boundary_examples": [
+          [
+            "erase",
+            0,
+            0
+          ],
+          [
+            "erase",
+            0,
+            1024
+          ],
+          [
+            "body",
+            0,
+            0
+          ],
+          [
+            "commit",
+            640,
+            1
+          ]
+        ]
+      },
+      {
+        "G": 8,
+        "E": 1024,
+        "M": 640,
+        "body_programs": 80,
+        "marker_programs": 1,
+        "erase_commands": 1,
+        "preflight_plus_verification_reads": 16,
+        "commands_including_wear": 99,
+        "prefix_labels_per_initial_state": 1754,
+        "prefix_labels_all_three_initial_states": 5262,
+        "ordered_labels_sha256": "5b3fc362504f92ba1f967dc0d08f8c4f1aaf784d424566a383ceb5b238cd9255",
+        "boundary_examples": [
+          [
+            "erase",
+            0,
+            0
+          ],
+          [
+            "erase",
+            0,
+            1024
+          ],
+          [
+            "body",
+            0,
+            0
+          ],
+          [
+            "commit",
+            640,
+            8
+          ]
+        ]
+      },
+      {
+        "G": 16,
+        "E": 1024,
+        "M": 640,
+        "body_programs": 40,
+        "marker_programs": 1,
+        "erase_commands": 1,
+        "preflight_plus_verification_reads": 16,
+        "commands_including_wear": 59,
+        "prefix_labels_per_initial_state": 1722,
+        "prefix_labels_all_three_initial_states": 5166,
+        "ordered_labels_sha256": "17e9d0ca04c4c62e1ae7aa798cc79b44788d1515305717baf9118734e3030556",
+        "boundary_examples": [
+          [
+            "erase",
+            0,
+            0
+          ],
+          [
+            "erase",
+            0,
+            1024
+          ],
+          [
+            "body",
+            0,
+            0
+          ],
+          [
+            "commit",
+            640,
+            16
+          ]
+        ]
+      },
+      {
+        "G": 64,
+        "E": 4096,
+        "M": 640,
+        "body_programs": 10,
+        "marker_programs": 1,
+        "erase_commands": 1,
+        "preflight_plus_verification_reads": 64,
+        "commands_including_wear": 77,
+        "prefix_labels_per_initial_state": 4812,
+        "prefix_labels_all_three_initial_states": 14436,
+        "ordered_labels_sha256": "f14651179371243c1b3c539845592326d5a8603ae7596e141ccd8d5cb1c6d897",
+        "boundary_examples": [
+          [
+            "erase",
+            0,
+            0
+          ],
+          [
+            "erase",
+            0,
+            4096
+          ],
+          [
+            "body",
+            0,
+            0
+          ],
+          [
+            "commit",
+            640,
+            64
+          ]
+        ]
+      },
+      {
+        "G": 256,
+        "E": 4096,
+        "M": 768,
+        "body_programs": 3,
+        "marker_programs": 1,
+        "erase_commands": 1,
+        "preflight_plus_verification_reads": 64,
+        "commands_including_wear": 70,
+        "prefix_labels_per_initial_state": 5125,
+        "prefix_labels_all_three_initial_states": 15375,
+        "ordered_labels_sha256": "a00c294c4d066771972e14f8b726422d8c238f683441a7787f1677e0cd9dde46",
+        "boundary_examples": [
+          [
+            "erase",
+            0,
+            0
+          ],
+          [
+            "erase",
+            0,
+            4096
+          ],
+          [
+            "body",
+            0,
+            0
+          ],
+          [
+            "commit",
+            768,
+            256
+          ]
+        ]
+      }
+    ],
+    "total_planned_prefix_runs": 47160
+  },
+  "product_tests_executed": 0,
+  "independent_rereview_required": true,
+  "historical_scope": "Preserved original design evidence, not current correction execution",
+  "current_correction_evidence": "portable-test-report.json",
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

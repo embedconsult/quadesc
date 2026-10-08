@@ -1,0 +1,27 @@
+format = 1
+
+[package]
+name = "bloxide-xcp"
+version = "0.1.0"
+blox-schema = 1
+
+[[bloxes]]
+name = "session"
+path = "bloxes/session/blox.toml"
+crate = "xcp-session-blox"
+
+[[crates]]
+name = "xcp-core"
+path = "crates/xcp-core/Cargo.toml"
+
+[[crates]]
+name = "xcp-messages"
+path = "crates/xcp-messages/Cargo.toml"
+
+[[crates]]
+name = "xcp-sxi"
+path = "crates/xcp-sxi/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-xcp"
+path = "crates/blox-ctx-xcp/Cargo.toml"

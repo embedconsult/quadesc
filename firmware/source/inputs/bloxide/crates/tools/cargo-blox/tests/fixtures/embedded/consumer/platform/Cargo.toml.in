@@ -1,0 +1,14 @@
+[package]
+name = "fixture-platform"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+fixture-context = { path = "../../package/context" }
+embassy-executor = { version = "0.9", features = ["executor-thread"] }
+embassy-time = "0.5"
+static_cell = "2"
+critical-section = "1.2"
+[target.'cfg(target_os = "none")'.dependencies]
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "=0.7.6", features = ["set-sp", "set-vtor", "zero-init-ram"] }
+embassy-time-driver = { version = "0.2.2", features = ["tick-hz-10_000"] }

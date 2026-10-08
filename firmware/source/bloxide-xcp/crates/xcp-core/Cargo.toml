@@ -1,0 +1,15 @@
+[package]
+name = "xcp-core"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+description = "Allocation-free transport-neutral XCP scalar S0 protocol core"
+
+[dependencies]
+xcp-messages.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+calibration-store = []

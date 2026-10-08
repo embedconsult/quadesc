@@ -1,0 +1,16 @@
+format = 1
+[package]
+name = "mainboard-characterization"
+version = "0.1.0"
+blox-schema = 1
+[[crates]]
+name = "mainboard-characterization"
+path = "Cargo.toml"
+[[bloxes]]
+name = "mainboard-owner"
+path = "bloxes/mainboard-owner/blox.toml"
+crate = "mainboard-owner-blox"
+
+[[crates]]
+name="mainboard-messages"
+path="messages/Cargo.toml"

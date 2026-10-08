@@ -1,0 +1,21 @@
+[package]
+name = "am13-can-boot-core"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+[profile.release]
+panic = "abort"
+lto = true
+codegen-units = 1
+
+[target.'cfg(target_arch = "arm")'.dependencies]
+am13-rs = { path = "../inputs/am13-rs" }
+esc-som-board = { path = "../inputs/esc-som-board" }
+cortex-m = { version = "=0.7.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "=0.7.6", features = ["set-sp", "set-vtor", "zero-init-ram"] }
+[[bin]]
+name = "can-bootloader"
+path = "src/main.rs"
+required-features = ["firmware"]
+[features]
+firmware = []

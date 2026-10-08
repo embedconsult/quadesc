@@ -1,0 +1,13 @@
+{
+  "provenance": {
+    "kind": "independently reviewed upstream-source-derived vectors",
+    "pyxcp_commit": "016cf3e44364e9cd93966d144a39d342578a0391",
+    "source": "pyxcp/tests/test_framing.py plus accepted led-xcp/0.1.0 contract",
+    "not_derived_from_product_endpoint": true
+  },
+  "vectors": [
+    {"name": "connect_counter_00", "pdu_hex": "ff00", "counter": 0, "frame_hex": "0200ff0001"},
+    {"name": "connect_counter_aa", "pdu_hex": "ff00", "counter": 170, "frame_hex": "02aaff00ab"},
+    {"name": "connect_response_counter_00", "pdu_hex": "ff01000808000101", "counter": 0, "frame_hex": "0800ff010008080001011a"}
+  ]
+}

@@ -1,0 +1,16 @@
+[package]
+name = "bloxide-persistence-sim"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+description = "Independent host backend simulator for bloxide-persistence"
+
+[dependencies]
+bloxide-persistence = { path = "../.." }
+
+[dev-dependencies]
+bloxide-calibration = { path = "../../../bloxide-calibration" }
+bloxide-persistence-calibration = { path = "../bloxide-persistence-calibration" }
+
+[lints]
+workspace = true

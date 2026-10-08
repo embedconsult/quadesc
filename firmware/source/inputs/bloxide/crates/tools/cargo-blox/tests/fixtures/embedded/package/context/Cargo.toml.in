@@ -1,0 +1,6 @@
+[package]
+name = "fixture-context"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+fixture-messages = { path = "../messages" }

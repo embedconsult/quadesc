@@ -1,0 +1,10 @@
+format = 1
+[packages.framework]
+package = "bloxide"
+path = "@FRAMEWORK@"
+[packages.lamp]
+package = "fixture-lamp"
+path = "../package"
+[packages.platform]
+package = "fixture-platform"
+path = "platform"

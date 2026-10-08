@@ -1,0 +1,217 @@
+{
+  "scope": "finite design algebra and raw-image checks only; no product or physical proof",
+  "pair_checks": {
+    "two_bit_transition_table": [
+      {
+        "before": 0,
+        "after": 0,
+        "erase": true,
+        "program": true
+      },
+      {
+        "before": 0,
+        "after": 1,
+        "erase": true,
+        "program": false
+      },
+      {
+        "before": 0,
+        "after": 2,
+        "erase": true,
+        "program": false
+      },
+      {
+        "before": 0,
+        "after": 3,
+        "erase": true,
+        "program": false
+      },
+      {
+        "before": 1,
+        "after": 0,
+        "erase": false,
+        "program": true
+      },
+      {
+        "before": 1,
+        "after": 1,
+        "erase": true,
+        "program": true
+      },
+      {
+        "before": 1,
+        "after": 2,
+        "erase": false,
+        "program": false
+      },
+      {
+        "before": 1,
+        "after": 3,
+        "erase": true,
+        "program": false
+      },
+      {
+        "before": 2,
+        "after": 0,
+        "erase": false,
+        "program": true
+      },
+      {
+        "before": 2,
+        "after": 1,
+        "erase": false,
+        "program": false
+      },
+      {
+        "before": 2,
+        "after": 2,
+        "erase": true,
+        "program": true
+      },
+      {
+        "before": 2,
+        "after": 3,
+        "erase": true,
+        "program": false
+      },
+      {
+        "before": 3,
+        "after": 0,
+        "erase": false,
+        "program": true
+      },
+      {
+        "before": 3,
+        "after": 1,
+        "erase": false,
+        "program": true
+      },
+      {
+        "before": 3,
+        "after": 2,
+        "erase": false,
+        "program": true
+      },
+      {
+        "before": 3,
+        "after": 3,
+        "erase": true,
+        "program": true
+      }
+    ],
+    "byte_rail_masks": 131072
+  },
+  "directed": {
+    "sequence": {
+      "words": 8,
+      "directed_distinct_pairs": 56,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "format": {
+      "words": 6,
+      "directed_distinct_pairs": 30,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "schema": {
+      "words": 5,
+      "directed_distinct_pairs": 20,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "duplicate_sequence": {
+      "words": 4,
+      "directed_distinct_pairs": 12,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "duplicate_sequence_creation": {
+      "words": 2,
+      "directed_distinct_pairs": 2,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "source_labels_and_request": {
+      "words": 5,
+      "directed_distinct_pairs": 20,
+      "erase_transformations": 0,
+      "program_transformations": 0
+    },
+    "all_logical_field_bits_including_stored_crc": 2560
+  },
+  "witness": {
+    "original_changed_bits": 18,
+    "original_crc_before": "b358488e",
+    "original_crc_after": "b758488e",
+    "r2_class": "Corrupt",
+    "r2_selected_sequence": 7,
+    "fully_valid_promotion_erase_reachable": false,
+    "vector_sha256": {
+      "active-a.bin": "0dd7ac8707c2e0b1c46a49ce0e3bfc64cb234320bfe5e596d5c8fe7f364bb814",
+      "inactive-b.bin": "476d7e992acf81e0c1f641456750017678df21cf5fdb80383abbdcda83d82992",
+      "witness-data-rails.bin": "978a8e6bb40d297f76c0f04bd32c4f3fec72ba54d502ea64fb7ccd07ffd633a8",
+      "valid-promotion-target.bin": "0cd9872b8070952837eb0b8d414c1896372bbd0e91aa28b7ec296fb18ad8c5c8",
+      "intended-new.bin": "a4df68b68bd3afffa39024928d4db1a3dd70c35beaefce2a8f179e0f2f896496"
+    }
+  },
+  "prestate": {
+    "Q_unsafe_repair_negative_controls": 3,
+    "Q_safe_subset_trials": 1280,
+    "nonzero_marker_cannot_erase_to_zero": 255,
+    "edge_controls": "passed"
+  },
+  "cuts": [
+    {
+      "G": 1,
+      "E": 1024,
+      "counts": {
+        "prefix": 6921,
+        "subset": 4096,
+        "g1_masks": 164096
+      }
+    },
+    {
+      "G": 8,
+      "E": 1024,
+      "counts": {
+        "prefix": 5262,
+        "subset": 4096,
+        "g1_masks": 0
+      }
+    },
+    {
+      "G": 16,
+      "E": 1024,
+      "counts": {
+        "prefix": 5166,
+        "subset": 4096,
+        "g1_masks": 0
+      }
+    },
+    {
+      "G": 64,
+      "E": 4096,
+      "counts": {
+        "prefix": 14436,
+        "subset": 4096,
+        "g1_masks": 0
+      }
+    },
+    {
+      "G": 256,
+      "E": 4096,
+      "counts": {
+        "prefix": 15375,
+        "subset": 4096,
+        "g1_masks": 0
+      }
+    }
+  ],
+  "repeated_boundary_pairs": 6889,
+  "single_bit_corruptions": 16384,
+  "status": "passed",
+  "product_tests_executed": 0,
+  "hardware_tests_executed": 0,
+  "theorem": "specs/erase-integrity-proof.md conditional on unqualified R1/T16 model"
+}

@@ -1,0 +1,5 @@
+# Conditional controller r2
+
+The production controller uses the reviewed NVMNW/GSC sequence: one semaphore attempt; clear old status; protect only the target bank1 group; one sector erase or sixteen distinct full 16-byte ECC words; check `INPROGRESS`, `DONE`, `PASS` and every FAIL bit after each command; restore protection, NOOP, semaphore, and retain the exact header. Each transition is one bounded poll step under the owner's absolute monotonic deadline. A stale DONE without observed progress never succeeds. A timeout/failure retains uncertainty and permits no blind replay.
+
+Admission is a checked record of actual factory/FRI/NVMNW/static/mapping/ECC observations plus externally retained fixture evidence for RAM closure, voltage, timing and wear. A caller boolean or `basic_readiness` does not certify admission. Until the exact static protection/bank mapping/READ drain/ECC/cache interpretation and target timing are reviewed, the selected target has no admission record. FRI is never written when observed RWAIT is at least one; any future FRI adjustment requires a reviewed RAM procedure.

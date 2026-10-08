@@ -1,0 +1,150 @@
+{
+  "retrievals": [
+    {
+      "path": "ni-371601f.pdf",
+      "url": "https://download.ni.com/support/manuals/371601f.pdf",
+      "sha256": "7aab55713dcdacbf01ab2219f1c5b8d5584405d2ee8df2edf200f47f316e2809",
+      "bytes": 1516705,
+      "retrieved_utc": "2026-09-25T00:43:30.068080+00:00"
+    },
+    {
+      "path": "src_xcplite.c",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcplite.c",
+      "sha256": "606412f1261f89246b5080909bdad64b3445cef7957506989507e468dd6eebe6",
+      "bytes": 164261,
+      "retrieved_utc": "2026-09-25T00:43:30.251356+00:00"
+    },
+    {
+      "path": "src_xcp.h",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcp.h",
+      "sha256": "7dd865aba29f3f205ed2c9a74d15b3a76d375f0611e0bf411d2593b849e79525",
+      "bytes": 42060,
+      "retrieved_utc": "2026-09-25T00:43:30.423093+00:00"
+    },
+    {
+      "path": "src_xcpappl.c",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcpappl.c",
+      "sha256": "3b50df15ed0bf942d34c48625008faf9ec499b2876b848992e31c764e6494f1e",
+      "bytes": 28211,
+      "retrieved_utc": "2026-09-25T00:43:30.540531+00:00"
+    },
+    {
+      "path": "src_cal.c",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/cal.c",
+      "sha256": "7b80c934b46a16c338d1ca7e68d9f5e5d3245d103db6df966fb48981a6d6d1d9",
+      "bytes": 53976,
+      "retrieved_utc": "2026-09-25T00:43:30.686817+00:00"
+    },
+    {
+      "path": "src_persistence.c",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/persistence.c",
+      "sha256": "1f51c6f131ad44b64096dabc6ce25415ad2136f5a9aff8e2d46e4edf51dccff0",
+      "bytes": 24042,
+      "retrieved_utc": "2026-09-25T00:43:30.815173+00:00"
+    },
+    {
+      "path": "src_xcplib_cfg.h",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/src/xcplib_cfg.h",
+      "sha256": "ed665eb5c9102c315f659139d406293a891f799bcb3115e8699acdf37011eb81",
+      "bytes": 9879,
+      "retrieved_utc": "2026-09-25T00:43:30.932779+00:00"
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/vectorgrp/XCPlite/88e3cbeec79318f50067eede2502bcf4d34dab5f/LICENSE",
+      "sha256": "2832cdba56a8c48921bf7747fd70cb25ea47c127ea653e68308c593f1ef6da35",
+      "bytes": 1082,
+      "retrieved_utc": "2026-09-25T00:43:31.045558+00:00"
+    }
+  ],
+  "clients": [
+    {
+      "name": "pyxcp",
+      "version": "0.29.18",
+      "commit": "016cf3e44364e9cd93966d144a39d342578a0391",
+      "tree": "86927186407436c385dc6c1c3f1b933a2b8e9ce4",
+      "files": [
+        {
+          "path": "pyxcp/master/master.py",
+          "sha256": "9529e0b3a02de08eafef6900a52b77a0894832c784ca9b447a10216b97d4fb20",
+          "blob": "7f5188504243fe82545aa33e0a95a362a08e9957"
+        },
+        {
+          "path": "pyxcp/master/errorhandler.py",
+          "sha256": "54164793e427bd8911cfc02ee30f640633438bad3f16013d855b0f447b9f9c03",
+          "blob": "d5d0f20ff2438c0aaa3b5d553b9fe8a0172fcfb3"
+        },
+        {
+          "path": "pyxcp/errormatrix.py",
+          "sha256": "790f2dd77337571b098531c5d91c224dc6e857ffe4b63dd3cc4bf32f78f52261",
+          "blob": "1089c6c5993734ebc10dcaf0b8d907dd3054e412"
+        },
+        {
+          "path": "pyxcp/types.py",
+          "sha256": "288570b1d3ac7c70920ca71133186cf6d3376d7c7082db9c4d2fad0edeb9db04",
+          "blob": "73f49f74b4847d0a6096397c9620007469f8e803"
+        },
+        {
+          "path": "pyxcp/transport/base.py",
+          "sha256": "36f5ed325be284c8c575464171f195e4a4268bfb6c501e846387e24a92170263",
+          "blob": "ae8a3c036d78ca8512c82d44f3bc2b5c627f2dff"
+        },
+        {
+          "path": "pyxcp/config/__init__.py",
+          "sha256": "160a29250f886bca55b7c82268f4ae87902a967ec67025a4622d29d11697a706",
+          "blob": "6a2969c4f188805decb8f60e78b05c459c8a77de"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "fbb1494c7a03c01578edce3bbe6395c8304f296e8f6b7c0ca7af8418ac6178a0",
+          "blob": "1f3f462d7e9cf182c8a813522e2297f323546138"
+        }
+      ]
+    },
+    {
+      "name": "pya2ldb",
+      "version": "1.0.353",
+      "commit": "c19c3ad2f285d1230e334bad81eeb09cbaaa3031",
+      "tree": "5194d02ada2cbc96dd7d3f666fed86e4314f5f28",
+      "files": [
+        {
+          "path": "pya2l/classes.py",
+          "sha256": "52470523dc8aacb97caebbf5894f61327dbcddbf20f74e43c61c737ebe712f54",
+          "blob": "edf81eb11971830727ddfdb294b0f1ce36650882"
+        },
+        {
+          "path": "pya2l/model/__init__.py",
+          "sha256": "5739e90eb52a0c8706b0c83b5075c6cac7f1359a2e97db9f8070c3f3bf4a71a8",
+          "blob": "635599650bd3920f2f2e73b3b19a4ce9bdda9fb4"
+        },
+        {
+          "path": "pya2l/__init__.py",
+          "sha256": "d18d72f8d97c5151fd8676cd8327c3829cb45148f1cbb5b2af5f60a72486e0f6",
+          "blob": "215363be38c8540d6625569034546359c344795e"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "9bcb346c53e5210fc0b9e65b0962cbee4efcb8a25d7774dfd7bb17b2282016f3",
+          "blob": "90e066d3642a024b3aef918f9b6fbd891022546a"
+        }
+      ]
+    }
+  ],
+  "input_files": [
+    {
+      "path": "original-inputs/README.md",
+      "sha256": "77d76328cb2e74571d0c0bc57765073fdbbd5d3d5e45471857014ff6e29bf5d4"
+    },
+    {
+      "path": "original-inputs/PACKAGE-PLACEMENT.md",
+      "sha256": "906338f2584c3106727d487fdc41ba2a602158023a9fddca43c044bd8a40b9a5"
+    },
+    {
+      "path": "original-inputs/source-lock-v1.json",
+      "sha256": "a9c6bd90cf92b14256c4ca708a6e8d4ff2050937296d904c5839201bcd74cc1d"
+    }
+  ],
+  "s0_archive_sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db",
+  "xcplite_commit": "88e3cbeec79318f50067eede2502bcf4d34dab5f",
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

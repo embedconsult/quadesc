@@ -1,0 +1,21 @@
+{
+  "schema": "led-s0-descriptors/0.1.0",
+  "profile": "S0",
+  "byte_order": "little",
+  "address_extension": 0,
+  "variables": [
+    {"symbol":"led.period_ms","kind":"CHARACTERISTIC","address":4096,"wire_type":"u16","a2l_type":"UWORD","unit":"ms","minimum":100,"maximum":10000,"default":1000,"access":"calibration_read_write"},
+    {"symbol":"led.duty_permille","kind":"CHARACTERISTIC","address":4098,"wire_type":"u16","a2l_type":"UWORD","unit":"permille","minimum":0,"maximum":1000,"default":500,"access":"calibration_read_write"},
+    {"symbol":"led.uptime_ms","kind":"MEASUREMENT","address":8192,"wire_type":"u32","a2l_type":"ULONG","unit":"ms","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.sample_sequence","kind":"MEASUREMENT","address":8196,"wire_type":"u32","a2l_type":"ULONG","unit":"count","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.active_revision","kind":"MEASUREMENT","address":8200,"wire_type":"u32","a2l_type":"ULONG","unit":"count","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.phase_us","kind":"MEASUREMENT","address":8204,"wire_type":"u32","a2l_type":"ULONG","unit":"us","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.applied_period_ms","kind":"MEASUREMENT","address":8208,"wire_type":"u16","a2l_type":"UWORD","unit":"ms","minimum":100,"maximum":10000,"access":"read_only"},
+    {"symbol":"led.applied_duty_permille","kind":"MEASUREMENT","address":8210,"wire_type":"u16","a2l_type":"UWORD","unit":"permille","minimum":0,"maximum":1000,"access":"read_only"},
+    {"symbol":"led.commanded_on","kind":"MEASUREMENT","address":8212,"wire_type":"u8","a2l_type":"UBYTE","unit":"boolean","minimum":0,"maximum":1,"access":"read_only"},
+    {"symbol":"led.rejected_write_count","kind":"MEASUREMENT","address":8216,"wire_type":"u32","a2l_type":"ULONG","unit":"count","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"daq.dropped_sample_count","kind":"MEASUREMENT","address":8220,"wire_type":"u32","a2l_type":"ULONG","unit":"count","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.edge_lateness_us","kind":"MEASUREMENT","address":8224,"wire_type":"u32","a2l_type":"ULONG","unit":"us","minimum":0,"maximum":4294967295,"access":"read_only"},
+    {"symbol":"led.max_edge_lateness_us","kind":"MEASUREMENT","address":8228,"wire_type":"u32","a2l_type":"ULONG","unit":"us","minimum":0,"maximum":4294967295,"access":"read_only"}
+  ]
+}

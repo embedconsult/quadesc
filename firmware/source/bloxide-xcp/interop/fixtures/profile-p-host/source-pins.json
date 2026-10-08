@@ -1,0 +1,10 @@
+{
+  "scope": "host_fixture_only",
+  "profile": "P-restricted-reviewed",
+  "reviewed_persistence_commit": "5d67c9977c94ab74edde4821f5f880fe15ed65ac",
+  "accepted_calibration_commit": "c0a693a8811d920d05850cfc2ebcfd7956a2741b",
+  "a2l_origin": "profile-p-design-v1/metadata.a2l",
+  "descriptor_origin": "profile-p-design-v1/descriptor.json",
+  "policy_origin": "profile-p-open-v2/policy.json",
+  "production_image": false
+}

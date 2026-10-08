@@ -1,0 +1,98 @@
+// Copyright 2025 Bloxide, all rights reserved
+use crate::messaging::ActorId;
+
+/// Command sent on the abort mailbox for cooperative self-termination.
+///
+/// Sent by the managing blox (supervisor or custom) when `ChildPolicy::Abort` fires.
+/// The child's task receives this on its abort mailbox and self-terminates
+/// cooperatively (breaks out of the run loop, no callbacks fire).
+///
+/// This is the cooperative self-termination path — distinct from `KillCapability`
+/// which is the external ripcord that destroys the task without cooperation.
+#[derive(Debug, Clone)]
+pub enum AbortCommand {
+    /// Abort the child cooperatively. No callbacks, no graceful shutdown.
+    /// The child's task self-terminates on receipt.
+    ///
+    /// Abort mailboxes are per-child, so any Abort arriving on a child's abort
+    /// stream is definitionally addressed to that child — the run loop
+    /// `debug_assert`s that `child_id` matches the receiving actor, catching
+    /// supervisor misrouting in debug builds. The field mirrors the
+    /// `ChildLifecycleEvent` protocol shape and lets senders and tests assert
+    /// routing.
+    Abort { child_id: ActorId },
+}
+
+/// Lifecycle commands sent to actors via their lifecycle mailbox.
+/// Handled at VirtualRoot level, not in user state handlers.
+///
+/// The lifecycle model (`reset → stop → done → abort → kill`):
+///
+/// | Command  | Through dispatch? | Callbacks                    | End state              |
+/// |----------|-------------------|------------------------------|------------------------|
+/// | `Start`  | Yes               | `on_init_exit`               | `initial_state()`      |
+/// | `Reset`  | Yes               | Full exit + entry chain       | `initial_state()`      |
+/// | `Stop`   | Yes               | Full exit + `on_init_entry`  | `Init` (suspended)     |
+/// | `Abort`  | No (mailbox)      | None                         | Task ends (cooperative) |
+/// | `Ping`   | Yes               | None                         | Unchanged               |
+///
+/// `Decision::Done` is the self-initiated clean exit: full exit chain +
+/// `on_init_entry` (same ritual as `Stop`), then the task ENDS. The
+/// supervisor deregisters the child — no restart policy. `Decision::Stop`
+/// suspends (restartable); `Decision::Done` terminates (completion).
+///
+/// `Kill` is not a `LifecycleCommand` — it is a runtime capability
+/// (`KillCapability::kill(handle)`) that destroys the task externally.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LifecycleCommand {
+    /// Transition from Init to operational initial state.
+    /// Fires `on_init_exit` (resource acquisition).
+    Start,
+    /// Reset directly to `initial_state()` — immediately operational.
+    /// Uses LCA-based `change_state` (ancestors at/above the LCA do not fire
+    /// `on_exit`), then the entry chain for `initial_state()`. Does NOT visit
+    /// Init and does NOT fire `on_init_entry`; resetting FROM Init fires
+    /// `on_init_exit` (equivalent to Start).
+    Reset,
+    /// Transition to Init, report Stopped. Actor is suspended.
+    /// Fires the full exit chain, then `on_init_entry` (resource cleanup).
+    /// Actor stays in Init until a `Start` command arrives.
+    Stop,
+    /// Health check - respond Alive.
+    Ping,
+}
+
+/// Events sent from a supervised child's run loop to the supervisor's
+/// domain mailbox.
+///
+/// The runtime observes `DispatchOutcome` after every dispatch and
+/// generates these events automatically. The supervisor's `MachineSpec`
+/// handles them as normal domain events.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChildLifecycleEvent {
+    /// Child exited Init and entered its initial state.
+    /// Also sent when a child self-resets via `Decision::Reset` or
+    /// `LifecycleCommand::Reset` — both go directly to `initial_state()`.
+    Started { child_id: ActorId },
+    /// Child entered an error state (`is_error()` returned true) or
+    /// returned `Decision::Fail`.
+    Failed { child_id: ActorId },
+    /// Child was stopped via `LifecycleCommand::Stop`.
+    /// The exit chain and `on_init_entry` fired. The child is in Init,
+    /// suspended, and can be restarted with `Start`.
+    Stopped { child_id: ActorId },
+    /// Child self-terminated cleanly via `Decision::Done` — normal completion.
+    /// The exit chain and `on_init_entry` fired, then the child's task ended.
+    /// The supervisor deregisters the child (no restart policy triggered).
+    Done { child_id: ActorId },
+    /// Child was aborted via `AbortCommand` on the abort mailbox.
+    /// No callbacks fired — the child's task self-terminated cooperatively.
+    /// The task has ended; restarting requires respawning the task.
+    Aborted { child_id: ActorId },
+    /// Child was killed via `KillCapability::kill(handle)` — the external ripcord.
+    /// No callbacks fired — the child's task was destroyed externally and immediately.
+    /// Permanently dead — cannot be restarted without respawning.
+    Killed { child_id: ActorId },
+    /// Child responded to a Ping — its run loop is healthy.
+    Alive { child_id: ActorId },
+}

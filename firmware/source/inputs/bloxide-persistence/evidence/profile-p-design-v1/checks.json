@@ -1,0 +1,81 @@
+{
+  "scope": "design_only; full T17 partial; independent review required",
+  "checks": [
+    {
+      "label": "design-check-with-descriptor",
+      "command": [
+        "python3",
+        "tools/profile-p-design-v1/check_design.py"
+      ],
+      "started_utc": "2026-09-25T00:57:41.082960+00:00",
+      "seconds": 0.05108421000113594,
+      "exit_code": 0,
+      "environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "CARGO_BUILD_JOBS": "2",
+        "RUSTUP_TOOLCHAIN": "1.94.0"
+      }
+    }
+  ],
+  "sources_checked": [
+    {
+      "path": "tools/profile-p-design-v1/check_design.py",
+      "sha256": "39e78cc86f0dee8fc7c543602cf28dc56b8e4ed03afa2281dff065e0936688db"
+    },
+    {
+      "path": "specs/profile-p-design-v1/README.md",
+      "sha256": "199b9317edf87699997a8181d4443952589011d7d78543a622613d0e8b826cd8"
+    },
+    {
+      "path": "specs/profile-p-design-v1/descriptor.json",
+      "sha256": "6aa20e2b2da81bb4ca18b715843773ce77a791d08d559dc7bbd00d08d10f9fff"
+    },
+    {
+      "path": "specs/profile-p-design-v1/design.md",
+      "sha256": "4b2a6e011f1b3675f39ec1cbfb1ef59346ec0e92054c959db09d78d43de49390"
+    },
+    {
+      "path": "specs/profile-p-design-v1/evidence.md",
+      "sha256": "f53809b2beb0a60be319807883d6c1151457a523eaf51edf01f9143c434671a6"
+    },
+    {
+      "path": "specs/profile-p-design-v1/metadata.a2l",
+      "sha256": "ea17124ea4e959ffcd3d300d6c30e6d474b66ee2379258d57e94afa6dcca6dbf"
+    },
+    {
+      "path": "specs/profile-p-design-v1/vectors.json",
+      "sha256": "af069fd3b296d964b07cba3db77c55dbcc39276ec0a1ae7dda0ab7d8a0b06191"
+    }
+  ],
+  "results": {
+    "wire_vectors": 43,
+    "views": 7,
+    "field_checks": 203,
+    "malformed_views_rejected": 16,
+    "malformed_descriptors_rejected": 7,
+    "client_codec_records": 18,
+    "parsed_blobs": 2,
+    "installed_source_matches": {
+      "pyxcp": 122,
+      "pya2ldb": 98
+    },
+    "warnings": [
+      "pya2l empty AML expected: no IF_DATA proposal"
+    ],
+    "endpoint_interoperability": false,
+    "rust_build": false,
+    "native_arm64": false,
+    "mcu_execution": false,
+    "hil": false
+  },
+  "remaining": [
+    "P-OPEN-1 single-page INIT_SEGMENT semantics",
+    "P-OPEN-2 late failure bit/session/event disposition",
+    "independent P design review",
+    "actual endpoint C21-C23 after existing service/source/auth gates",
+    "I5/T36 real runtime",
+    "I7/T16 physical idle/M/Q/ECC/isolation/wear/native/HIL"
+  ],
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json.",
+  "source_audit_scope": "Original client codec/source identities retained; obsolete private-cache audit utility excluded. Current source hashes are recorded by firmware/source-provenance.json."
+}

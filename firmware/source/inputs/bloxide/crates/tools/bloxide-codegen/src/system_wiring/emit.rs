@@ -1,0 +1,1176 @@
+// Copyright 2025 Bloxide, all rights reserved
+//! Emission of the complete binary `main.rs` from a validated system wiring
+//! manifest: channels, contexts, machines, supervision, and bootstrap sends.
+
+use super::actor_kind::{crate_name, is_dynamic, skip_in_main_body};
+use super::ctor_fields::collect_ctor_fields;
+use super::fmt::rustfmt_source;
+use super::paths::{all_message_crates, primary_message, substitute_runtime_generic};
+use super::payload::toml_value_to_tokens;
+use super::validate::validate;
+use crate::schema::{BloxConfig, SystemConfig};
+use crate::util::{DOC_FROM_SYSTEM_TOML, HEADER};
+use quote::{format_ident, quote};
+use std::collections::{BTreeMap, BTreeSet};
+
+pub fn generate(
+    config: &SystemConfig,
+    blox_configs: &BTreeMap<String, BloxConfig>,
+    active_features: &BTreeMap<String, BTreeSet<String>>,
+) -> anyhow::Result<String> {
+    validate(config, blox_configs, active_features)?;
+
+    let embedded = config.system.profile == "embedded";
+    let is_tokio = config.system.runtime == "tokio";
+    let is_embassy = config.system.runtime == "embassy";
+    if !is_tokio && !is_embassy {
+        anyhow::bail!(
+            "unsupported system runtime '{}', expected 'tokio' or 'embassy'",
+            config.system.runtime
+        );
+    }
+
+    let runtime_crate_ident = format_ident!(
+        "{}",
+        if is_tokio {
+            "bloxide_tokio"
+        } else {
+            "bloxide_embassy"
+        }
+    );
+    let runtime_ident = format_ident!(
+        "{}",
+        if is_tokio {
+            "TokioRuntime"
+        } else {
+            "EmbassyRuntime"
+        }
+    );
+
+    let runtime_ident_str = if is_tokio {
+        "TokioRuntime".to_string()
+    } else {
+        "EmbassyRuntime".to_string()
+    };
+
+    let binary_name = config.system.name.as_deref().unwrap_or("main");
+    let done_str = format!("{} complete", binary_name);
+    let done_lit = syn::LitStr::new(&done_str, proc_macro2::Span::call_site());
+
+    // ── Imports ─────────────────────────────────────────────────────────────
+    let mut use_stmts = Vec::new();
+    use_stmts.push(quote! {
+        use ::#runtime_crate_ident::prelude::*;
+    });
+    use_stmts.push(quote! {
+        use ::bloxide_core::lifecycle::LifecycleCommand;
+    });
+
+    // (No feature-gated imports needed — unified SupervisorSpec<R> has no
+    // extra type parameters beyond R.)
+
+    // Blox crate imports.
+    let mut has_non_timer_actors = false;
+    for actor in &config.actors {
+        if actor.kind.as_deref() == Some("timer") {
+            continue;
+        }
+        has_non_timer_actors = true;
+        let blox_crate_ident = format_ident!("{}", crate_name(&actor.blox));
+        use_stmts.push(quote! {
+            use ::#blox_crate_ident::prelude::*;
+        });
+    }
+
+    // Import concrete specs from the app's generated/ directory.
+    // Explicit imports shadow the stub Spec types from the glob imports
+    // above (Rust: explicit `use` takes precedence over glob `use *`).
+    for actor in &config.actors {
+        if actor.kind.as_deref() == Some("timer") {
+            continue;
+        }
+        // Look up the actor name from the blox config to get the Spec name.
+        let blox_config = blox_configs.get(&actor.blox);
+        let blox_actor_name = blox_config
+            .and_then(|bc| bc.actor.as_ref())
+            .map(|a| a.name.clone())
+            .unwrap_or_else(|| actor.name.clone());
+        let spec_ident = format_ident!("{}Spec", blox_actor_name);
+        // Module name is derived from the system.toml actor name, not the
+        // blox.toml actor name (e.g. "worker" → "worker_spec_skeleton").
+        let module_name = format_ident!(
+            "{}_spec_skeleton",
+            actor.name.replace('-', "_").to_lowercase()
+        );
+        use_stmts.push(quote! {
+            use crate::generated::#module_name::#spec_ident;
+        });
+    }
+
+    // Message type imports and bootstrap struct imports.
+    let mut bootstrap_imports: BTreeSet<(String, String)> = BTreeSet::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        if let Some(blox_config) = blox_configs.get(&actor.blox) {
+            if let Some((msg_crate, _msg_type)) = primary_message(blox_config) {
+                for boot in &actor.bootstrap {
+                    let variant = boot
+                        .message
+                        .split("::")
+                        .nth(1)
+                        .ok_or_else(|| {
+                            anyhow::anyhow!(
+                                "actor '{}' bootstrap message '{}' is not in the form MsgType::VariantName",
+                                actor.name,
+                                boot.message
+                            )
+                        })?;
+                    bootstrap_imports.insert((msg_crate.clone(), variant.to_string()));
+                }
+            }
+        }
+    }
+
+    let mut message_imports: BTreeSet<(String, String)> = BTreeSet::new();
+    for actor in &config.actors {
+        if actor.kind.as_deref() == Some("timer") {
+            continue;
+        }
+        if let Some(blox_config) = blox_configs.get(&actor.blox) {
+            if let Some((msg_crate, msg_type)) = primary_message(blox_config) {
+                message_imports.insert((msg_crate, msg_type));
+            }
+        }
+    }
+    for (msg_crate, variant) in &bootstrap_imports {
+        let crate_ident = format_ident!("{}", msg_crate);
+        let variant_ident = format_ident!("{}", variant);
+        use_stmts.push(quote! {
+            use ::#crate_ident::#variant_ident;
+        });
+    }
+    for (msg_crate, msg_type) in &message_imports {
+        let crate_ident = format_ident!("{}", msg_crate);
+        let type_ident = format_ident!("{}", msg_type);
+        use_stmts.push(quote! {
+            use ::#crate_ident::#type_ident;
+        });
+    }
+
+    // Crate-level imports for all crates referenced in any mailbox message_path.
+    // This handles multi-mailbox actors whose secondary mailbox types reference
+    // crates beyond the primary message crate (e.g. bloxide_peers in
+    // pool_messages::SpawnedWorker<bloxide_peers::PeerCtrl<...>, R>).
+    // We import the crate root so that fully-qualified paths in the channels!
+    // macro call resolve correctly.
+    let mut all_crates: BTreeSet<String> = BTreeSet::new();
+    for actor in &config.actors {
+        if actor.kind.as_deref() == Some("timer") {
+            continue;
+        }
+        if let Some(blox_config) = blox_configs.get(&actor.blox) {
+            for c in all_message_crates(blox_config) {
+                all_crates.insert(c);
+            }
+        }
+    }
+    // Also add crates from bootstrap and message type imports.
+    for (msg_crate, _) in &bootstrap_imports {
+        all_crates.insert(msg_crate.clone());
+    }
+    for (msg_crate, _) in &message_imports {
+        all_crates.insert(msg_crate.clone());
+    }
+    for crate_name in all_crates {
+        let crate_ident = format_ident!("{}", crate_name);
+        use_stmts.push(quote! {
+            use ::#crate_ident;
+        });
+    }
+
+    // ── Timer spawn ─────────────────────────────────────────────────────────
+    let mut embassy_timer_task_decl = Vec::new();
+    let mut timer_stmts = Vec::new();
+
+    // ── Watchdog spawn ──────────────────────────────────────────────────────
+    let mut embassy_watchdog_task_decls = Vec::new();
+    let mut watchdog_stmts = Vec::new();
+
+    let has_timer = config
+        .actors
+        .iter()
+        .any(|a| a.kind.as_deref() == Some("timer"));
+    if has_timer {
+        if is_tokio {
+            timer_stmts.push(quote! {
+                let timer_ref = ::#runtime_crate_ident::spawn_timer!(8);
+            });
+        } else {
+            embassy_timer_task_decl.push(quote! {
+                ::#runtime_crate_ident::timer_task!(timer_task);
+            });
+            timer_stmts.push(quote! {
+                let timer_ref = ::#runtime_crate_ident::spawn_timer!(spawner, timer_task, 8);
+            });
+        }
+    }
+
+    // ── Channel creation ────────────────────────────────────────────────────
+    let mut channel_stmts = Vec::new();
+    let mut symbol_table: BTreeMap<(String, String), String> = BTreeMap::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        let id_ident = format_ident!("{}_id", actor.name);
+        let mbox_ident = format_ident!("{}_mbox", actor.name);
+
+        let blox_config = blox_configs.get(&actor.blox).ok_or_else(|| {
+            anyhow::anyhow!(
+                "actor '{}' references unknown blox '{}'",
+                actor.name,
+                actor.blox
+            )
+        })?;
+        let event = blox_config.event.as_ref().ok_or_else(|| {
+            anyhow::anyhow!(
+                "actor '{}' blox '{}' has no event config",
+                actor.name,
+                actor.blox
+            )
+        })?;
+
+        // Collect mailboxes, respecting feature gates.
+        // A mailbox is included when:
+        //   - it has no feature gate, OR
+        //   - its feature is enabled in the app's Cargo.toml for this blox.
+        let enabled = active_features.get(&actor.blox);
+        let mailboxes: Vec<_> = event
+            .mailboxes
+            .iter()
+            .filter(|m| match &m.feature {
+                None => true,
+                Some(feat) => enabled.map(|s| s.contains(feat)).unwrap_or(false),
+            })
+            .collect();
+
+        if mailboxes.is_empty() {
+            anyhow::bail!("actor '{}' has no mailboxes", actor.name);
+        }
+
+        let capacity = actor.channel_capacity.unwrap_or(16);
+        let capacity_lit = proc_macro2::Literal::usize_unsuffixed(capacity);
+
+        // Build ref names: primary is {actor}_ref, secondaries are looked up
+        // from inject entries with source = "self_secondary".
+        let primary_ref_ident = format_ident!("{}_ref", actor.name);
+        let mut ref_idents = vec![primary_ref_ident.clone()];
+        let mut msg_type_tokens = Vec::new();
+
+        // Primary mailbox message type.
+        let primary = &mailboxes[0];
+        let primary_path = primary.message_path.as_deref().unwrap_or(&primary.message);
+        let primary_msg = substitute_runtime_generic(primary_path, &runtime_ident_str);
+        let primary_msg_tokens: proc_macro2::TokenStream =
+            syn::parse_str(&primary_msg).map_err(|e| {
+                anyhow::anyhow!(
+                    "failed to parse message type '{}' for actor '{}': {}",
+                    primary_msg,
+                    actor.name,
+                    e
+                )
+            })?;
+        msg_type_tokens.push(quote! { #primary_msg_tokens(#capacity_lit) });
+
+        // Secondary mailboxes.
+        for (i, mbox) in mailboxes.iter().enumerate().skip(1) {
+            // Find the inject field that references this secondary mailbox.
+            let secondary_field = actor
+                .inject
+                .iter()
+                .find(|(_, src)| src.source == "self_secondary" && src.index.unwrap_or(1) == i)
+                .map(|(name, _)| name.clone())
+                .unwrap_or_else(|| format!("{}_mailbox_{}_ref", actor.name, i));
+            let ref_ident = format_ident!("{}", secondary_field);
+            ref_idents.push(ref_ident);
+
+            let path = mbox.message_path.as_deref().unwrap_or(&mbox.message);
+            let msg = substitute_runtime_generic(path, &runtime_ident_str);
+            let msg_tokens: proc_macro2::TokenStream = syn::parse_str(&msg).map_err(|e| {
+                anyhow::anyhow!(
+                    "failed to parse secondary message type '{}' for actor '{}': {}",
+                    msg,
+                    actor.name,
+                    e
+                )
+            })?;
+            let cap_lit = proc_macro2::Literal::usize_unsuffixed(capacity);
+            msg_type_tokens.push(quote! { #msg_tokens(#cap_lit) });
+        }
+
+        for (mailbox, ident) in mailboxes.iter().zip(&ref_idents) {
+            symbol_table.insert(
+                (
+                    actor.name.clone(),
+                    crate::util::to_snake_case(&mailbox.variant),
+                ),
+                ident.to_string(),
+            );
+        }
+        // Generate the channels! call with all message types.
+        // Single mailbox: let ((ref,), mbox) = channels! { Msg(cap), };
+        // Multi mailbox:  let ((ref1, ref2), mbox) = channels! { Msg1(cap), Msg2(cap), };
+        // The trailing comma after #(#ref_idents),* is critical for the
+        // single-mailbox case: `((ref,), mbox)` matches `(ActorRef,)` while
+        // `((ref), mbox)` would bind `ref` to the tuple `(ActorRef,)`.
+        channel_stmts.push(quote! {
+            let ((#(#ref_idents,)*), #mbox_ident) = ::#runtime_crate_ident::channels! {
+                #(#msg_type_tokens),*,
+            };
+            let #id_ident = #primary_ref_ident.id();
+        });
+    }
+
+    // (Spawn channel creation removed — the dynamic spawn factory mechanism
+    // was removed in spawn-architecture-v2. Dynamic spawning is now handled
+    // via factory injection in the blox's context, wired through the
+    // supervisor's RegisterDynamicChild control message.)
+
+    // (Factory construction removed — see spawn-architecture-v2.)
+
+    // ── Supervisor phase 1: create builders, extract refs ──────────────────
+    //
+    // The supervisor's control_ref and notify_ref must be available BEFORE
+    // context construction so actors (e.g. the Pool) can inject them.
+    // Children are added in phase 2 (after machine construction).
+    //
+    // Symbol table: maps (actor_name, field_name) → variable ident.
+    // - (supervisor, "primary") → {supervisor}_ref (not used, but registered)
+    // - (supervisor, "control") → extracted control_ref from ChildGroupBuilder
+    // - (supervisor, "notify")  → extracted notify_ref from ChildGroupBuilder
+    let mut supervisor_setup_stmts = Vec::new();
+    let mut supervisor_finish_stmts = Vec::new();
+    let mut root_task_decls = Vec::new();
+
+    for (idx, sup) in config.supervision.iter().enumerate() {
+        let group_ident = if config.supervision.len() == 1 {
+            format_ident!("group")
+        } else {
+            format_ident!("group_{}", idx)
+        };
+        let sup_ctx_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_ctx")
+        } else {
+            format_ident!("sup_ctx_{}", idx)
+        };
+        let sup_machine_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_machine")
+        } else {
+            format_ident!("sup_machine_{}", idx)
+        };
+        let sup_notify_rx_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_notify_rx")
+        } else {
+            format_ident!("sup_notify_rx_{}", idx)
+        };
+        let sup_control_rx_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_control_rx")
+        } else {
+            format_ident!("sup_control_rx_{}", idx)
+        };
+        let sup_id_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_id")
+        } else {
+            format_ident!("sup_id_{}", idx)
+        };
+        let task_ident = if config.supervision.len() == 1 {
+            format_ident!("supervisor_task")
+        } else {
+            format_ident!("supervisor_task_{}", idx)
+        };
+        let control_ref_ident = format_ident!("sup_control_ref_{}", idx);
+        let notify_ref_ident = format_ident!("sup_notify_ref_{}", idx);
+
+        // Map strategy to GroupShutdown. Only the two strategies matching
+        // GroupShutdown's semantics exist; anything else is a hard error
+        // (previously every unknown value silently became WhenAnyDone).
+        let shutdown_strategy = match sup.strategy.as_str() {
+            "when_all_done" => quote! { GroupShutdown::WhenAllDone },
+            "when_any_done" => quote! { GroupShutdown::WhenAnyDone },
+            other => anyhow::bail!(
+                "unknown supervision strategy '{other}' — expected `when_any_done` or `when_all_done`"
+            ),
+        };
+
+        // Phase 1: create builder + extract control_ref and notify_ref.
+        // Capacities: explicit const generics (expression position does not
+        // apply const-parameter defaults). Defaults: notify sized to the
+        // child count (every child can have a terminal report in flight),
+        // control 16, per-child lifecycle 4. These channels carry the
+        // supervision control plane — sized to make "full" a bug, not
+        // routine backpressure (confirm-before-record still recovers).
+        let notify_cap = sup
+            .capacities
+            .notify
+            .unwrap_or_else(|| (2 * sup.children.len()).max(32));
+        let control_cap = sup.capacities.control.unwrap_or(16);
+        let lifecycle_cap = sup.capacities.lifecycle.unwrap_or(4);
+        for (name, cap) in [
+            ("notify", notify_cap),
+            ("control", control_cap),
+            ("lifecycle", lifecycle_cap),
+        ] {
+            if cap == 0 {
+                anyhow::bail!("supervision capacities.{name} must be >= 1");
+            }
+        }
+        let max_misses = sup.watchdog.as_ref().map(|w| w.max_misses).unwrap_or(2u8);
+        let max_misses_lit = proc_macro2::Literal::u8_unsuffixed(max_misses);
+        // The control ref is only needed when a watchdog driver sends on the
+        // control channel or an actor injects it (e.g. the Pool's spawn_ref).
+        // Emitting it unconditionally leaves an unused variable in static-only
+        // systems (embassy-demo, tokio-demo, tokio-minimal-demo).
+        let control_ref_used = sup.watchdog.is_some()
+            || config.actors.iter().any(|actor| {
+                actor.inject.values().any(|source| {
+                    source.source == "actor"
+                        && source.actor.as_deref() == Some("supervisor")
+                        && source.field.as_deref() == Some("control")
+                })
+            });
+        supervisor_setup_stmts.push(quote! {
+            let mut #group_ident = ChildGroupBuilder::<_, _, #notify_cap, #control_cap, #lifecycle_cap>::new(#shutdown_strategy, #max_misses_lit);
+            let #notify_ref_ident = #group_ident.notify_ref();
+        });
+        if control_ref_used {
+            supervisor_setup_stmts.push(quote! {
+                let #control_ref_ident = #group_ident.control_ref();
+            });
+        }
+
+        // Register refs in symbol table.
+        // The supervisor actor name comes from the supervision entry —
+        // we use "supervisor" as the canonical name (matching the system.toml
+        // `actor = "supervisor"` convention).
+        let sup_name = "supervisor".to_string();
+        symbol_table.insert(
+            (sup_name.clone(), "control".to_string()),
+            control_ref_ident.to_string(),
+        );
+        symbol_table.insert(
+            (sup_name.clone(), "notify".to_string()),
+            notify_ref_ident.to_string(),
+        );
+
+        // Watchdog driver: when a watchdog config is present, emit a timer-based
+        // task that sends `ChildCtrl::WatchdogTick` to the supervisor's control
+        // channel at the configured interval.
+        if let Some(watchdog) = &sup.watchdog {
+            if watchdog.interval_ms == 0 {
+                anyhow::bail!(
+                    "supervision watchdog interval_ms must be >= 1 (got {})",
+                    watchdog.interval_ms
+                );
+            }
+            let interval_ms = watchdog.interval_ms;
+            let interval_lit = proc_macro2::Literal::u64_unsuffixed(interval_ms);
+            if is_tokio {
+                watchdog_stmts.push(quote! {
+                    let _ = tokio::spawn(async move {
+                        let mut interval = tokio::time::interval(
+                            std::time::Duration::from_millis(#interval_lit),
+                        );
+                        loop {
+                            interval.tick().await;
+                            let _ = #control_ref_ident.try_send(
+                                0,
+                                ::bloxide_child_management::control::ChildCtrl::WatchdogTick,
+                            );
+                        }
+                    });
+                });
+            } else {
+                let watchdog_task_ident = if config.supervision.len() == 1 {
+                    format_ident!("watchdog_task")
+                } else {
+                    format_ident!("watchdog_task_{}", idx)
+                };
+                embassy_watchdog_task_decls.push(quote! {
+                    #[embassy_executor::task]
+                    async fn #watchdog_task_ident(
+                        control_ref: ::bloxide_core::messaging::ActorRef<
+                            ::bloxide_child_management::control::ChildCtrl<
+                                ::#runtime_crate_ident::EmbassyRuntime
+                            >,
+                            ::#runtime_crate_ident::EmbassyRuntime,
+                        >,
+                    ) {
+                        loop {
+                            ::embassy_time::Timer::after_millis(#interval_lit).await;
+                            let _ = control_ref.try_send(
+                                0,
+                                ::bloxide_child_management::control::ChildCtrl::WatchdogTick,
+                            );
+                        }
+                    }
+                });
+                watchdog_stmts.push(quote! {
+                    spawner.must_spawn(#watchdog_task_ident(#control_ref_ident.clone()));
+                });
+            }
+        }
+
+        // Phase 2: add children, finish, construct supervisor (after machines).
+        for child_name in &sup.children {
+            let child_actor = config
+                .actors
+                .iter()
+                .find(|a| &a.name == child_name)
+                .ok_or_else(|| {
+                    anyhow::anyhow!("supervision child '{}' not declared", child_name)
+                })?;
+            let child_mbox_ident = format_ident!("{}_mbox", child_actor.name);
+            let child_id_ident = format_ident!("{}_id", child_actor.name);
+            let child_machine_ident = format_ident!("{}_machine", child_actor.name);
+            let child_task_ident = format_ident!("{}_task", child_actor.name);
+
+            let policy = if let Some(policy_config) = sup.policies.get(child_name) {
+                if policy_config.stop == Some(false) {
+                    anyhow::bail!(
+                        "supervision policy for '{child_name}': stop = false is invalid \
+                         — use stop = true or restart = {{ max = N }}"
+                    );
+                }
+                if let Some(restart) = &policy_config.restart {
+                    if restart.max == 0 {
+                        anyhow::bail!(
+                            "supervision policy for '{child_name}': restart.max must be >= 1 \
+                             (max = 0 forbids any restart — use `stop = true` instead)"
+                        );
+                    }
+                    let max = restart.max;
+                    quote! { ChildPolicy::Reset { max: #max } }
+                } else {
+                    quote! { ChildPolicy::Stop }
+                }
+            } else {
+                quote! { ChildPolicy::Stop }
+            };
+
+            if is_tokio {
+                supervisor_finish_stmts.push(quote! {
+                    ::#runtime_crate_ident::spawn_static_child!(
+                        #group_ident,
+                        #child_task_ident(#child_machine_ident, #child_mbox_ident, #child_id_ident),
+                        #policy
+                    );
+                });
+            } else {
+                supervisor_finish_stmts.push(quote! {
+                    ::#runtime_crate_ident::spawn_static_child!(
+                        spawner,
+                        #group_ident,
+                        #child_task_ident(#child_machine_ident, #child_mbox_ident, #child_id_ident),
+                        #policy
+                    );
+                });
+            }
+        }
+
+        supervisor_finish_stmts.push(quote! {
+            let #sup_id_ident = ::#runtime_crate_ident::next_actor_id!();
+            let (children, #sup_notify_rx_ident, #sup_control_rx_ident) = #group_ident.finish();
+        });
+
+        // Use the system-level generated concrete supervisor spec, not the
+        // blox-crate-level stub. The concrete spec has real action closures
+        // wired from the context crates.
+        let supervisor_spec_path: syn::Path =
+            syn::parse_str("crate::generated::bloxide_supervisor_spec_skeleton::SupervisorSpec")
+                .expect("valid supervisor spec path");
+        let supervisor_ctx_path: syn::Path = syn::parse_str("::bloxide_supervisor::SupervisorCtx")
+            .expect("valid supervisor ctx path");
+        let supervisor_event_path: syn::Path =
+            syn::parse_str("::bloxide_supervisor::SupervisorEvent")
+                .expect("valid supervisor event path");
+
+        supervisor_finish_stmts.push(quote! {
+            let #sup_ctx_ident = #supervisor_ctx_path::new(#sup_id_ident, children, #notify_ref_ident);
+            let mut #sup_machine_ident = ::bloxide_core::StateMachine::<#supervisor_spec_path<#runtime_ident>>::new(#sup_ctx_ident);
+        });
+        if !embedded {
+            supervisor_finish_stmts.push(quote! {
+                #sup_machine_ident.dispatch(#supervisor_event_path::<#runtime_ident>::Lifecycle(LifecycleCommand::Start));
+            });
+        }
+
+        if is_tokio {
+            root_task_decls.push(quote! {
+                ::#runtime_crate_ident::root_task!(#task_ident, #supervisor_spec_path<#runtime_ident>);
+            });
+        } else if embedded {
+            root_task_decls.push(quote! {
+                #[embassy_executor::task]
+                async fn #task_ident(
+                    mut machine: ::bloxide_core::StateMachine<#supervisor_spec_path<#runtime_ident>>,
+                    mailboxes: <#supervisor_spec_path<#runtime_ident> as ::bloxide_core::spec::MachineSpec>::Mailboxes<#runtime_ident>,
+                ) {
+                    machine.dispatch(#supervisor_event_path::<#runtime_ident>::Lifecycle(LifecycleCommand::Start));
+                    ::bloxide_core::run(machine, mailboxes, ::bloxide_core::RunConfig::<#runtime_ident>::root(), 0).await;
+                }
+            });
+        } else {
+            // Embassy: exit the process when the root supervisor's run loop
+            // returns. `exit_process` is `std::process::exit(0)` on std-hosted
+            // (arch-std) builds and a no-op on no_std embedded builds (the
+            // task ends and the executor idles, as before).
+            root_task_decls.push(quote! {
+                ::#runtime_crate_ident::root_task!(#task_ident, #supervisor_spec_path<#runtime_ident>, ::#runtime_crate_ident::exit_process());
+            });
+        }
+    }
+
+    // ── Actor task declarations (file level) ──────────────────────────────
+    let mut task_decls = Vec::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        let blox_config = blox_configs.get(&actor.blox).ok_or_else(|| {
+            anyhow::anyhow!(
+                "actor '{}' references unknown blox '{}'",
+                actor.name,
+                actor.blox
+            )
+        })?;
+        let actor_name = blox_config
+            .actor
+            .as_ref()
+            .map(|a| a.name.clone())
+            .unwrap_or_else(|| actor.name.clone());
+        let spec_ident = format_ident!("{}Spec", actor_name);
+        let task_ident = format_ident!("{}_task", actor.name);
+
+        let generics_str = blox_config
+            .context
+            .as_ref()
+            .and_then(|c| c.generics.as_deref())
+            .unwrap_or("");
+
+        let has_r = generics_str.contains("R:");
+
+        let spec_ty = if has_r {
+            quote! { #spec_ident<#runtime_ident> }
+        } else {
+            quote! { #spec_ident }
+        };
+
+        if config
+            .supervision
+            .iter()
+            .any(|s| s.children.contains(&actor.name))
+        {
+            task_decls.push(quote! {
+                ::#runtime_crate_ident::actor_task_supervised!(#task_ident, #spec_ty);
+            });
+        } else {
+            task_decls.push(quote! {
+                ::#runtime_crate_ident::actor_task!(#task_ident, #spec_ty);
+            });
+        }
+    }
+
+    // ── Dynamic actor spawn wrappers ────────────────────────────────────────
+    // For each dynamic actor, build a map from impl_crate → (spec_module, spec_type)
+    // so that factory injection can generate monomorphization wrappers.
+    let mut dynamic_actor_specs: std::collections::HashMap<String, (String, String)> =
+        std::collections::HashMap::new();
+    for actor in &config.actors {
+        if is_dynamic(actor) {
+            if let Some(impl_crate) = &actor.impl_crate {
+                let blox_config = blox_configs.get(&actor.blox).ok_or_else(|| {
+                    anyhow::anyhow!(
+                        "dynamic actor '{}' references unknown blox '{}'",
+                        actor.name,
+                        actor.blox
+                    )
+                })?;
+                let blox_actor_name = blox_config
+                    .actor
+                    .as_ref()
+                    .map(|a| a.name.clone())
+                    .unwrap_or_else(|| actor.name.clone());
+                let spec_ident_str = format!("{}Spec", blox_actor_name);
+                let spec_module = format!(
+                    "{}_spec_skeleton",
+                    actor.name.replace('-', "_").to_lowercase()
+                );
+                let generics_str = blox_config
+                    .context
+                    .as_ref()
+                    .and_then(|c| c.generics.as_deref())
+                    .unwrap_or("");
+                let has_r = generics_str.contains("R:");
+                let spec_ty = if has_r {
+                    format!("{}<{}>", spec_ident_str, runtime_ident_str)
+                } else {
+                    spec_ident_str.clone()
+                };
+                dynamic_actor_specs.insert(impl_crate.clone(), (spec_module, spec_ty));
+            }
+        }
+    }
+
+    // ── Context construction ────────────────────────────────────────────────
+    let mut ctx_stmts = Vec::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        let blox_config = blox_configs.get(&actor.blox).ok_or_else(|| {
+            anyhow::anyhow!(
+                "actor '{}' references unknown blox '{}'",
+                actor.name,
+                actor.blox
+            )
+        })?;
+        let actor_name = blox_config
+            .actor
+            .as_ref()
+            .map(|a| a.name.clone())
+            .unwrap_or_else(|| actor.name.clone());
+        let ctx_ident = format_ident!("{}Ctx", actor_name);
+        let ctx_var_ident = format_ident!("{}_ctx", actor.name);
+        let id_ident = format_ident!("{}_id", actor.name);
+
+        let ctor_fields = collect_ctor_fields(blox_config, &actor.blox, active_features);
+        let mut ctor_args = Vec::new();
+        for field in &ctor_fields {
+            if field.is_self_id {
+                ctor_args.push(quote! { #id_ident });
+            } else if let Some(source) = actor.inject.get(&field.name) {
+                if source.source == "self" {
+                    let ref_ident = format_ident!("{}_ref", actor.name);
+                    ctor_args.push(quote! { #ref_ident.clone() });
+                } else if source.source == "self_secondary" {
+                    // The ref was already created by the multi-mailbox channels! call
+                    // and named after this inject field name.
+                    let ref_ident = format_ident!("{}", field.name);
+                    ctor_args.push(quote! { #ref_ident.clone() });
+                } else if source.source == "factory" {
+                    let factory_crate = source.crate_name.as_deref().ok_or_else(|| {
+                        anyhow::anyhow!(
+                            "actor '{}' inject field '{}' source = 'factory' missing crate name",
+                            actor.name,
+                            field.name
+                        )
+                    })?;
+                    let factory_fn = source.function.as_deref().ok_or_else(|| {
+                        anyhow::anyhow!(
+                            "actor '{}' inject field '{}' source = 'factory' missing function name",
+                            actor.name,
+                            field.name
+                        )
+                    })?;
+                    let crate_ident = format_ident!("{}", factory_crate);
+                    let fn_ident = format_ident!("{}", factory_fn);
+
+                    // If this factory crate is a dynamic actor's impl_crate,
+                    // generate a monomorphization wrapper that fills in the
+                    // system-level concrete spec type.
+                    if let Some((spec_module, spec_ty)) = dynamic_actor_specs.get(factory_crate) {
+                        let spec_module_ident = format_ident!("{}", spec_module);
+                        let spec_ty_tokens: proc_macro2::TokenStream =
+                            spec_ty.parse().map_err(|e| {
+                                anyhow::anyhow!("failed to parse spec type '{}': {}", spec_ty, e)
+                            })?;
+                        let spec_path =
+                            quote! { crate::generated::#spec_module_ident::#spec_ty_tokens };
+                        // Compose the domain build (impl crate) with the
+                        // platform spawn (bloxide-spawn): the closure
+                        // monomorphizes the generic factory with the
+                        // system-level concrete spec type, then hands the
+                        // resulting ActorParts to `spawn_actor_task`,
+                        // yielding a SpawnFn<R, Req>. The `as _` cast on the
+                        // constructor argument tells Rust to infer the
+                        // closure's parameter types from the target field
+                        // type.
+                        ctor_args.push(quote! {
+                            (|req, notify| ::bloxide_spawn::spawn_actor_task(
+                                ::#crate_ident::#fn_ident::<#spec_path>(req),
+                                notify,
+                            )) as _
+                        });
+                    } else {
+                        ctor_args.push(quote! { ::#crate_ident::#fn_ident as _ });
+                    }
+                } else if source.source == "resource" {
+                    let resource = format_ident!("resource_{}", source.field.as_deref().unwrap());
+                    ctor_args.push(quote! { #resource });
+                } else if source.source == "service" {
+                    let endpoint = format_ident!("{}_ref", source.service.as_deref().unwrap());
+                    ctor_args.push(quote! { #endpoint.clone() });
+                } else if source.source == "actor" {
+                    let src_actor = source.actor.as_deref().ok_or_else(|| {
+                        anyhow::anyhow!(
+                            "actor '{}' inject field '{}' source = 'actor' missing actor name",
+                            actor.name,
+                            field.name
+                        )
+                    })?;
+                    let field_selector = source.field.as_deref().unwrap_or("primary");
+                    if field_selector == "primary" {
+                        // Default: inject the actor's primary channel ref.
+                        let ref_ident = format_ident!("{}_ref", src_actor);
+                        ctor_args.push(quote! { #ref_ident.clone() });
+                    } else {
+                        // Named ref: look up in symbol table (e.g. supervisor's
+                        // "control" or "notify" refs).
+                        let sym = symbol_table
+                            .get(&(src_actor.to_string(), field_selector.to_string()))
+                            .ok_or_else(|| {
+                                anyhow::anyhow!(
+                                    "actor '{}' has no ref '{}'",
+                                    src_actor,
+                                    field_selector
+                                )
+                            })?;
+                        let ref_ident = format_ident!("{}", sym);
+                        ctor_args.push(quote! { #ref_ident.clone() });
+                    }
+                } else {
+                    anyhow::bail!(
+                        "actor '{}' inject field '{}' has unsupported source '{}'",
+                        actor.name,
+                        field.name,
+                        source.source
+                    );
+                }
+            }
+        }
+
+        ctx_stmts.push(quote! {
+            let #ctx_var_ident = #ctx_ident::new(#(#ctor_args),*);
+        });
+    }
+
+    // ── Machine construction ────────────────────────────────────────────────
+    let mut machine_stmts = Vec::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        let machine_ident = format_ident!("{}_machine", actor.name);
+        let ctx_var_ident = format_ident!("{}_ctx", actor.name);
+        machine_stmts.push(quote! {
+            let #machine_ident = ::bloxide_core::StateMachine::new(#ctx_var_ident);
+        });
+    }
+
+    // ── Supervisor run statements ───────────────────────────────────────────
+    let mut supervisor_run_stmts = Vec::new();
+    for (idx, _sup) in config.supervision.iter().enumerate() {
+        let task_ident = if config.supervision.len() == 1 {
+            format_ident!("supervisor_task")
+        } else {
+            format_ident!("supervisor_task_{}", idx)
+        };
+        let sup_machine_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_machine")
+        } else {
+            format_ident!("sup_machine_{}", idx)
+        };
+        let sup_notify_rx_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_notify_rx")
+        } else {
+            format_ident!("sup_notify_rx_{}", idx)
+        };
+        let sup_control_rx_ident = if config.supervision.len() == 1 {
+            format_ident!("sup_control_rx")
+        } else {
+            format_ident!("sup_control_rx_{}", idx)
+        };
+
+        // Unified supervisor run — tuple mailboxes (child_rx, control_rx).
+        // No feature gating, no SupervisorMailboxes, no spawn_rx.
+        if is_tokio {
+            supervisor_run_stmts.push(quote! {
+                #task_ident(#sup_machine_ident, (#sup_notify_rx_ident, #sup_control_rx_ident)).await;
+            });
+        } else {
+            supervisor_run_stmts.push(quote! {
+                spawner.must_spawn(#task_ident(#sup_machine_ident, (#sup_notify_rx_ident, #sup_control_rx_ident)));
+            });
+        }
+    }
+
+    // ── Bootstrap message sends ─────────────────────────────────────────────
+    let mut bootstrap_send_stmts = Vec::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor) {
+            continue;
+        }
+        if actor.bootstrap.is_empty() {
+            continue;
+        }
+        let ref_ident = format_ident!("{}_ref", actor.name);
+        let id_ident = format_ident!("{}_id", actor.name);
+        for boot in &actor.bootstrap {
+            let parts: Vec<&str> = boot.message.split("::").collect();
+            if parts.len() != 2 {
+                anyhow::bail!(
+                    "actor '{}' bootstrap message '{}' is not in the form MsgType::VariantName",
+                    actor.name,
+                    boot.message
+                );
+            }
+            let msg_type_ident = format_ident!("{}", parts[0]);
+            let variant_ident = format_ident!("{}", parts[1]);
+
+            let msg_expr = if let Some(payload) = &boot.payload {
+                let mut field_tokens = Vec::new();
+                for (key, value) in payload {
+                    let field_ident = format_ident!("{}", key);
+                    let value_tokens = toml_value_to_tokens(value)?;
+                    field_tokens.push(quote! { #field_ident: #value_tokens });
+                }
+                quote! { #msg_type_ident::#variant_ident(#variant_ident { #(#field_tokens),* }) }
+            } else {
+                quote! { #msg_type_ident::#variant_ident(#variant_ident) }
+            };
+
+            if is_tokio {
+                bootstrap_send_stmts.push(quote! {
+                    assert!(#ref_ident.send(#id_ident, #msg_expr).await.is_ok(), "bootstrap mailbox closed");
+                });
+            } else {
+                bootstrap_send_stmts.push(quote! {
+                    assert!(#ref_ident.try_send(#id_ident, #msg_expr).is_ok(), "bootstrap mailbox full");
+                });
+            }
+        }
+    }
+
+    // Services consume resources exactly once. No service futures are polled
+    // until the single Embassy executor's setup closure returns.
+    let mut service_channels = Vec::new();
+    let mut service_starts = Vec::new();
+    let mut owned_resources = BTreeSet::new();
+    for source in config.actors.iter().flat_map(|a| a.inject.values()) {
+        if source.source == "resource" {
+            owned_resources.insert(source.field.as_deref().unwrap());
+        }
+    }
+    for service in &config.services {
+        owned_resources.insert(service.resource.as_str());
+        let implementation = format_ident!("{}", service.impl_crate);
+        let start = format_ident!("{}", service.start);
+        let resource = format_ident!("resource_{}", service.resource);
+        let mut args = vec![quote! { spawner }, quote! { #resource }];
+        if let (Some(message), Some(capacity)) = (&service.message_path, service.capacity) {
+            let ty: syn::Type = syn::parse_str(message)?;
+            let endpoint = format_ident!("{}_ref", service.name);
+            let rx = format_ident!("{}_rx", service.name);
+            service_channels.push(quote! {
+                let ((#endpoint,), (#rx,)) = ::#runtime_crate_ident::channels! { #ty(#capacity), };
+            });
+            args.push(quote! { #rx });
+        }
+        for source in service.inject.values() {
+            let value = match source.source.as_str() {
+                "resource" => {
+                    let name = source.field.as_deref().unwrap();
+                    owned_resources.insert(name);
+                    let ident = format_ident!("resource_{}", name);
+                    quote! { #ident }
+                }
+                "service" => {
+                    let ident = format_ident!("{}_ref", source.service.as_deref().unwrap());
+                    quote! { #ident.clone() }
+                }
+                "actor" => {
+                    let name = source
+                        .actor
+                        .as_deref()
+                        .ok_or_else(|| anyhow::anyhow!("service actor injection requires actor"))?;
+                    let field = source.field.as_deref().unwrap_or("primary");
+                    let ident = if field == "primary" {
+                        anyhow::ensure!(
+                            config.actors.iter().any(|a| a.name == name),
+                            "unknown actor '{name}'"
+                        );
+                        format_ident!("{}_ref", name)
+                    } else {
+                        let sym = symbol_table
+                            .get(&(name.into(), field.into()))
+                            .ok_or_else(|| anyhow::anyhow!("unknown mailbox '{name}.{field}'"))?;
+                        format_ident!("{}", sym)
+                    };
+                    quote! { #ident.clone() }
+                }
+                other => anyhow::bail!("unsupported service injection '{other}'"),
+            };
+            args.push(value);
+        }
+        let platform = format_ident!("{}", config.platform.as_ref().unwrap().impl_crate);
+        let on_error = format_ident!("{}", config.platform.as_ref().unwrap().on_error);
+        service_starts.push(quote! {
+            if let Err(error) = ::#implementation::#start(#(#args),*) {
+                ::#platform::#on_error(error);
+            }
+        });
+    }
+    let mut standalone_starts = Vec::new();
+    for actor in &config.actors {
+        if skip_in_main_body(actor)
+            || config
+                .supervision
+                .iter()
+                .any(|s| s.children.contains(&actor.name))
+        {
+            continue;
+        }
+        let task = format_ident!("{}_task", actor.name);
+        let machine = format_ident!("{}_machine", actor.name);
+        let mbox = format_ident!("{}_mbox", actor.name);
+        standalone_starts.push(if is_tokio {
+            quote! { let _ = ::tokio::spawn(#task(#machine, #mbox)); }
+        } else {
+            quote! { spawner.must_spawn(#task(#machine, #mbox)); }
+        });
+    }
+    let platform_setup = config.platform.as_ref().map(|p| {
+        let implementation = format_ident!("{}", p.impl_crate);
+        let init = format_ident!("{}", p.init);
+        let on_error = format_ident!("{}", p.on_error);
+        quote! { let resources = match ::#implementation::#init() { Ok(resources) => resources, Err(error) => ::#implementation::#on_error(error) }; }
+    });
+    let resource_destructure = config.platform.as_ref().map(|p| {
+        let implementation = format_ident!("{}", p.impl_crate);
+        let ty = format_ident!("{}", p.resources);
+        let fields = owned_resources.iter().map(|name| {
+            let field = format_ident!("{}", name);
+            let binding = format_ident!("resource_{}", name);
+            quote! { #field: #binding }
+        });
+        // Exhaustive pattern rejects unused owned resources and prevents a
+        // hidden destructor running after the allocator freezes.
+        quote! { let ::#implementation::#ty { #(#fields),* } = resources; }
+    });
+    let freeze = config.platform.as_ref().map(|p| {
+        let implementation = format_ident!("{}", p.impl_crate);
+        let function = format_ident!("{}", p.freeze);
+        quote! { ::#implementation::#function(); }
+    });
+
+    // ── Main function ───────────────────────────────────────────────────────
+    let main_fn = if is_tokio {
+        quote! {
+            async fn main() {
+                tracing_log::LogTracer::init().ok();
+                tracing_subscriber::fmt()
+                    .with_env_filter(
+                        tracing_subscriber::EnvFilter::try_from_default_env()
+                            .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("info")),
+                    )
+                    .try_init()
+                    .ok();
+
+                #(#timer_stmts)*
+                #(#channel_stmts)*
+                #(#supervisor_setup_stmts)*
+                #(#ctx_stmts)*
+                #(#machine_stmts)*
+                #(#supervisor_finish_stmts)*
+                #(#standalone_starts)*
+                #(#bootstrap_send_stmts)*
+                #(#watchdog_stmts)*
+                #(#supervisor_run_stmts)*
+                println!(#done_lit);
+            }
+        }
+    } else {
+        let entry = embedded.then(|| quote! { #[::cortex_m_rt::entry] });
+        let return_ty = embedded.then(|| quote! { -> ! });
+        quote! {
+            #entry
+            fn main() #return_ty {
+                #platform_setup
+                static EXECUTOR: ::static_cell::StaticCell<::embassy_executor::Executor> =
+                    ::static_cell::StaticCell::new();
+                let executor = EXECUTOR.init(::embassy_executor::Executor::new());
+                executor.run(move |spawner| {
+                    #resource_destructure
+                    #(#timer_stmts)*
+                    #(#channel_stmts)*
+                    #(#service_channels)*
+                    #(#supervisor_setup_stmts)*
+                    #(#ctx_stmts)*
+                    #(#machine_stmts)*
+                    #(#service_starts)*
+                    #(#supervisor_finish_stmts)*
+                    #(#standalone_starts)*
+                    #(#watchdog_stmts)*
+                    #(#supervisor_run_stmts)*
+                    #freeze
+                    #(#bootstrap_send_stmts)*
+                });
+            }
+        }
+    };
+
+    let tokens = quote! {
+        #![allow(unused_imports, unused_variables)]
+        #(#embassy_timer_task_decl)*
+        #(#embassy_watchdog_task_decls)*
+        #(#use_stmts)*
+        #(#task_decls)*
+        #(#root_task_decls)*
+        #main_fn
+    };
+
+    // Prepend `mod generated;` if we generated concrete spec files.
+    // This must come before any use statements that reference crate::generated.
+    let tokens = if has_non_timer_actors {
+        quote! {
+            #![allow(unused_imports, unused_variables)]
+            mod generated;
+            #(#embassy_timer_task_decl)*
+            #(#embassy_watchdog_task_decls)*
+            #(#use_stmts)*
+            #(#task_decls)*
+            #(#root_task_decls)*
+            #main_fn
+        }
+    } else {
+        tokens
+    };
+
+    let tokens = if embedded {
+        quote! { #![no_std] #![no_main] #tokens }
+    } else {
+        tokens
+    };
+    let file = syn::parse2::<syn::File>(tokens)
+        .map_err(|e| anyhow::anyhow!("syn parsing failed: {}", e))?;
+    let pretty = prettyplease::unparse(&file);
+
+    // Apply the `#[tokio::main]` attribute that prettyplease can't emit
+    // (it's not a regular attribute — it's an outer attribute on a function
+    // that prettyplease formats on the same line).
+    let with_attr = if is_tokio {
+        pretty.replace("async fn main()", "#[tokio::main]\nasync fn main()")
+    } else {
+        pretty
+    };
+
+    // Run rustfmt on the output so it matches `cargo fmt` exactly.
+    // This prevents `cargo blox generate` (which calls `cargo fmt`) from
+    // clobbering the wire-generated main.rs with formatting diffs.
+    let with_header = format!("{}{}{}", HEADER, DOC_FROM_SYSTEM_TOML, with_attr);
+    let formatted = rustfmt_source(&with_header)?;
+
+    Ok(formatted)
+}

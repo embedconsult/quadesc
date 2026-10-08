@@ -1,0 +1,40 @@
+{
+  "schema": "bloxide-xcp/sxi-transport-profiles/1",
+  "selected_external_profile": "reviewed-19200-8n1",
+  "profiles": {
+    "reviewed-19200-8n1": {
+      "scope": "selected diagnostic baseline for later physical qualification",
+      "bitrate": 19200,
+      "bytesize": 8,
+      "parity": "N",
+      "stopbits": 1,
+      "mode": "ASYNCH_FULL_DUPLEX_MODE",
+      "header_format": "HEADER_LEN_CTR_BYTE",
+      "tail_format": "CHECKSUM_BYTE",
+      "framing": false,
+      "inter_byte_timeout_ms": 20,
+      "host_reopen_quiet_ms": 50,
+      "physical_uart_qualified": false
+    },
+    "reference-pty-38400-8n1": {
+      "scope": "historical T10 host fixture only",
+      "bitrate": 38400,
+      "bytesize": 8,
+      "parity": "N",
+      "stopbits": 1,
+      "mode": "ASYNCH_FULL_DUPLEX_MODE",
+      "header_format": "HEADER_LEN_CTR_BYTE",
+      "tail_format": "CHECKSUM_BYTE",
+      "framing": false,
+      "inter_byte_timeout_ms": 20,
+      "host_reopen_quiet_ms": 50,
+      "physical_uart_qualified": false
+    }
+  },
+  "limitations": [
+    "PTY execution cannot measure electrical baud",
+    "SUM8 does not detect all corruption",
+    "no escaping or in-band resynchronization",
+    "native ARM64 and physical UART remain later gates"
+  ]
+}

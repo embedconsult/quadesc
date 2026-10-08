@@ -1,0 +1,613 @@
+[actor]
+name = "XcpSession"
+
+[package]
+description = "Declarative runtime-agnostic session topology for XCP scalar S0"
+
+[package.features]
+default = ["std"]
+std = ["bloxide-core/std"]
+
+[package.dev-dependencies]
+bloxide-core = { features = ["std"] }
+xcp-core = {}
+blox-ctx-xcp = {}
+critical-section = { features = ["std"] }
+
+[context]
+name = "XcpSessionCtx"
+imports = [
+    "xcp_core::{Session, VirtualMap}",
+    "blox_ctx_xcp::{EffectSlot, ResponseSlot, SessionBridge}",
+]
+
+[[context.uses]]
+field = "bridge"
+field_type = "&'static SessionBridge"
+role = "ctor"
+
+[[context.uses]]
+field = "map"
+field_type = "VirtualMap<'static>"
+role = "ctor"
+
+[[context.fields]]
+name = "session"
+type = "Session"
+
+[[context.fields]]
+name = "effects"
+type = "EffectSlot"
+
+[[context.fields]]
+name = "responses"
+type = "ResponseSlot"
+
+[[context.actions]]
+name = "handle_ready_packet"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "map:ref", "effects:mut", "responses:mut"]
+event_payload = "packet"
+returns = "ActionResult"
+[[context.actions]]
+name = "handle_connect_packet"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "packet"
+returns = "ActionResult"
+[[context.actions]]
+name = "handle_recovery_packet"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "packet"
+returns = "ActionResult"
+[[context.actions]]
+name = "handle_busy_packet"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "packet"
+returns = "ActionResult"
+
+[[context.actions]]
+name = "handle_provider_completion"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "provider_completion"
+returns = "ActionResult"
+
+[[context.actions]]
+name = "service"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "service"
+returns = "ActionResult"
+[[context.actions]]
+name = "service_awaiting"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "service"
+returns = "ActionResult"
+[[context.actions]]
+name = "service_resolving"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "service"
+returns = "ActionResult"
+[[context.actions]]
+name = "service_recovery"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+event_payload = "service"
+returns = "ActionResult"
+
+[[context.actions]]
+name = "transport_lost"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+returns = "ActionResult"
+
+[[context.actions]]
+name = "fence_delivery"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut"]
+
+[[context.actions]]
+name = "deliver"
+crate = "blox_ctx_xcp"
+fields = ["session:mut", "effects:mut", "responses:mut", "bridge:ref"]
+returns = "ActionResult"
+
+[[context.actions]]
+name = "fence_bridge"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "mark_lost"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+
+[[context.actions]]
+name = "enter_disconnected"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_closed"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_synchronizing"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_ready"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_awaiting_owner"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_resolving"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_quiescing"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+[[context.actions]]
+name = "enter_recovery"
+crate = "blox_ctx_xcp"
+fields = ["bridge:ref"]
+
+[event]
+name = "XcpSessionEvent"
+
+[[event.mailboxes]]
+variant = "Msg"
+message = "XcpSessionMsg"
+message_path = "xcp_messages::XcpSessionMsg"
+variants = ["Packet", "ProviderCompletion", "Service", "TransportLost", "TransportSettled"]
+
+[topology]
+spec_imports = []
+
+[[topology.states]]
+name = "Session"
+composite = true
+
+[[topology.states]]
+name = "Disconnected"
+parent = "Session"
+initial = true
+
+# Normal DISCONNECT reaches Closed; the initial leaf is reserved for lifecycle
+# entry, so Reset can invalidate even an unsent DISCONNECT response.
+[[topology.states]]
+name = "Closed"
+parent = "Session"
+
+[[topology.states]]
+name = "Synchronizing"
+parent = "Session"
+
+[[topology.states]]
+name = "Ready"
+parent = "Session"
+
+[[topology.states]]
+name = "AwaitingOwner"
+parent = "Session"
+
+[[topology.states]]
+name = "Resolving"
+parent = "Session"
+
+[[topology.states]]
+name = "Quiescing"
+parent = "Session"
+
+[[topology.states]]
+name = "Recovery"
+parent = "Session"
+
+# Stop exits the ancestor; Reset may skip it but always enters the initial leaf.
+[[topology.exit]]
+state = "Session"
+actions = ["Self::fence_delivery", "Self::fence_bridge"]
+
+[[topology.entry]]
+state = "Disconnected"
+actions = ["Self::fence_delivery", "Self::fence_bridge", "Self::enter_disconnected"]
+
+[[topology.entry]]
+state = "Closed"
+actions = ["Self::enter_closed"]
+[[topology.entry]]
+state = "Synchronizing"
+actions = ["Self::enter_synchronizing"]
+[[topology.entry]]
+state = "Ready"
+actions = ["Self::enter_ready"]
+[[topology.entry]]
+state = "AwaitingOwner"
+actions = ["Self::enter_awaiting_owner"]
+[[topology.entry]]
+state = "Resolving"
+actions = ["Self::enter_resolving"]
+[[topology.entry]]
+state = "Quiescing"
+actions = ["Self::enter_quiescing"]
+[[topology.entry]]
+state = "Recovery"
+actions = ["Self::fence_bridge", "Self::enter_recovery"]
+
+[[topology.transitions]]
+state = "Ready"
+event = "XcpSessionMsg::Packet(_)"
+target = "stay"
+actions = ["Self::handle_ready_packet", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Disconnected"
+event = "XcpSessionMsg::Packet(_)"
+target = "stay"
+actions = ["Self::handle_connect_packet", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Closed"
+event = "XcpSessionMsg::Packet(_)"
+target = "stay"
+actions = ["Self::handle_connect_packet", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Recovery"
+event = "XcpSessionMsg::Packet(_)"
+target = "stay"
+actions = ["Self::handle_recovery_packet", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Session"
+event = "XcpSessionMsg::Packet(_)"
+target = "stay"
+actions = ["Self::handle_busy_packet", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Session"
+event = "XcpSessionMsg::ProviderCompletion(_)"
+target = "stay"
+actions = ["Self::handle_provider_completion", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "AwaitingOwner"
+event = "XcpSessionMsg::Service(_)"
+target = "stay"
+actions = ["Self::service_awaiting", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Resolving"
+event = "XcpSessionMsg::Service(_)"
+target = "stay"
+actions = ["Self::service_resolving", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Recovery"
+event = "XcpSessionMsg::Service(_)"
+target = "stay"
+actions = ["Self::service_recovery", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Session"
+event = "XcpSessionMsg::Service(_)"
+target = "stay"
+actions = ["Self::service", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_synchronizing()"
+  target = "Synchronizing"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_ready()"
+  target = "Ready"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_awaiting_owner()"
+  target = "AwaitingOwner"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_quiescing()"
+  target = "Quiescing"
+
+[[topology.transitions]]
+state = "Session"
+event = "XcpSessionMsg::TransportLost"
+target = "stay"
+actions = ["Self::transport_lost", "Self::fence_bridge", "Self::mark_lost", "Self::deliver"]
+
+  [[topology.transitions.guards]]
+  condition = "results.any_failed() || ctx.session.target_recovery()"
+  target = "Recovery"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_closed()"
+  target = "Closed"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.session.target_resolving()"
+  target = "Resolving"
+
+[[topology.transitions]]
+state = "Session"
+event = "XcpSessionMsg::TransportSettled"
+target = "stay"
+
+  [[topology.transitions.guards]]
+  condition = "ctx.bridge.loss_acknowledged() && ctx.bridge.settled() && ctx.bridge.effect().is_none() && !ctx.session.has_pending_work()"
+  target = "done"
+
+  [[topology.transitions.guards]]
+  condition = "_"
+  target = "stay"

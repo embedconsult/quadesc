@@ -1,0 +1,10 @@
+[workspace]
+members = ["characterization", "characterization/messages", "mcu-xcp-platform", "diagnostic-parser", "diagnostic-transport"]
+resolver = "2"
+[workspace.dependencies]
+static_cell = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+libc = "0.2"
+critical-section = "1"
+

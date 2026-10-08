@@ -1,0 +1,130 @@
+[actor]
+name = "MainboardOwner"
+[package.features]
+default = []
+[context]
+name = "MainboardOwnerCtx"
+imports = ["mainboard_characterization::Owner"]
+on_init = "mainboard_characterization::lifecycle_stop(&mut ctx.owner);"
+[[context.uses]]
+field = "owner"
+field_type = "Owner"
+role = "ctor"
+[[context.actions]]
+name = "provider"
+crate = "mainboard_characterization"
+fields = ["owner:mut"]
+impl_required = false
+event_payload = "request"
+[[context.actions]]
+name = "tick"
+crate = "mainboard_characterization"
+fields = ["owner:mut"]
+impl_required = false
+event_payload = "tick"
+[[context.actions]]
+name = "lifecycle_stop"
+crate = "mainboard_characterization"
+fields = ["owner:mut"]
+impl_required = false
+[event]
+name = "MainboardOwnerEvent"
+[[event.mailboxes]]
+variant = "Msg"
+message = "MainboardMsg"
+message_path = "mainboard_messages::MainboardMsg"
+[topology]
+[[topology.states]]
+name = "Operating"
+composite = true
+[[topology.states]]
+name = "Idle"
+parent = "Operating"
+initial = true
+[[topology.states]]
+name = "Configured"
+parent = "Operating"
+[[topology.states]]
+name = "Continuous"
+parent = "Operating"
+[[topology.states]]
+name = "PulseWait"
+parent = "Operating"
+[[topology.states]]
+name = "PulseComplete"
+parent = "Operating"
+[[topology.states]]
+name = "Fault"
+parent = "Operating"
+[[topology.exit]]
+state = "Operating"
+actions = ["Self::lifecycle_stop"]
+[[topology.transitions]]
+state = "Operating"
+event = "MainboardMsg::Provider(_)"
+target = "stay"
+actions = ["Self::provider"]
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 0"
+target = "Idle"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 1"
+target = "Configured"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 2"
+target = "Continuous"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 3"
+target = "PulseWait"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 4"
+target = "PulseComplete"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 5"
+target = "Fault"
+[[topology.transitions]]
+state = "Operating"
+event = "MainboardMsg::Tick(_)"
+target = "stay"
+actions = ["Self::tick"]
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 0"
+target = "Idle"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 1"
+target = "Configured"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 2"
+target = "Continuous"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 3"
+target = "PulseWait"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 4"
+target = "PulseComplete"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 5"
+target = "Fault"
+[[topology.transitions]]
+state = "Operating"
+event = "MainboardMsg::TransportLost"
+target = "stay"
+actions = ["Self::lifecycle_stop"]
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 0"
+target = "Idle"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 1"
+target = "Configured"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 2"
+target = "Continuous"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 3"
+target = "PulseWait"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 4"
+target = "PulseComplete"
+[[topology.transitions.guards]]
+condition = "ctx.owner.phase() == 5"
+target = "Fault"

@@ -1,0 +1,11 @@
+[package]
+name = "host-all-motor-regression"
+version = "0.1.0"
+edition = "2024"
+[workspace]
+[dependencies]
+mainboard-characterization = { path = "../characterization" }
+am13-rs = { path = "../../inputs/am13-rs" }
+esc-som-board = { path = "../../inputs/esc-som-board" }
+xcp-core = { path = "../../bloxide-xcp/crates/xcp-core" }
+xcp-messages = { path = "../../bloxide-xcp/crates/xcp-messages" }

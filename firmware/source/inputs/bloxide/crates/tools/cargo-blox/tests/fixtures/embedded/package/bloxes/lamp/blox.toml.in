@@ -1,0 +1,32 @@
+[actor]
+name = "FixtureLamp"
+[package.features]
+default = []
+[context]
+name = "FixtureLampCtx"
+imports = ["fixture_context::Producer"]
+[[context.uses]]
+field = "output"
+field_type = "Producer"
+role = "ctor"
+[[context.actions]]
+name = "set_level"
+crate = "fixture_context"
+fields = ["output:mut"]
+event_payload = "level"
+impl_required = false
+[event]
+name = "FixtureLampEvent"
+[[event.mailboxes]]
+variant = "Msg"
+message = "LampMsg"
+message_path = "fixture_messages::LampMsg"
+[topology]
+[[topology.states]]
+name = "Ready"
+initial = true
+[[topology.transitions]]
+state = "Ready"
+event = "LampMsg::SetLevel(_)"
+target = "stay"
+actions = ["Self::set_level"]

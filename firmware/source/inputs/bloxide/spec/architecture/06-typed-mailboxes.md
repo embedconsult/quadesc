@@ -1,0 +1,161 @@
+# Typed Mailboxes
+
+Each actor has **one mailbox per message type it can receive**. The run loop selects
+across all mailboxes in priority order, converting each incoming envelope into the
+actor's unified `Event` enum before dispatching through the HSM.
+
+## Motivation
+
+A single untyped mailbox would require the `Event` enum to be the shared message type,
+making all callers aware of the full event space. Typed per-message mailboxes give each
+sender a precise `ActorRef<M, R>` handle — they can only send the message types they
+are authorized to send.
+
+## The `Mailboxes` Trait
+
+```rust
+pub trait Mailboxes<E: Send + 'static>: Send + 'static + Unpin {
+    /// Poll all mailboxes in priority order (index 0 = highest priority).
+    /// Returns the next event converted into the unified `E` type, or
+    /// `Poll::Ready(None)` once **every** stream in the tuple has closed
+    /// (all-streams-close semantics, issue #134).
+    fn poll_next(&mut self, cx: &mut core::task::Context<'_>) -> core::task::Poll<Option<E>>;
+}
+```
+
+Blanket implementations are generated at build time by bloxide-core's `build.rs` (via
+`bloxide-codegen`, from the `[mailboxes]` section of `blox.toml`) into
+`$OUT_DIR/mailboxes_impls.rs` for 1- through 16-element tuples where each element `Si`
+implements `Stream<Item = Ti>` and `E: From<Ti>`.
+
+## Actor Event Enum
+
+Every actor defines a unified `Event` enum with one variant per mailbox. Each variant
+wraps the full `Envelope<M>` so the handler can inspect the sender's `ActorId`.
+
+```toml
+# In blox.toml
+[event]
+name = "PingEvent"
+
+[[event.mailboxes]]
+variant = "Msg"
+message = "PingPongMsg"
+message_path = "ping_pong_messages::PingPongMsg"
+```
+
+Run `cargo blox generate` to produce `src/generated/events.rs` (in the materialized crate under `target/bloxide-generated/`) with `From<Envelope<M>>` impls,
+`EventTag`, tag constants, and payload accessor methods. Then use `pub use crate::generated::events::*;`.
+
+## `MachineSpec::Mailboxes<R>` Associated Type
+
+Every `MachineSpec` implementation declares its mailbox tuple via a generic associated
+type (GAT), using `R: BloxRuntime` to produce the concrete stream types:
+
+```rust
+pub trait MachineSpec: Sized + 'static {
+    // ...existing associated types...
+
+    /// Declares the set of typed mailbox streams for this actor.
+    /// Streams are polled in index order — index 0 has highest priority.
+    type Mailboxes<R: BloxRuntime>: Mailboxes<Self::Event>;
+}
+```
+
+Example for the Ping blox:
+
+```rust
+impl<R: BloxRuntime> MachineSpec for PingSpec<R> {
+    type Event = PingEvent;
+    type Mailboxes<Rt: BloxRuntime> = (Rt::Stream<PingPongMsg>,);
+    // ...
+}
+```
+
+Actors that are only driven directly (e.g., in unit tests) use `NoMailboxes`:
+
+```rust
+type Mailboxes<R: BloxRuntime> = NoMailboxes;
+```
+
+## Lifecycle and the Runtime
+
+**Lifecycle is not a domain mailbox.** The runtime manages Start and Reset
+commands through a separate, runtime-internal `LifecycleCommand` channel that is
+never part of the actor's `Mailboxes` tuple.
+
+- `dispatch(LifecycleCommand::Start)` — dispatched by the runtime to exit Init and enter `initial_state()`
+- `dispatch(LifecycleCommand::Reset)` — dispatched by the runtime to go **directly** to
+  `initial_state()` (skipping Init entirely; no `on_init_entry`/`on_init_exit`)
+
+Domain mailboxes contain only peer-to-peer messages. The domain run loop never
+inspects `LifecycleCommand` values as domain events.
+
+## Priority Semantics
+
+The `Mailboxes` blanket impls poll streams in tuple index order: index 0 is polled
+first on every call to `poll_next`. This means the stream at index 0 receives
+priority over all others. Order streams by descending urgency.
+
+## Supervised Run Loop
+
+Supervised actors run the unified `run()` loop from `bloxide-core` with
+`RunConfig::supervised(lifecycle_rx, supervisor_notify)`. The loop polls the
+internal lifecycle channel **before** domain mailboxes. Domain events are only
+polled when no lifecycle command is pending. The actor never sees lifecycle
+commands as domain events.
+
+```rust
+// RunConfig variants (bloxide-core::runloop):
+RunConfig::root()                                    // root supervisor/actor
+RunConfig::supervised(lifecycle_rx, notify)          // supervised child
+RunConfig::supervised_with_abort(lifecycle_rx, abort_rx, notify)  // + kill capability
+RunConfig::unsupervised()                            // auto-start, exits on stop
+RunConfig::bare()                                    // tests: no lifecycle, no auto-start
+```
+
+`RunConfig` is generic over `R: BloxRuntime`, so the lifecycle stream and notify
+sender use the runtime's own channel types (`R::Stream`, `R::Sender`) — the same
+signature serves Embassy, Tokio, and TestRuntime.
+
+After every dispatch the runtime observes `DispatchOutcome` and sends
+`ChildLifecycleEvent` to the supervisor's domain mailbox automatically.
+
+`SupervisorSpec` itself uses a two-stream domain mailbox tuple:
+- child lifecycle events (`Stream<ChildLifecycleEvent>`)
+- supervisor control-plane events (`Stream<ChildCtrl<R>>`) for dynamic registration and watchdog ticks
+
+## Wiring Pattern
+
+Create one domain channel per message type, then build the mailbox tuple:
+
+```rust
+let ((ping_ref,), ping_mbox) = bloxide_embassy::channels! {
+    PingPongMsg(16),
+};
+```
+
+The `channels!` macro creates channels via `StaticChannelCap` and returns
+`(refs_tuple, streams_tuple)` ready to pass to an actor task.
+
+## Key Invariants
+
+> **See `spec/README.md` → "Key Invariants" for the canonical list.**
+
+Typed-mailbox-specific invariants:
+
+- Domain `Mailboxes` tuples contain **no lifecycle stream** — lifecycle is runtime-internal.
+- Callers only hold `ActorRef<M, R>` for the specific message type `M` they are
+  authorized to send — they cannot send arbitrary `Event` variants.
+- `NoMailboxes` is used as the `Mailboxes` type for spec impls driven directly via
+  `machine.dispatch(event)` (e.g., in unit tests).
+- The run loop exits on five conditions: `DispatchOutcome::Aborted`,
+  `DispatchOutcome::Done`, all domain streams closed (all-streams-close),
+  `DispatchOutcome::Stopped` when `exit_on_stop` is set, and
+  `DispatchOutcome::Failed` when `exit_on_fail` is set. Supervised actors clear
+  both flags, so their tasks stay alive through `Stopped` and `Failed` until
+  the supervisor acts.
+- An actor holding its own `self_ref` keeps its domain stream open — a
+  convenience (e.g. for self-delivered timer messages), not a lifetime
+  requirement. Shutdown flows through the lifecycle/abort streams and
+  `Decision` outcomes, never through domain channel close.

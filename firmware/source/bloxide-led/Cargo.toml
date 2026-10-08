@@ -1,0 +1,4 @@
+[workspace]
+members = ["crates/led-messages", "crates/led-context"]
+resolver = "2"
+

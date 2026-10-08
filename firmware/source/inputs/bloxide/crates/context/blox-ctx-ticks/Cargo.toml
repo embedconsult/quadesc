@@ -1,0 +1,11 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "blox-ctx-ticks"
+version.workspace = true
+edition.workspace = true
+description = "Domain context crate: increment_count action function for tick-counting"
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+bloxide-core = { workspace = true }

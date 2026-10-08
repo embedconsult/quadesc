@@ -1,0 +1,21 @@
+{
+  "profile": "S0",
+  "connection_profile": "reviewed-19200-8n1",
+  "scope": "external_fixture",
+  "protocol_layer": "1.0",
+  "transport_layer": "SxI 1.0",
+  "connection": {
+    "bitrate": 19200,
+    "bytesize": 8,
+    "parity": "N",
+    "stopbits": 1,
+    "mode": "ASYNCH_FULL_DUPLEX_MODE",
+    "header_format": "HEADER_LEN_CTR_BYTE",
+    "tail_format": "CHECKSUM_BYTE",
+    "framing": false,
+    "alignment": 1,
+    "timeout_seconds": 0.5
+  },
+  "qualification": "reviewed current fixture transport selection; physical XCP endpoint, serial side effects, and device execution remain unqualified",
+  "warning": "The current 19200 core 0.1.2 firmware is a diagnostic protocol, not an XCP endpoint."
+}

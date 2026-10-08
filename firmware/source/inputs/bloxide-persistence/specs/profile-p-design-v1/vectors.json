@@ -1,0 +1,825 @@
+{
+  "scope": "candidate_design_only_not_endpoint_acceptance",
+  "fields": [
+    {
+      "name": "magic",
+      "offset": 0,
+      "size": 8
+    },
+    {
+      "name": "version",
+      "offset": 8,
+      "size": 2
+    },
+    {
+      "name": "size",
+      "offset": 10,
+      "size": 2
+    },
+    {
+      "name": "flags",
+      "offset": 12,
+      "size": 4
+    },
+    {
+      "name": "view_generation",
+      "offset": 16,
+      "size": 8
+    },
+    {
+      "name": "epoch",
+      "offset": 24,
+      "size": 8
+    },
+    {
+      "name": "connection",
+      "offset": 32,
+      "size": 4
+    },
+    {
+      "name": "state",
+      "offset": 36,
+      "size": 4
+    },
+    {
+      "name": "key_epoch",
+      "offset": 40,
+      "size": 8
+    },
+    {
+      "name": "key_session",
+      "offset": 48,
+      "size": 4
+    },
+    {
+      "name": "reason",
+      "offset": 52,
+      "size": 4
+    },
+    {
+      "name": "key_sequence",
+      "offset": 56,
+      "size": 8
+    },
+    {
+      "name": "capture_epoch",
+      "offset": 64,
+      "size": 8
+    },
+    {
+      "name": "capture_revision",
+      "offset": 72,
+      "size": 4
+    },
+    {
+      "name": "capture_schema",
+      "offset": 76,
+      "size": 2
+    },
+    {
+      "name": "capture_length",
+      "offset": 78,
+      "size": 2
+    },
+    {
+      "name": "durable_sequence",
+      "offset": 80,
+      "size": 8
+    },
+    {
+      "name": "durable_epoch",
+      "offset": 88,
+      "size": 8
+    },
+    {
+      "name": "durable_revision",
+      "offset": 96,
+      "size": 4
+    },
+    {
+      "name": "durable_schema",
+      "offset": 100,
+      "size": 2
+    },
+    {
+      "name": "durable_length",
+      "offset": 102,
+      "size": 2
+    },
+    {
+      "name": "durable_session",
+      "offset": 104,
+      "size": 4
+    },
+    {
+      "name": "reserved0",
+      "offset": 108,
+      "size": 4
+    },
+    {
+      "name": "durable_request",
+      "offset": 112,
+      "size": 8
+    },
+    {
+      "name": "status",
+      "offset": 120,
+      "size": 1
+    },
+    {
+      "name": "freeze",
+      "offset": 121,
+      "size": 1
+    },
+    {
+      "name": "reserved1",
+      "offset": 122,
+      "size": 6
+    },
+    {
+      "name": "capture",
+      "offset": 128,
+      "size": 256
+    },
+    {
+      "name": "durable",
+      "offset": 384,
+      "size": 256
+    }
+  ],
+  "views": [
+    {
+      "name": "pending",
+      "file": "pending.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 7,
+        "view_generation": 1,
+        "epoch": 11,
+        "connection": 3,
+        "state": 1,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 0,
+        "key_sequence": 9,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 7,
+        "durable_epoch": 7,
+        "durable_revision": 10,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 2,
+        "durable_request": 6,
+        "status": 1,
+        "freeze": 1,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "d007fa00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "durable",
+      "file": "durable.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 15,
+        "view_generation": 2,
+        "epoch": 11,
+        "connection": 3,
+        "state": 2,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 0,
+        "key_sequence": 9,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 8,
+        "durable_epoch": 7,
+        "durable_revision": 11,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 3,
+        "durable_request": 9,
+        "status": 0,
+        "freeze": 1,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "failed",
+      "file": "failed.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 15,
+        "view_generation": 2,
+        "epoch": 11,
+        "connection": 3,
+        "state": 3,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 2,
+        "key_sequence": 9,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 7,
+        "durable_epoch": 7,
+        "durable_revision": 10,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 2,
+        "durable_request": 6,
+        "status": 1,
+        "freeze": 1,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "d007fa00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "indeterminate",
+      "file": "indeterminate.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 7,
+        "view_generation": 2,
+        "epoch": 11,
+        "connection": 3,
+        "state": 4,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 6,
+        "key_sequence": 9,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 7,
+        "durable_epoch": 7,
+        "durable_revision": 10,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 2,
+        "durable_request": 6,
+        "status": 1,
+        "freeze": 1,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "d007fa00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "reconnect_failed",
+      "file": "reconnect_failed.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 15,
+        "view_generation": 3,
+        "epoch": 11,
+        "connection": 4,
+        "state": 3,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 2,
+        "key_sequence": 9,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 7,
+        "durable_epoch": 7,
+        "durable_revision": 10,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 2,
+        "durable_request": 6,
+        "status": 0,
+        "freeze": 0,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "d007fa00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "reboot",
+      "file": "reboot.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 4,
+        "view_generation": 1,
+        "epoch": 1,
+        "connection": 1,
+        "state": 0,
+        "key_epoch": 0,
+        "key_session": 0,
+        "reason": 0,
+        "key_sequence": 0,
+        "capture_epoch": 0,
+        "capture_revision": 0,
+        "capture_schema": 0,
+        "capture_length": 0,
+        "durable_sequence": 8,
+        "durable_epoch": 7,
+        "durable_revision": 11,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 3,
+        "durable_request": 9,
+        "status": 0,
+        "freeze": 0,
+        "capture": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    },
+    {
+      "name": "durable_existing",
+      "file": "durable_existing.bin",
+      "expected": {
+        "magic": "424c585056573031",
+        "version": 1,
+        "size": 640,
+        "flags": 15,
+        "view_generation": 4,
+        "epoch": 11,
+        "connection": 3,
+        "state": 2,
+        "key_epoch": 11,
+        "key_session": 3,
+        "reason": 0,
+        "key_sequence": 10,
+        "capture_epoch": 7,
+        "capture_revision": 11,
+        "capture_schema": 1,
+        "capture_length": 4,
+        "durable_sequence": 8,
+        "durable_epoch": 7,
+        "durable_revision": 11,
+        "durable_schema": 1,
+        "durable_length": 4,
+        "durable_session": 3,
+        "durable_request": 9,
+        "status": 0,
+        "freeze": 1,
+        "capture": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "durable": "b80bee02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "id": "admit",
+      "request": "f9010000",
+      "response": "ff",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": true
+    },
+    {
+      "id": "s0-unknown",
+      "request": "f9010000",
+      "response": "fe20",
+      "profile": "S0",
+      "state": "ready",
+      "freeze": 0,
+      "capture": false
+    },
+    {
+      "id": "short",
+      "request": "f90100",
+      "response": "fe21",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "long",
+      "request": "f901000000",
+      "response": "fe21",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "opcode-only",
+      "request": "f9",
+      "response": "fe21",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-0",
+      "request": "f9000000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-2",
+      "request": "f9020000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-3",
+      "request": "f9030000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-4",
+      "request": "f9040000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-8",
+      "request": "f9080000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-16",
+      "request": "f9100000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "mode-255",
+      "request": "f9ff0000",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "id-f9010100",
+      "request": "f9010100",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "id-f9010001",
+      "request": "f9010001",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "id-f901ffff",
+      "request": "f901ffff",
+      "response": "fe22",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "freeze-off",
+      "request": "f9010000",
+      "response": "fe27",
+      "profile": "P",
+      "state": "ready",
+      "freeze": 0,
+      "capture": false
+    },
+    {
+      "id": "stopped",
+      "request": "f9010000",
+      "response": "fe27",
+      "profile": "P",
+      "state": "stopped",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "busy",
+      "request": "f9010000",
+      "response": "fe10",
+      "profile": "P",
+      "state": "pending",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "full",
+      "request": "f9010000",
+      "response": "fe10",
+      "profile": "P",
+      "state": "capacity",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "known-write-lock",
+      "request": "f9010000",
+      "response": "fe24",
+      "profile": "P",
+      "state": "quarantine",
+      "freeze": 1,
+      "capture": false,
+      "public_input": "Persistence::health().write_locked == true",
+      "scope": "already latched denial only; never fresh Q or future permit availability"
+    },
+    {
+      "id": "schema",
+      "request": "f9010000",
+      "response": "fe24",
+      "profile": "P",
+      "state": "unsupported",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "quarantine",
+      "request": "f9010000",
+      "response": "fe24",
+      "profile": "P",
+      "state": "quarantine",
+      "freeze": 1,
+      "capture": false,
+      "public_input": "Persistence::health().write_locked == true",
+      "scope": "already latched denial only; never fresh Q or future permit availability"
+    },
+    {
+      "id": "known-q-lock",
+      "request": "f9010000",
+      "response": "fe24",
+      "profile": "P",
+      "state": "quarantine",
+      "freeze": 1,
+      "capture": false,
+      "public_input": "Persistence::health().write_locked == true",
+      "scope": "already latched denial only; never fresh Q or future permit availability"
+    },
+    {
+      "id": "rate",
+      "request": "f9010000",
+      "response": "fe10",
+      "profile": "P",
+      "state": "rate",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "deadline",
+      "request": "f9010000",
+      "response": "fe31",
+      "profile": "P",
+      "state": "expired",
+      "freeze": 1,
+      "capture": false
+    },
+    {
+      "id": "disconnected",
+      "request": "f9010000",
+      "response": null,
+      "profile": "P",
+      "state": "disconnected",
+      "freeze": 0,
+      "capture": false
+    },
+    {
+      "id": "pag-info",
+      "request": "e9",
+      "response": "ff0101",
+      "method": "getPagProcessorInfo",
+      "args": []
+    },
+    {
+      "id": "segment-address",
+      "request": "e800000000",
+      "response": "ff00000000100000",
+      "method": "getSegmentInfo",
+      "args": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "segment-length",
+      "request": "e800000100",
+      "response": "ff00000004000000",
+      "method": "getSegmentInfo",
+      "args": [
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "segment-info",
+      "request": "e801000000",
+      "response": "ff0100000000",
+      "method": "getSegmentInfo",
+      "args": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "page-info",
+      "request": "e7000000",
+      "response": "ff3f00",
+      "method": "getPageInfo",
+      "args": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "ecu-page",
+      "request": "ea0100",
+      "response": "ff000000",
+      "method": "getCalPage",
+      "args": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "xcp-page",
+      "request": "ea0200",
+      "response": "ff000000",
+      "method": "getCalPage",
+      "args": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "select-both",
+      "request": "eb030000",
+      "response": "ff",
+      "method": "setCalPage",
+      "args": [
+        3,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "freeze-enable",
+      "request": "e60100",
+      "response": "ff",
+      "method": "setSegmentMode",
+      "args": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "freeze-disable",
+      "request": "e60000",
+      "response": "ff",
+      "method": "setSegmentMode",
+      "args": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "freeze-read",
+      "request": "e50000",
+      "response": "ff0001",
+      "method": "getSegmentMode",
+      "args": [
+        0
+      ]
+    },
+    {
+      "id": "bad-segment",
+      "request": "e7000100",
+      "response": "fe28",
+      "negative_proposal": true
+    },
+    {
+      "id": "bad-page",
+      "request": "e7000001",
+      "response": "fe26",
+      "negative_proposal": true
+    },
+    {
+      "id": "bad-mode",
+      "request": "ea0300",
+      "response": "fe27",
+      "negative_proposal": true
+    },
+    {
+      "id": "bad-reserved",
+      "request": "e50100",
+      "response": "fe21",
+      "negative_proposal": true
+    },
+    {
+      "id": "bad-freeze",
+      "request": "e60200",
+      "response": "fe22",
+      "negative_proposal": true
+    },
+    {
+      "id": "unsupported-copy",
+      "request": "e400000000",
+      "response": "fe20",
+      "negative_proposal": true
+    }
+  ],
+  "identity_file": "identity.bin",
+  "later_ram_hex": "a00ff401",
+  "traces": [
+    {
+      "id": "success",
+      "steps": [
+        "pending",
+        "durable"
+      ],
+      "status": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "definite-failure",
+      "steps": [
+        "pending",
+        "failed",
+        "reconnect_failed"
+      ],
+      "status": [
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "uncertain",
+      "steps": [
+        "pending",
+        "indeterminate"
+      ],
+      "status": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "boot",
+      "steps": [
+        "durable",
+        "reboot"
+      ],
+      "status": [
+        0,
+        0
+      ]
+    }
+  ],
+  "capture_definition": "accepted retained C; a rejected admission may have a temporary scratch snapshot but cannot replace retained C"
+}

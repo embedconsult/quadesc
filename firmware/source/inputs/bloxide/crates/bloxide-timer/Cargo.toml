@@ -1,0 +1,21 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "bloxide-timer"
+version.workspace = true
+edition.workspace = true
+description = "Timer service for bloxide — messages, queue, actions, and TimerService trait"
+repository.workspace = true
+license.workspace = true
+
+[features]
+std = ["bloxide-core/std"]
+
+[dependencies]
+bloxide-core = { workspace = true }
+bloxide-log = { workspace = true }
+critical-section = "1.2.0"
+
+[dev-dependencies]
+# VirtualClock (`src/test_utils.rs`) is `#[cfg(test)]`-gated, so
+# bloxide-test-runtime is only needed here, for its unit tests.
+bloxide-test-runtime = { workspace = true }

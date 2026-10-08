@@ -1,0 +1,20 @@
+[package]
+name = "xcp-profile-p"
+version.workspace = true
+edition = "2024"
+rust-version = "1.94"
+repository.workspace = true
+description = "Restricted profile P session and portable save adapter"
+
+[dependencies]
+xcp-messages.workspace = true
+bloxide-persistence.workspace = true
+bloxide-persistence-calibration.workspace = true
+bloxide-calibration.workspace = true
+
+[dev-dependencies]
+bloxide-persistence-sim.workspace = true
+xcp-sxi.workspace = true
+
+[lints]
+workspace = true

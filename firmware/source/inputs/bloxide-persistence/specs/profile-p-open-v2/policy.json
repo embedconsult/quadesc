@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "status": "candidate_application_policy_pending_independent_review",
+  "release_eligible": false,
+  "standards_conformance_claim": false,
+  "base_wire_vectors": "../profile-p-design-v1/vectors.json",
+  "segment": {
+    "number": 0,
+    "count": 1,
+    "page": 0,
+    "page_count": 1,
+    "init_segment": 0,
+    "initialization": "boot_only_self_reference_no_independent_image",
+    "address": 4096,
+    "length": 4,
+    "address_extension": 0,
+    "properties": 63,
+    "ecu_page": 0,
+    "xcp_page": 0,
+    "freeze_default": 0
+  },
+  "save": {
+    "request": "f9010000",
+    "response": "ff",
+    "capture": "whole_owner_schema_at_C",
+    "freeze_required": true,
+    "empty_selection_error": "fe27",
+    "automatic_retry": false
+  },
+  "asynchronous": {
+    "success_status": "ff0000000000",
+    "unfulfilled_status": "ff0100000000",
+    "event_packets": [],
+    "post_accept_negative_response": false,
+    "failure_clears_pending": false,
+    "reconnect_requires_idle_and_drain": true,
+    "new_connection_status": 0,
+    "new_connection_freeze": 0,
+    "diagnostic_reconnect_allows_save": false,
+    "uncertain_releases_custody": false
+  },
+  "metadata": {
+    "a2l": "../profile-p-design-v1/metadata.a2l",
+    "transport_discovery": false,
+    "if_data": false,
+    "companion_required": true,
+    "synthetic_identity_acceptable": false
+  },
+  "storage_extra_bytes": 0,
+  "required_review_decisions": [
+    "P-OPEN-1 restricted boot-only page interpretation",
+    "P-OPEN-2 sticky unfulfilled/no-event/fenced reconnect"
+  ]
+}

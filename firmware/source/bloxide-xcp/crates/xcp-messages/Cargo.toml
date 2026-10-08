@@ -1,0 +1,9 @@
+[package]
+name = "xcp-messages"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+description = "Plain owned packet and completion messages for the scoped XCP S0 profile"
+
+[lints]
+workspace = true

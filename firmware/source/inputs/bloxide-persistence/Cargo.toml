@@ -1,0 +1,30 @@
+[package]
+name = "bloxide-persistence"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+description = "Portable bounded persistent-record codec, recovery, and save service"
+
+[features]
+default = []
+
+[dependencies]
+
+[workspace]
+members = [
+    "crates/bloxide-persistence-calibration",
+    "crates/bloxide-persistence-sim",
+]
+resolver = "3"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"

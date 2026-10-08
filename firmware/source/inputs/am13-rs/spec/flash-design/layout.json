@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "status": "conditional_design_not_target_qualified",
+  "executable_job": false,
+  "part": "AM13E23019",
+  "main": [
+    0,
+    524288
+  ],
+  "bank_bytes": 262144,
+  "firmware": [
+    0,
+    262144
+  ],
+  "sram": [
+    536870912,
+    536969216
+  ],
+  "erase_bytes": 2048,
+  "hardware_program_bytes": 16,
+  "candidate_granule_bytes": 256,
+  "alternative_granule_bytes": 16,
+  "slots": {
+    "A": 491520,
+    "B": 507904
+  },
+  "protection_group_bytes": 16384,
+  "reserved": [
+    491520,
+    524288
+  ],
+  "write_predicates": [
+    "F-ID",
+    "F-GEOM",
+    "F-MODEL",
+    "F-ECC",
+    "F-POWER",
+    "F-RAM",
+    "F-TIME",
+    "F-WEAR",
+    "F-INTEGRATION"
+  ],
+  "qualified_predicates": [],
+  "qualified_backend_timing": null,
+  "qualified_wear_allowance": 0,
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

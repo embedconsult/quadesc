@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "status": "candidate_design_only",
+  "release_eligible": false,
+  "profile_name": "P-design-v1",
+  "profile_id": 1342177281,
+  "byte_order": "little",
+  "address_extension": 0,
+  "max_cto": 8,
+  "max_dto": 8,
+  "max_clients": 4,
+  "blocks": [
+    {
+      "name": "persistence_view",
+      "address": 65536,
+      "size": 640,
+      "access": "read_only",
+      "latch": "SET_MTA_at_base",
+      "fields": [
+        {
+          "name": "magic",
+          "offset": 0,
+          "size": 8
+        },
+        {
+          "name": "version",
+          "offset": 8,
+          "size": 2
+        },
+        {
+          "name": "size",
+          "offset": 10,
+          "size": 2
+        },
+        {
+          "name": "flags",
+          "offset": 12,
+          "size": 4
+        },
+        {
+          "name": "view_generation",
+          "offset": 16,
+          "size": 8
+        },
+        {
+          "name": "epoch",
+          "offset": 24,
+          "size": 8
+        },
+        {
+          "name": "connection",
+          "offset": 32,
+          "size": 4
+        },
+        {
+          "name": "state",
+          "offset": 36,
+          "size": 4
+        },
+        {
+          "name": "key_epoch",
+          "offset": 40,
+          "size": 8
+        },
+        {
+          "name": "key_session",
+          "offset": 48,
+          "size": 4
+        },
+        {
+          "name": "reason",
+          "offset": 52,
+          "size": 4
+        },
+        {
+          "name": "key_sequence",
+          "offset": 56,
+          "size": 8
+        },
+        {
+          "name": "capture_epoch",
+          "offset": 64,
+          "size": 8
+        },
+        {
+          "name": "capture_revision",
+          "offset": 72,
+          "size": 4
+        },
+        {
+          "name": "capture_schema",
+          "offset": 76,
+          "size": 2
+        },
+        {
+          "name": "capture_length",
+          "offset": 78,
+          "size": 2
+        },
+        {
+          "name": "durable_sequence",
+          "offset": 80,
+          "size": 8
+        },
+        {
+          "name": "durable_epoch",
+          "offset": 88,
+          "size": 8
+        },
+        {
+          "name": "durable_revision",
+          "offset": 96,
+          "size": 4
+        },
+        {
+          "name": "durable_schema",
+          "offset": 100,
+          "size": 2
+        },
+        {
+          "name": "durable_length",
+          "offset": 102,
+          "size": 2
+        },
+        {
+          "name": "durable_session",
+          "offset": 104,
+          "size": 4
+        },
+        {
+          "name": "reserved0",
+          "offset": 108,
+          "size": 4
+        },
+        {
+          "name": "durable_request",
+          "offset": 112,
+          "size": 8
+        },
+        {
+          "name": "status",
+          "offset": 120,
+          "size": 1
+        },
+        {
+          "name": "freeze",
+          "offset": 121,
+          "size": 1
+        },
+        {
+          "name": "reserved1",
+          "offset": 122,
+          "size": 6
+        },
+        {
+          "name": "capture",
+          "offset": 128,
+          "size": 256
+        },
+        {
+          "name": "durable",
+          "offset": 384,
+          "size": 256
+        }
+      ]
+    },
+    {
+      "name": "persistence_identity",
+      "address": 66560,
+      "size": 128,
+      "access": "read_only",
+      "latch": "immutable"
+    }
+  ],
+  "calibration": {
+    "address": 4096,
+    "size": 4,
+    "schema_id": 1,
+    "segment": 0,
+    "page": 0,
+    "init_segment": 0,
+    "init_segment_review": "application_policy_pending_independent_review"
+  },
+  "storage": {
+    "latches": 2560,
+    "summaries": 1536,
+    "scratch": 640,
+    "identity": 128,
+    "latch_controls": 128,
+    "route_controls": 128,
+    "total": 5120,
+    "ceiling": 6144
+  },
+  "identity_policy": {
+    "fixture_hashes": "synthetic; MUST NOT satisfy matched release admission",
+    "production_inputs": "SHA256 of identified image bytes, canonical descriptor bytes, canonical profile bytes; digest-bearing block and A2L excluded from their own input",
+    "required_open_questions": [
+      "P-OPEN-1",
+      "P-OPEN-2"
+    ]
+  },
+  "application_policy": "../profile-p-open-v2/policy.json"
+}

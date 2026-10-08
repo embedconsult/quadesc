@@ -1,0 +1,27 @@
+[package]
+name = "esc-som-board"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+description = "Exclusive ESC SoM resources for the AM13 LED profile"
+[features]
+default = []
+embassy = ["am13-rs/embassy"]
+firmware = ["embassy", "dep:embassy-executor", "dep:embassy-time", "dep:embedded-io-async"]
+[dependencies]
+am13-rs = { path = "../am13-rs", version = "=0.1.0" }
+embedded-hal = "=1.0.0"
+embassy-executor = { version = "=0.9.1", optional = true, features = ["executor-thread"] }
+embassy-time = { version = "=0.5.1", optional = true }
+embedded-io-async = { version = "=0.6.1", optional = true }
+[target.'cfg(target_arch = "arm")'.dependencies]
+cortex-m = { version = "=0.7.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "=0.7.6", features = ["set-sp", "set-vtor", "zero-init-ram"] }
+embassy-executor = { version = "=0.9.1", optional = true, features = ["arch-cortex-m", "executor-thread"] }
+[[example]]
+name = "led-uart"
+required-features = ["firmware"]
+[profile.release]
+panic = "abort"
+lto = true
+codegen-units = 1

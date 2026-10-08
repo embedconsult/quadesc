@@ -1,0 +1,13 @@
+[package]
+name = "xcp-sxi"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+description = "Allocation-free LEN8/CTR8/SUM8 transport for the XCP scalar S0 profile"
+
+[dependencies]
+xcp-core.workspace = true
+xcp-messages.workspace = true
+
+[lints]
+workspace = true

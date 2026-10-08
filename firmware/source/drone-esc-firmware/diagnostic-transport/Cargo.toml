@@ -1,0 +1,13 @@
+[package]
+name = "am13-diagnostic-transport"
+version = "0.1.0"
+edition = "2024"
+[dependencies]
+am13-rs = { path = "../../inputs/am13-rs", features = ["embassy"] }
+bloxide-calibration = { path = "../../inputs/bloxide-calibration" }
+embassy-time = "=0.5.1"
+embedded-io-async = "=0.6.1"
+[dev-dependencies]
+esc-som-board = { path = "../../inputs/esc-som-board" }
+critical-section = { version = "=1.2.0", features = ["std"] }
+embassy-executor = "=0.9.1"

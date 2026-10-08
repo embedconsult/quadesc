@@ -1,0 +1,288 @@
+{
+  "scope": "candidate_design_only_not_service_execution",
+  "source_sha256": {
+    "src/service.rs": "68708fa9fb416de0010e9b2a8a0b0200064a0f1bbe2abb74b553e537960933c0",
+    "src/codec.rs": "70c8a8968a72a0bfc187bf3d3b48d37ad5c66dadaf59709b5745a2a0a1a27b00",
+    "crates/bloxide-persistence-calibration/src/lib.rs": "ad71ae3e9578140c0dbb075602cf9e9ed91c834d6f27a316fa944a4e8839c544"
+  },
+  "api_traces": [
+    {
+      "id": "known-write-lock",
+      "events": [
+        "health().write_locked == true",
+        "F9 -> FE24"
+      ],
+      "key": null,
+      "capture": null,
+      "responses": [
+        "fe24"
+      ],
+      "outcome": "RejectedBeforeReserve",
+      "reason": null,
+      "settled": null
+    },
+    {
+      "id": "q-changed",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Read(classification changed)",
+        "ownership_settled -> true",
+        "summary <- terminal/K/C",
+        "Broker::record_terminal",
+        "Persistence::release",
+        "Broker::release"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Failed(Qualification,RecoveryChanged,true)",
+      "reason": 9,
+      "settled": true
+    },
+    {
+      "id": "q-unsafe",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Read(unchanged,Q unsafe)",
+        "ownership_settled -> true",
+        "summary <- terminal/K/C",
+        "Broker::record_terminal",
+        "Persistence::release",
+        "Broker::release"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Failed(Qualification,UnsafeErasePrestate,true)",
+      "reason": 9,
+      "settled": true
+    },
+    {
+      "id": "q-ecc",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Read(UncorrectableEcc)",
+        "ownership_settled -> true",
+        "summary <- terminal/K/C",
+        "Broker::record_terminal",
+        "Persistence::release",
+        "Broker::release"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Failed(Qualification,Read(UncorrectableEcc),true)",
+      "reason": 7,
+      "settled": true
+    },
+    {
+      "id": "wear-denied",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Read(full,Q safe)",
+        "take_command -> ConsumeErasePermit",
+        "complete -> WearDenied",
+        "ownership_settled -> true",
+        "summary <- terminal/K/C",
+        "Broker::record_terminal",
+        "Persistence::release",
+        "Broker::release"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Failed(Wear,WearUnavailable,true)",
+      "reason": 3,
+      "settled": true
+    },
+    {
+      "id": "q-backend-idle",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Failed(quiescent=true)",
+        "ownership_settled -> true",
+        "summary <- terminal/K/C",
+        "Broker::record_terminal",
+        "Persistence::release",
+        "Broker::release"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Failed(Qualification,Backend,true)",
+      "reason": 1,
+      "settled": true
+    },
+    {
+      "id": "q-backend-unsettled",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Failed(quiescent=false)",
+        "ownership_settled -> false",
+        "retain command/control/K/C"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Indeterminate(Qualification,Backend)",
+      "reason": 1,
+      "settled": false
+    },
+    {
+      "id": "wear-backend-unsettled",
+      "events": [
+        "Broker::reserve",
+        "capture_owner",
+        "Persistence::save -> Accepted",
+        "summary <- K/C",
+        "F9 -> FF",
+        "take_command -> Read",
+        "complete -> Read(full,Q safe)",
+        "take_command -> ConsumeErasePermit",
+        "complete -> Failed(quiescent=false)",
+        "ownership_settled -> false",
+        "retain command/control/K/C"
+      ],
+      "key": [
+        7,
+        3,
+        9
+      ],
+      "capture": "b80bee02",
+      "terminal_key": [
+        7,
+        3,
+        9
+      ],
+      "terminal_capture": "b80bee02",
+      "responses": [
+        "ff"
+      ],
+      "outcome": "Indeterminate(Wear,Backend)",
+      "reason": 1,
+      "settled": false
+    }
+  ],
+  "rejected_next_save": [
+    {
+      "id": "durable-rejected-next-save",
+      "before": "durable.bin",
+      "after": "durable_rejected_next.bin",
+      "response": "fe24",
+      "denial": "known-write-lock",
+      "accepted": false,
+      "commands": []
+    },
+    {
+      "id": "failed-rejected-next-save",
+      "before": "failed.bin",
+      "after": "failed_rejected_next.bin",
+      "response": "fe27",
+      "denial": "calibration-owner disarmed-policy denied (earlier FE27 gate)",
+      "accepted": false,
+      "commands": []
+    }
+  ]
+}

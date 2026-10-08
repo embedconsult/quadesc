@@ -1,0 +1,20 @@
+{
+  "campaigns": [
+    {
+      "mode": "default",
+      "exchanges": 58,
+      "fresh_save_restores": false,
+      "loaded_save_restores": true,
+      "selected_divergence_tested": true
+    },
+    {
+      "mode": "single",
+      "exchanges": 49,
+      "fresh_save_restores": false,
+      "loaded_save_restores": true,
+      "selected_divergence_tested": false
+    }
+  ],
+  "unmodified_reference_files": 459,
+  "scope": "host reference artifacts, not async P or hardware"
+}

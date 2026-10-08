@@ -1,0 +1,21 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "bloxide-test-runtime"
+version.workspace = true
+edition.workspace = true
+description = "In-memory TestRuntime for bloxide unit tests — implements BloxRuntime + SpawnCap"
+repository.workspace = true
+license.workspace = true
+
+[features]
+default = ["std"]
+std = ["bloxide-core/std", "bloxide-spawn/std"]
+
+[dependencies]
+bloxide-core = { workspace = true }
+bloxide-spawn = { workspace = true }
+futures-core = { version = "0.3" }
+spin = { version = "0.9", default-features = false, features = ["mutex", "spin_mutex"] }
+
+[dev-dependencies]
+bloxide-child-management = { workspace = true }

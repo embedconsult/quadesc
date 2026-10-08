@@ -1,0 +1,8 @@
+{
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+  "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+  "objcopy": "GNU objcopy (2.45.50.20251209-1ubuntu1+23build1) 2.45.50.20251209",
+  "readelf": "GNU readelf (2.45.50.20251209-1ubuntu1+23build1) 2.45.50.20251209",
+  "target": "thumbv8m.main-none-eabi",
+  "bubblewrap": "bubblewrap 0.11.1"
+}

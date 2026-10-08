@@ -1,0 +1,71 @@
+[system]
+name = "can-xcp-control-am13"
+runtime = "embassy"
+profile = "embedded"
+target = "thumbv8m.main-none-eabi"
+
+[platform]
+impl_crate = "am13_xcp_control_platform"
+entry = "cortex-m-rt"
+init = "initialize"
+on_error = "startup_failed"
+freeze = "freeze"
+resources = "Resources"
+cleanup = "process-lifetime"
+
+[[services]]
+name = "led_io"
+impl_crate = "am13_xcp_control_platform"
+start = "start_led_owned"
+resource = "led_service"
+[services.inject]
+owner = { source = "actor", actor = "led" }
+
+[[services]]
+name = "xcp_io"
+impl_crate = "am13_xcp_control_platform"
+start = "start_xcp_can"
+resource = "transport"
+[services.inject]
+owner = { source = "actor", actor = "led" }
+session = { source = "actor", actor = "xcp" }
+mainboard = { source = "actor", actor = "mainboard" }
+
+[[actors]]
+name = "led"
+blox = "led::led-owner"
+channel_capacity = 2
+[actors.inject]
+controller = { source = "resource", field = "led_controller" }
+
+[[actors]]
+name = "xcp"
+blox = "xcp::session"
+channel_capacity = 2
+[actors.inject]
+map = { source = "resource", field = "session_map" }
+bridge = { source = "resource", field = "session_bridge" }
+
+[[supervision]]
+supervisor = "bloxide-supervisor"
+strategy = "when_any_done"
+children = ["led", "xcp", "mainboard"]
+[supervision.policies]
+led = { stop = true }
+xcp = { stop = true }
+mainboard = { stop = true }
+
+[[actors]]
+name = "mainboard"
+blox = "mainboard::mainboard-owner"
+channel_capacity = 2
+[actors.inject]
+owner = { source = "resource", field = "mainboard_owner" }
+
+[[services]]
+name = "mainboard_tick"
+impl_crate = "am13_xcp_control_platform"
+start = "start_mainboard_ticks"
+resource = "mainboard_tick"
+[services.inject]
+owner = { source = "actor", actor = "mainboard" }

@@ -1,0 +1,169 @@
+# Actor Messaging
+
+Actors communicate exclusively through typed mailboxes. No shared mutable state; no raw channels in domain code.
+
+## Core Types
+
+```mermaid
+classDiagram
+    class ActorId {
+        <<type alias>>
+        usize
+    }
+
+    class Envelope~M~ {
+        +.0: ActorId
+        +.1: M
+    }
+
+    class ActorRef~M_R~ {
+        -id: ActorId
+        -tx: RuntimeSender
+        +id() ActorId
+        +async send(from, payload) Result
+        +try_send(from, payload) Result
+        +sender() RuntimeSender
+        +clone() ActorRef
+    }
+
+    ActorRef --> ActorId : identifies
+    Envelope --> ActorId : from field
+```
+
+- `ActorRef<M, R>` is `Clone + Send + Sync`. Hand it to any state that needs to send a message to that actor.
+- `send` awaits mailbox capacity (async, backpressure).
+- `try_send` returns an error immediately if the mailbox is full or closed (non-blocking, preferred in `actions` / `on_entry`). Distinguish the two failure kinds with `BloxRuntime::try_send_error_is_closed`: full is genuine backpressure (worth a warning); closed means the receiving task is gone — an expected shutdown race, handled as a silent no-op.
+- `sender()` returns the underlying `R::Sender<M>` (a clone of the internal sender). Used by the wiring layer to hand a raw sender to a `ChildGroup` without wrapping it in an `ActorRef`.
+- `Envelope` wraps every message with the sender's `ActorId` so recipients know who sent it.
+
+## Message Flow Model
+
+```mermaid
+flowchart LR
+    subgraph PingActor
+        PingCtx[PingCtx\nholds pong_ref]
+        PingSM[StateMachine]
+    end
+
+    subgraph PongActor
+        PongCtx[PongCtx\nholds ping_ref]
+        PongSM[StateMachine]
+    end
+
+    subgraph Mailboxes
+        PM[Ping Mailbox\nActorRef&lt;PingPongMsg&gt;]
+        OM[Pong Mailbox\nActorRef&lt;PingPongMsg&gt;]
+    end
+
+    PingCtx -- try_send --> OM
+    PongCtx -- try_send --> PM
+    PM -- Envelope --> PingSM
+    OM -- Envelope --> PongSM
+```
+
+## Ping-Pong Message Sequence
+
+```mermaid
+sequenceDiagram
+    participant W as Wiring / Runtime
+    participant Ping
+    participant Pong
+
+    W->>Ping: dispatch(LifecycleCommand::Start)
+    W->>Pong: dispatch(LifecycleCommand::Start)
+
+    Note over Ping: Init → Operating → Active<br/>(on_entry: send_initial_ping, round 0→1)
+    Note over Pong: Init → Ready
+
+    Ping->>Pong: PingPongMsg::Ping(1)
+    Note over Pong: Ready — Decision::Stay<br/>sends Pong(1)
+    Pong->>Ping: PingPongMsg::Pong(1)
+    Note over Ping: Active — stay, no self-transition<br/>(round=2, forwards Ping(2));<br/>round == PAUSE_AT_ROUND → Paused
+
+    Ping->>Pong: PingPongMsg::Ping(2)
+    Note over Ping: Paused — on_entry schedules resume timer<br/>(2000 + round × 500 ms)
+    Ping->>Ping: PingPongMsg::Resume (timer fires)
+    Note over Ping: Paused → Active<br/>(round=3, forwards Ping(3))
+
+    Ping->>Pong: PingPongMsg::Ping(3)
+    Pong->>Ping: PingPongMsg::Pong(3)
+    Note over Ping: Active — stay (round=4, forwards Ping(4))
+
+    Note over Ping,Pong: ... round 4 ...
+
+    Ping->>Pong: PingPongMsg::Ping(5)
+    Note over Ping: Decision::Done<br/>(round >= MAX_ROUNDS, clean self-termination)
+    Pong->>Ping: PingPongMsg::Pong(5)
+    Note over Ping: task ended — Pong(5) not consumed
+```
+
+## Rules
+
+### No receivers in domain messages
+
+Domain message enums must be plain data. Never embed runtime receiver handles, raw senders, or `ActorRef` inside a message payload. All wiring is done at construction time through `Ctx`.
+
+```rust
+// WRONG — leaks runtime internals into the message
+enum MyEvent {
+    Subscribe(ActorRef<Response, R>),  // ← never do this
+}
+
+// RIGHT — put the ActorRef in Ctx at construction time
+pub struct MyCtx<R: BloxRuntime> {
+    pub subscriber_ref: ActorRef<Response, R>,
+}
+```
+
+### Message types in separate crates
+
+Message types shared between two blox crates live in a dedicated `*-messages` crate. This prevents circular crate dependencies and makes the message contract explicit and independently versioned.
+
+```
+ping-pong-messages/   ← owned by neither ping nor pong
+  src/lib.rs          ← pub enum PingPongMsg { Ping(...), Pong(...), Resume(...) }
+```
+
+### Fanout
+
+To send the same event to multiple actors, store `Arc<Payload>` inside the event variant so cloning is O(1). Clone `ActorRef` for each recipient.
+
+## Backpressure Policy
+
+| Method | Behavior when mailbox is full |
+|--------|-------------------------------|
+| `ActorRef::send` | Awaits until space is available |
+| `ActorRef::try_send` | Returns `TrySendError` immediately |
+
+Use `try_send` from `on_entry` and `actions` functions (which run synchronously inside dispatch). Reserve `send` for async contexts outside the machine (e.g., the actor run loop or wiring).
+
+## Channel Close Semantics (all-streams-close, issue #134)
+
+A channel closes when every sender (`ActorRef`) for it has been dropped.
+Domain mailbox closes are a **garbage-collection backstop, not a lifecycle
+signal**: actor fate is owned exclusively by supervision — dispatch-driven
+lifecycle commands (`Start`/`Reset`/`Stop`), `Decision::Stop`/`Decision::Done`,
+and the kill capability.
+
+**`Mailboxes` behavior:** The blanket tuple impls in `mailboxes.rs`
+(`poll_next` returns `Poll<Option<E>>`) return `Poll::Ready(None)` only when
+**every** stream in the tuple has closed —
+i.e. no domain sender remains anywhere, so the actor cannot be reached at
+all. A single closed stream does **not** shut down the actor: a peer
+dropping its `ActorRef` merely removes one input. The run loop polls the
+lifecycle/abort streams separately, and a close on **those** streams is
+immediately fatal (shutdown flows through them).
+
+**Streams must be fused:** once a stream returns `Poll::Ready(None)` it must
+keep returning `Poll::Ready(None)` on re-poll. All bloxide runtime channel
+receivers satisfy this.
+
+**Consequence for self-refs:** an actor holding its own `self_ref` keeps its
+domain stream open forever — harmless, because shutdown flows through the
+lifecycle stream, not domain close. Actors that finish their work should
+use `Decision::Done` (clean self-termination, task ends) rather than relying
+on close semantics.
+
+**For runtimes:** no special handling is required beyond fused receivers.
+Dynamic teardown (stopped workers, removed peers) goes through the explicit
+supervision path — Stop/Kill and deregistration — never implicit ref-drop.

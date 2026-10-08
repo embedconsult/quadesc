@@ -1,0 +1,14 @@
+[package]
+name = "independent-xcp-consumer"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Independent non-drone consumer fixture for xcp-core"
+
+[dependencies]
+xcp-core = { path = "../../crates/xcp-core" }
+
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"

@@ -1,0 +1,91 @@
+# Copyright 2025 Bloxide, all rights reserved
+format = 1
+[package]
+name = "bloxide"
+version = "0.0.3"
+blox-schema = 1
+
+[[crates]]
+name = "bloxide-codegen"
+path = "crates/tools/bloxide-codegen/Cargo.toml"
+
+[[crates]]
+name = "bloxide-core"
+path = "crates/bloxide-core/Cargo.toml"
+
+[[crates]]
+name = "bloxide-log"
+path = "crates/bloxide-log/Cargo.toml"
+
+[[crates]]
+name = "bloxide-macros"
+path = "crates/bloxide-macros/Cargo.toml"
+
+[[crates]]
+name = "bloxide-child-management"
+path = "crates/bloxide-child-management/Cargo.toml"
+
+[[crates]]
+name = "bloxide-spawn"
+path = "crates/bloxide-spawn/Cargo.toml"
+
+[[crates]]
+name = "bloxide-supervisor"
+path = "crates/bloxide-supervisor/Cargo.toml"
+
+[[crates]]
+name = "bloxide-peers"
+path = "crates/bloxide-peers/Cargo.toml"
+
+[[crates]]
+name = "bloxide-timer"
+path = "crates/bloxide-timer/Cargo.toml"
+
+[[crates]]
+name = "bloxide-embassy"
+path = "runtimes/bloxide-embassy/Cargo.toml"
+
+[[crates]]
+name = "bloxide-tokio"
+path = "runtimes/bloxide-tokio/Cargo.toml"
+
+[[crates]]
+name = "bloxide-test-runtime"
+path = "runtimes/bloxide-test-runtime/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-noop"
+path = "crates/context/blox-ctx-noop/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-ping-pong"
+path = "crates/context/blox-ctx-ping-pong/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-pool-ref"
+path = "crates/context/blox-ctx-pool-ref/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-rounds"
+path = "crates/context/blox-ctx-rounds/Cargo.toml"
+
+[[crates]]
+name = "blox-ctx-ticks"
+path = "crates/context/blox-ctx-ticks/Cargo.toml"
+
+[[crates]]
+name = "ping-pong-messages"
+path = "crates/messages/ping-pong-messages/Cargo.toml"
+
+[[crates]]
+name = "pool-messages"
+path = "crates/messages/pool-messages/Cargo.toml"
+
+[[crates]]
+name = "counter-messages"
+path = "crates/messages/counter-messages/Cargo.toml"
+
+[[crates]]
+name = "bhsm-tst-messages"
+path = "crates/messages/bhsm-tst-messages/Cargo.toml"
+

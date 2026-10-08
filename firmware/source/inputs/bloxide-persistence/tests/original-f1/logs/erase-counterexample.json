@@ -1,0 +1,89 @@
+{
+  "scope": "design algebraic counterexample only",
+  "G": 8,
+  "E": 512,
+  "basis_rank": 32,
+  "active": {
+    "record_sequence": 7,
+    "source_epoch": 1,
+    "source_revision": 10,
+    "period": 2000,
+    "duty": 250,
+    "crc32c": "171f03b9"
+  },
+  "inactive_before": {
+    "record_sequence": 6,
+    "source_epoch": 1,
+    "source_revision": 9,
+    "period": 1000,
+    "duty": 500,
+    "crc32c": "8e4858b3"
+  },
+  "inactive_after_torn_erase": {
+    "record_sequence": 14,
+    "source_epoch": 2744301397,
+    "source_revision": 9,
+    "period": 1000,
+    "duty": 500,
+    "crc32c": "8e4858b7"
+  },
+  "requested_new": {
+    "record_sequence": 8,
+    "source_epoch": 1,
+    "source_revision": 11,
+    "period": 3000,
+    "duty": 750,
+    "crc32c": "4ced9363"
+  },
+  "crc_collision": false,
+  "only_zero_to_one": true,
+  "marker_untouched": true,
+  "other_slot_untouched": true,
+  "changed_bits": 18,
+  "changed_bytes": [
+    {
+      "offset": 16,
+      "before": "06",
+      "after": "0e",
+      "mask": "08"
+    },
+    {
+      "offset": 24,
+      "before": "01",
+      "after": "55",
+      "mask": "54"
+    },
+    {
+      "offset": 25,
+      "before": "00",
+      "after": "b7",
+      "mask": "b7"
+    },
+    {
+      "offset": 26,
+      "before": "00",
+      "after": "92",
+      "mask": "92"
+    },
+    {
+      "offset": 27,
+      "before": "00",
+      "after": "a3",
+      "mask": "a3"
+    },
+    {
+      "offset": 60,
+      "before": "b3",
+      "after": "b7",
+      "mask": "04"
+    }
+  ],
+  "recovery_by_R3": "B seq14, period1000/duty500; neither selected old nor captured new",
+  "artifacts_sha256": {
+    "active-a.bin": "9a3e03017985ae25d16f39adec1a84edac4f2d23fe6d0ee0a705f909818567b9",
+    "inactive-b-before.bin": "e466d3403be3ab1178ce37909edee6ca2d14fdd5d861a7ab2f5639e420751631",
+    "inactive-b-torn-erase.bin": "55860a4084a8b3234043def06895b7a9bdd95203348c5307f3e5f1a1ee4f13b3",
+    "intended-new.bin": "6e36108948111e71f158b86be43323298d41cdc7830f4aa9262017b7fde9f434",
+    "erase-mask.bin": "26cd7925da95ea6eee05b9bee97212323df75cb1a458d8a3d3451b38d52ac0e1"
+  }
+}

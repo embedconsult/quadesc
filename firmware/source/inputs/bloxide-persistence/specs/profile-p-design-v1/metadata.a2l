@@ -1,0 +1,32 @@
+ASAP2_VERSION 1 71
+/begin PROJECT profile_p_design "Design fixture only; not a matched firmware bundle"
+  /begin MODULE profile_p_design "P-local boot page and failure policy; pending independent approval"
+    /begin MOD_COMMON "Intel byte order"
+      BYTE_ORDER MSB_LAST
+      ALIGNMENT_BYTE 1
+      ALIGNMENT_WORD 2
+      ALIGNMENT_LONG 4
+    /end MOD_COMMON
+    /begin MOD_PAR "Logical page; P-local initialization policy in companion descriptor"
+      /begin MEMORY_SEGMENT led_page "Boot-initialized RAM; no independent init image" DATA RAM INTERN 0x1000 4 -1 -1 -1 -1 -1
+      /end MEMORY_SEGMENT
+    /end MOD_PAR
+    /begin RECORD_LAYOUT scalar_u16
+      FNC_VALUES 1 UWORD ROW_DIR DIRECT
+    /end RECORD_LAYOUT
+    /begin CHARACTERISTIC led_period_ms "LED period" VALUE 0x1000 scalar_u16 0 NO_COMPU_METHOD 100 10000
+      ECU_ADDRESS_EXTENSION 0
+    /end CHARACTERISTIC
+    /begin CHARACTERISTIC led_duty_permille "LED duty" VALUE 0x1002 scalar_u16 0 NO_COMPU_METHOD 0 1000
+      ECU_ADDRESS_EXTENSION 0
+    /end CHARACTERISTIC
+    /begin BLOB persistence_view "Latch at base; sequential read; no wire save control" 0x10000 640
+      ECU_ADDRESS_EXTENSION 0
+      CALIBRATION_ACCESS NO_CALIBRATION
+    /end BLOB
+    /begin BLOB persistence_identity "Synthetic design identity; reject as release identity" 0x10400 128
+      ECU_ADDRESS_EXTENSION 0
+      CALIBRATION_ACCESS NO_CALIBRATION
+    /end BLOB
+  /end MODULE
+/end PROJECT

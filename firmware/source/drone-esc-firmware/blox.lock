@@ -1,0 +1,84 @@
+format = 1
+blox-schema = 1
+generator-revision = "2b4ec83a1aa3dcbddeb001fc34d0074fa68cd132"
+generator-sha256 = "3ff96951be0de5b1dc824e701b6cb84269be064a46b0ca5da873ee862339441d"
+
+[[packages]]
+alias = "calibration"
+name = "bloxide-calibration"
+version = "0.1.0"
+source = "path"
+path = "../inputs/bloxide-calibration"
+manifest-sha256 = "b69a06565d6718f65bf4cb37d733d3c02e02ca323224cc55ffd2c200b15ecb13"
+content-sha256 = "e3062f88af69f6c624a27a5f20b8dae7b28fb56e7bb89920dab7657cf4dd80bf"
+dirty = true
+
+[[packages]]
+alias = "diagnostic_parser"
+name = "am13-diagnostic-parser"
+version = "0.1.0"
+source = "path"
+path = "diagnostic-parser"
+manifest-sha256 = "8b855cc2d41f071ee6502b9ccab4294f3572aa57ce3b967f8f3c89db023e9b37"
+content-sha256 = "65dbd061b37d6a0cf09cdcfaecb9ccfd76f3ac9be05c9c5f2ba2fa5da95668e1"
+dirty = true
+
+[[packages]]
+alias = "diagnostic_transport"
+name = "am13-diagnostic-transport"
+version = "0.1.0"
+source = "path"
+path = "diagnostic-transport"
+manifest-sha256 = "e787fef500f34c5dc7d76497e4a74d9a479a0e901253ba542ab5b617d2b455d3"
+content-sha256 = "bd8b70e7eb375356993817168ca7cd9655ebd2679439af5f7a6d1b0a84924e12"
+dirty = true
+
+[[packages]]
+alias = "framework"
+name = "bloxide"
+version = "0.0.3"
+source = "path"
+path = "../inputs/bloxide"
+manifest-sha256 = "93be6b944ab9f36c15cb3fe3c269251e3b1011f0df79854ed57594a600942313"
+content-sha256 = "6c68f9351a48ddbf69d05474648dbbd837f6c2b3ac5cc04fb728ee399f76e4e4"
+dirty = true
+
+[[packages]]
+alias = "led"
+name = "bloxide-led"
+version = "0.1.0"
+source = "path"
+path = "../bloxide-led"
+manifest-sha256 = "84370f360bb3f31e33d14772061ca408bbc4112ea51347fe39b3ceb4bf211f8e"
+content-sha256 = "b2c8df9fbfa3ac118516103200c87bfbe9048676e55a91af1e98bc16af34c7da"
+dirty = true
+
+[[packages]]
+alias = "mainboard"
+name = "mainboard-characterization"
+version = "0.1.0"
+source = "path"
+path = "characterization"
+manifest-sha256 = "ae049a76c62b82f7bf89f26b38671aeec497aa5d1e9bc7231e531a23cfdac52d"
+content-sha256 = "37395a15abdd8c90b671d20128cdfbc29909096760a5e2c0bc946a9132db772e"
+dirty = true
+
+[[packages]]
+alias = "mcu_xcp_platform"
+name = "am13-xcp-control-platform"
+version = "0.1.0"
+source = "path"
+path = "mcu-xcp-platform"
+manifest-sha256 = "840b91da7f18577aedccfba59022c39a0f5af0f8c125f342df0e3b440c11da6a"
+content-sha256 = "aa4df5557f2f4fe75fa9f18a1dd482c64e5494d6045a898161b7e7f1861b210d"
+dirty = true
+
+[[packages]]
+alias = "xcp"
+name = "bloxide-xcp"
+version = "0.1.0"
+source = "path"
+path = "../bloxide-xcp"
+manifest-sha256 = "edd023c295ea81803a5d4a45a8cfbb2af230675e40d541414c51a4a4aabc3e9b"
+content-sha256 = "6af948a6793d70ae58c7be824269527be00af31dd9457801ad3c833555cac660"
+dirty = true

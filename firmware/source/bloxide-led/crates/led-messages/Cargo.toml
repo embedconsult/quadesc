@@ -1,0 +1,10 @@
+[package]
+name = "led-messages"
+version = "0.1.0"
+edition = "2021"
+[dependencies]
+bloxide-calibration = { path = "../../../inputs/bloxide-calibration" }
+xcp-messages = { path = "../../../bloxide-xcp/crates/xcp-messages" }
+xcp-core = { path = "../../../bloxide-xcp/crates/xcp-core" }
+bloxide-persistence-calibration = { path = "../../../inputs/bloxide-persistence/crates/bloxide-persistence-calibration" }
+bloxide-persistence = { path = "../../../inputs/bloxide-persistence" }

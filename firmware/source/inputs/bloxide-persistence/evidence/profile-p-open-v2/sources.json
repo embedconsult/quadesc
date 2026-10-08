@@ -1,0 +1,247 @@
+{
+  "base_commit": "8cc9f8fc60c727f18a28643ffb3b2ca00de505fe",
+  "base_tree": "a48754223b8012705b5b84446d51259facb542c2",
+  "xcplite": {
+    "commit": "88e3cbeec79318f50067eede2502bcf4d34dab5f",
+    "tree": "fcf57f8dc3b22f4db1afebf879e14b91a880e480",
+    "archive_sha256": "7093471811d8e2eadfc426707510c024db448521f9cc05a44b488230b71576b5",
+    "upstream_source_modified": false,
+    "files": [
+      {
+        "path": "original-inputs/research/XCPlite-88e3cbeec79318f50067eede2502bcf4d34dab5f/CMakeLists.txt",
+        "upstream_path": "CMakeLists.txt",
+        "sha256": "4831ac84effddfe64cd20cded0f636339cb9de29d562a39a02d80070c98eb78a"
+      },
+      {
+        "path": "original-inputs/research/XCPlite-88e3cbeec79318f50067eede2502bcf4d34dab5f/LICENSE",
+        "upstream_path": "LICENSE",
+        "sha256": "2832cdba56a8c48921bf7747fd70cb25ea47c127ea653e68308c593f1ef6da35"
+      },
+      {
+        "path": "original-inputs/src/xcplib_cfg.h",
+        "upstream_path": "src/xcplib_cfg.h",
+        "sha256": "ed665eb5c9102c315f659139d406293a891f799bcb3115e8699acdf37011eb81"
+      },
+      {
+        "path": "original-inputs/src/xcp_cfg.h",
+        "upstream_path": "src/xcp_cfg.h",
+        "sha256": "4a26c6deb06d6462a2031accd80d87d6cc6927f9ef66a301fc4be389abc123fb"
+      },
+      {
+        "path": "original-inputs/src/xcptl_cfg.h",
+        "upstream_path": "src/xcptl_cfg.h",
+        "sha256": "22df0b3fdfd1e8d2c67157eeefebc85356a0d24480ac947dcab64d1662aadc08"
+      },
+      {
+        "path": "original-inputs/src/xcplib_no_a2l_cfg.h",
+        "upstream_path": "src/xcplib_no_a2l_cfg.h",
+        "sha256": "84f92f78c7841ee90576a7f343793db5d159e14f4a6ba6c818912015f22f7be8"
+      },
+      {
+        "path": "original-inputs/src/xcplib_ptp_cfg.h",
+        "upstream_path": "src/xcplib_ptp_cfg.h",
+        "sha256": "6b33182a6898684c2b37e60382e515148a75248404c7d12380a42d2e9011cb88"
+      },
+      {
+        "path": "original-inputs/src/xcplib_shm_cfg.h",
+        "upstream_path": "src/xcplib_shm_cfg.h",
+        "sha256": "f2f4eeda080e8045faa2fc7fcd1f903165a28c19befc7f1f39f6784ebc7b10b7"
+      },
+      {
+        "path": "original-inputs/src/xcplib_rtos_cfg.h",
+        "upstream_path": "src/xcplib_rtos_cfg.h",
+        "sha256": "dd60dfdea8537064db700a2cd2caf6ad68977ad3f7dfb5abcb995be1df236d8c"
+      },
+      {
+        "path": "original-inputs/src/xcplib_raw_cfg.h",
+        "upstream_path": "src/xcplib_raw_cfg.h",
+        "sha256": "42dc9202795716c3c35c41e3af75d4bbfdfe09b7c29eba0750104d98e62cf26c"
+      },
+      {
+        "path": "original-inputs/src/a2l.c",
+        "upstream_path": "src/a2l.c",
+        "sha256": "35d36691ee850e4859f6b25799694ac284885b718b1d58003cdab7a371806c02"
+      },
+      {
+        "path": "original-inputs/src/a2l_writer.c",
+        "upstream_path": "src/a2l_writer.c",
+        "sha256": "66d0eb8ef6eec907a66add623345101e06bb9548276c95e9a39754e9bec9b40a"
+      },
+      {
+        "path": "original-inputs/src/cal.c",
+        "upstream_path": "src/cal.c",
+        "sha256": "7b80c934b46a16c338d1ca7e68d9f5e5d3245d103db6df966fb48981a6d6d1d9"
+      },
+      {
+        "path": "original-inputs/src/persistence.c",
+        "upstream_path": "src/persistence.c",
+        "sha256": "1f51c6f131ad44b64096dabc6ce25415ad2136f5a9aff8e2d46e4edf51dccff0"
+      },
+      {
+        "path": "original-inputs/src/persistence.h",
+        "upstream_path": "src/persistence.h",
+        "sha256": "fdaa6a39c716c3d7d46885fc00918bb832357ae2492f00fa0e814cc321a192ca"
+      },
+      {
+        "path": "original-inputs/src/xcp.h",
+        "upstream_path": "src/xcp.h",
+        "sha256": "7dd865aba29f3f205ed2c9a74d15b3a76d375f0611e0bf411d2593b849e79525"
+      },
+      {
+        "path": "original-inputs/src/xcplite.c",
+        "upstream_path": "src/xcplite.c",
+        "sha256": "606412f1261f89246b5080909bdad64b3445cef7957506989507e468dd6eebe6"
+      },
+      {
+        "path": "original-inputs/research/XCPlite-88e3cbeec79318f50067eede2502bcf4d34dab5f/docs/xcplib_cfg.md",
+        "upstream_path": "docs/xcplib_cfg.md",
+        "sha256": "98d767c8e3e10a0c56ee38e78c6155f097e73aa39d5849a71e00f6aeed21e1b0"
+      },
+      {
+        "path": "original-inputs/research/XCPlite-88e3cbeec79318f50067eede2502bcf4d34dab5f/docs/TECHNICAL.md",
+        "upstream_path": "docs/TECHNICAL.md",
+        "sha256": "1f065915587efd775f0e34c21bc28b5a6d45cd48896567d1110797b5f57d9547"
+      }
+    ],
+    "fixture": "tools/profile-p-open/reference.c",
+    "override": "tools/profile-p-open/single_page.h"
+  },
+  "clients": [
+    {
+      "name": "pyxcp",
+      "version": "0.29.18",
+      "commit": "016cf3e44364e9cd93966d144a39d342578a0391",
+      "tree": "86927186407436c385dc6c1c3f1b933a2b8e9ce4",
+      "files": [
+        {
+          "path": "pyxcp/master/master.py",
+          "sha256": "9529e0b3a02de08eafef6900a52b77a0894832c784ca9b447a10216b97d4fb20",
+          "blob": "7f5188504243fe82545aa33e0a95a362a08e9957"
+        },
+        {
+          "path": "pyxcp/master/errorhandler.py",
+          "sha256": "54164793e427bd8911cfc02ee30f640633438bad3f16013d855b0f447b9f9c03",
+          "blob": "d5d0f20ff2438c0aaa3b5d553b9fe8a0172fcfb3"
+        },
+        {
+          "path": "pyxcp/errormatrix.py",
+          "sha256": "790f2dd77337571b098531c5d91c224dc6e857ffe4b63dd3cc4bf32f78f52261",
+          "blob": "1089c6c5993734ebc10dcaf0b8d907dd3054e412"
+        },
+        {
+          "path": "pyxcp/types.py",
+          "sha256": "288570b1d3ac7c70920ca71133186cf6d3376d7c7082db9c4d2fad0edeb9db04",
+          "blob": "73f49f74b4847d0a6096397c9620007469f8e803"
+        },
+        {
+          "path": "pyxcp/transport/base.py",
+          "sha256": "36f5ed325be284c8c575464171f195e4a4268bfb6c501e846387e24a92170263",
+          "blob": "ae8a3c036d78ca8512c82d44f3bc2b5c627f2dff"
+        },
+        {
+          "path": "pyxcp/config/__init__.py",
+          "sha256": "160a29250f886bca55b7c82268f4ae87902a967ec67025a4622d29d11697a706",
+          "blob": "6a2969c4f188805decb8f60e78b05c459c8a77de"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "fbb1494c7a03c01578edce3bbe6395c8304f296e8f6b7c0ca7af8418ac6178a0",
+          "blob": "1f3f462d7e9cf182c8a813522e2297f323546138"
+        }
+      ]
+    },
+    {
+      "name": "pya2ldb",
+      "version": "1.0.353",
+      "commit": "c19c3ad2f285d1230e334bad81eeb09cbaaa3031",
+      "tree": "5194d02ada2cbc96dd7d3f666fed86e4314f5f28",
+      "files": [
+        {
+          "path": "pya2l/classes.py",
+          "sha256": "52470523dc8aacb97caebbf5894f61327dbcddbf20f74e43c61c737ebe712f54",
+          "blob": "edf81eb11971830727ddfdb294b0f1ce36650882"
+        },
+        {
+          "path": "pya2l/model/__init__.py",
+          "sha256": "5739e90eb52a0c8706b0c83b5075c6cac7f1359a2e97db9f8070c3f3bf4a71a8",
+          "blob": "635599650bd3920f2f2e73b3b19a4ce9bdda9fb4"
+        },
+        {
+          "path": "pya2l/__init__.py",
+          "sha256": "d18d72f8d97c5151fd8676cd8327c3829cb45148f1cbb5b2af5f60a72486e0f6",
+          "blob": "215363be38c8540d6625569034546359c344795e"
+        },
+        {
+          "path": "pyproject.toml",
+          "sha256": "9bcb346c53e5210fc0b9e65b0962cbee4efcb8a25d7774dfd7bb17b2282016f3",
+          "blob": "90e066d3642a024b3aef918f9b6fbd891022546a"
+        }
+      ]
+    }
+  ],
+  "retrievals": [
+    {
+      "url": "https://codeload.github.com/vectorgrp/XCPlite/tar.gz/88e3cbeec79318f50067eede2502bcf4d34dab5f",
+      "path": "original-inputs/research/xcplite-88e3cbe.tar.gz",
+      "sha256": "7093471811d8e2eadfc426707510c024db448521f9cc05a44b488230b71576b5"
+    },
+    {
+      "path": "original-inputs/research/asam-xcp-wiki.html",
+      "url": "https://www.asam.net/standards/detail/mcd-1-xcp/wiki/",
+      "sha256": "589f86eb9865d02e877068b6acd4b9c2bfbfadd6dbc8e61c86fbf23cb02c7d80",
+      "retrieved_utc": "2026-09-25T02:19:34.510800+00:00"
+    },
+    {
+      "url": "https://www.autosar.org/fileadmin/standards/R23-11/CP/AUTOSAR_CP_SWS_XCP.pdf",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1081)>"
+    }
+  ],
+  "s0_archive_sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db",
+  "evidence": [
+    {
+      "path": "original-inputs/build.json",
+      "sha256": "6a1991368a7ddee8484f4570080f18e5c66f764c7c0e791c75e2c0d497fc6994"
+    },
+    {
+      "path": "original-inputs/reference-tree.json",
+      "sha256": "6a7bb03c823fc8ac41a7f22c7cc4d1b526c2b247bf37bfbfa8dba7d0e511516a"
+    },
+    {
+      "path": "original-inputs/reference-source-manifest.json",
+      "sha256": "5d4a558284999a019e1b50caab1e480b0723fcc184220b39f345309750c6b96c"
+    },
+    {
+      "path": "original-inputs/input-verification.json",
+      "sha256": "119a5254d5b031c75f58093fe59dffb17b894242e9f56804e3fa0df71778f84f"
+    },
+    {
+      "path": "original-inputs/reference-audit.json",
+      "sha256": "cb9f369850d2d91200c018cab66b685cc101f79a06e117a41318c1dee62aa0ed"
+    },
+    {
+      "path": "original-inputs/reference-probe.log",
+      "sha256": "238aac22c606e6f19f658b981f66fe7b9a1d1e4bded4b73716130e8c26c8a32b"
+    },
+    {
+      "path": "original-inputs/design-check.json",
+      "sha256": "e6b13ec2a77c38f8c9e0a974ee34d7760d49943d7ca6cb5cfafaab036e640249"
+    },
+    {
+      "path": "original-inputs/policy-check-renamed.json",
+      "sha256": "e355891a330c155a811878fe7fa56af0b47aba6167f1f299bfd7bf645d063949"
+    },
+    {
+      "path": "original-inputs/metadata-check.json",
+      "sha256": "13a628ed511b61a9a643af849af669e7cd3ba86eec684bab884d72322bf6421e"
+    },
+    {
+      "path": "original-inputs/result.json",
+      "sha256": "2e24b5cec07a62202e64a762b4c4e0a46004859fc1e0ca29eae610826fa3f9bb"
+    },
+    {
+      "path": "original-inputs/private-origin.json",
+      "sha256": "57ed5236b45256b0e919783ef2bfac31a0d7c04b58570beb45b7d28eb91c18c4"
+    }
+  ],
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

@@ -1,0 +1,100 @@
+{
+  "scope": "design constraints only; no endpoint/interoperability or target evidence",
+  "views": 7,
+  "field_checks": 203,
+  "negative_schema_controls": 16,
+  "descriptor_negative_controls": 7,
+  "wire_vectors": 43,
+  "traces": 4,
+  "max_view_uploads": 92,
+  "max_identity_uploads": 19,
+  "declared_extra_bytes": 5120,
+  "vector_sha256": "2fb315958e0bec98a9edec8b6450ddf01b7ac12d27336b68e1f3166eac326518",
+  "admission_correction": {
+    "api_traces": 8,
+    "retained_rejection_vectors": 2,
+    "negative_controls": [
+      {
+        "control": "post-C-FE24",
+        "expected_stage": "single-accepted-response",
+        "rejected": true
+      },
+      {
+        "control": "second-F9-response",
+        "expected_stage": "single-accepted-response",
+        "rejected": true
+      },
+      {
+        "control": "wrong-terminal-key",
+        "expected_stage": "exact-retained-key",
+        "rejected": true
+      },
+      {
+        "control": "recaptured-RAM",
+        "expected_stage": "exact-retained-capture",
+        "rejected": true
+      },
+      {
+        "control": "wear-as-rejection",
+        "expected_stage": "actual-service-outcome",
+        "rejected": true
+      },
+      {
+        "control": "permit-before-C",
+        "expected_stage": "api-order-and-settlement",
+        "rejected": true
+      },
+      {
+        "control": "release-unsettled",
+        "expected_stage": "api-order-and-settlement",
+        "rejected": true
+      },
+      {
+        "control": "invented-preflight",
+        "expected_stage": "known-input-before-reserve",
+        "rejected": true
+      },
+      {
+        "control": "durable-rejected-next-save-mutated-reason",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "durable-rejected-next-save-mutated-state",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "durable-rejected-next-save-mutated-key",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "durable-rejected-next-save-mutated-capture",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "failed-rejected-next-save-mutated-reason",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "failed-rejected-next-save-mutated-state",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "failed-rejected-next-save-mutated-key",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      },
+      {
+        "control": "failed-rejected-next-save-mutated-capture",
+        "expected_stage": "retained-operation-preservation",
+        "rejected": true
+      }
+    ],
+    "scope": "source-tied design checks only; no Rust/endpoint execution"
+  }
+}

@@ -1,0 +1,8 @@
+format = 1
+[package]
+name = "am13-diagnostic-transport"
+version = "0.1.0"
+blox-schema = 1
+[[crates]]
+name = "am13-diagnostic-transport"
+path = "Cargo.toml"

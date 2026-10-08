@@ -1,0 +1,144 @@
+{
+  "status": "validated-software-and-bounded-physical-checks",
+  "host": "bloxide1",
+  "target": "thumbv8m.main-none-eabi",
+  "schema": 7,
+  "parameters": 252,
+  "source_provenance_sha256": "974230266b530691b6730c8f703a5f2a9e7297876279a81237f460a20e0fd657",
+  "toolchain": {
+    "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02)",
+    "cargo": "cargo 1.94.0 (85eff7c80 2026-01-15)",
+    "objcopy": "GNU objcopy (2.45.50.20251209-1ubuntu1+23build1) 2.45.50.20251209",
+    "readelf": "GNU readelf (2.45.50.20251209-1ubuntu1+23build1) 2.45.50.20251209",
+    "target": "thumbv8m.main-none-eabi",
+    "bubblewrap": "bubblewrap 0.11.1"
+  },
+  "build_command": "HANDOFF_OFFLINE=1 bash tools/firmware/build.sh NEW_WORK_DIRECTORY",
+  "fixed_namespace": {
+    "sources": "/tmp/handoff-build",
+    "cargo": "/tmp/handoff-cargo"
+  },
+  "application_origin": 32768,
+  "application_slot_end": 260096,
+  "profile": {
+    "opt_level": "z",
+    "lto": "fat",
+    "codegen_units": 1,
+    "debug": 0,
+    "panic": "abort"
+  },
+  "reproducibility": {
+    "two_independent_builds": true,
+    "second_from_clean_zip_extraction": true,
+    "source_and_crates_locked": true,
+    "artifacts": {
+      "application/firmware.bin": {
+        "bytes": 86464,
+        "sha256": "a94b3eac319f5d5b03c6710d7cd8d60fa951e09fa0573e9de0bfbaf4cca2c2e7",
+        "byte_identical": true
+      },
+      "application/firmware.ab1": {
+        "bytes": 86496,
+        "sha256": "68ad0523f41a9b501e149b33c45d65fb171683a997be854ed4871ba7ae7f95b5",
+        "byte_identical": true
+      },
+      "application/firmware.elf": {
+        "bytes": 202928,
+        "sha256": "b51326c200e246d22892736625e93576b1695947227ca92b6dab9d5173f43c17",
+        "byte_identical": true
+      },
+      "loader/bootloader.bin": {
+        "bytes": 14912,
+        "sha256": "df2d3ef254f3cff52a579a2fb746d1a477477eeacbfbba214f023e248d34d7e1",
+        "byte_identical": true
+      },
+      "loader/bootloader.elf": {
+        "bytes": 203972,
+        "sha256": "782a2ebaecee28546243dddcdcb1a6f3e5ee1496162256759da133bc47b2fbb0",
+        "byte_identical": true
+      }
+    },
+    "post_cleanup_rebuild": {
+      "current_cleaned_source_rebuild": true,
+      "target": "thumbv8m.main-none-eabi",
+      "command": "HANDOFF_OFFLINE=1 bash tools/firmware/build.sh NEW_BUILD_DIRECTORY",
+      "artifacts": {
+        "application/firmware.bin": {
+          "bytes": 86464,
+          "sha256": "a94b3eac319f5d5b03c6710d7cd8d60fa951e09fa0573e9de0bfbaf4cca2c2e7",
+          "identical_to_validated_release": true
+        },
+        "application/firmware.ab1": {
+          "bytes": 86496,
+          "sha256": "68ad0523f41a9b501e149b33c45d65fb171683a997be854ed4871ba7ae7f95b5",
+          "identical_to_validated_release": true
+        },
+        "application/firmware.elf": {
+          "bytes": 202928,
+          "sha256": "b51326c200e246d22892736625e93576b1695947227ca92b6dab9d5173f43c17",
+          "identical_to_validated_release": true
+        },
+        "loader/bootloader.bin": {
+          "bytes": 14912,
+          "sha256": "df2d3ef254f3cff52a579a2fb746d1a477477eeacbfbba214f023e248d34d7e1",
+          "identical_to_validated_release": true
+        },
+        "loader/bootloader.elf": {
+          "bytes": 203972,
+          "sha256": "782a2ebaecee28546243dddcdcb1a6f3e5ee1496162256759da133bc47b2fbb0",
+          "identical_to_validated_release": true
+        }
+      },
+      "all_five_byte_identical": true,
+      "subsequent_changes": "Documentation and provenance only; all compiled Rust inputs remain byte-identical."
+    }
+  },
+  "verification": {
+    "schema": 7,
+    "parameters": 252,
+    "application_bytes": 86464,
+    "bin_sha256": "a94b3eac319f5d5b03c6710d7cd8d60fa951e09fa0573e9de0bfbaf4cca2c2e7",
+    "ab1_sha256": "68ad0523f41a9b501e149b33c45d65fb171683a997be854ed4871ba7ae7f95b5",
+    "loader_bin_sha256": "df2d3ef254f3cff52a579a2fb746d1a477477eeacbfbba214f023e248d34d7e1",
+    "loader_region_sha256": "c0070f2a5e1b463c08cd7561b3c95811af44597797c2f780319396b93828b503",
+    "elf_load_bytes_match": true,
+    "a2l_addresses_types_match": true,
+    "loader_abi": 1
+  },
+  "metadata": {
+    "retained_descriptors_address_type_width_persistence_unchanged": 251,
+    "retired_ids": [
+      222,
+      223,
+      224,
+      225,
+      226
+    ],
+    "added_known_descriptor_id": 297,
+    "added_known_descriptor_address": 5428,
+    "calibration_storage_unchanged": true,
+    "loader_abi": 1
+  },
+  "regressions": {
+    "rust_passed": 164,
+    "rust_failed": 0,
+    "host_passed": 26,
+    "host_failed": 0,
+    "shared_lock_uid_tmpdir_regression_passed": true,
+    "http_partial_headers_bodies_concurrent_tabs_host_origin_deadlines_passed": true,
+    "transport_teardown_nested_finally_passed": true,
+    "calibration_bounds_readback_save_fencing_passed": true,
+    "unknown_shutdown_retry_telemetry_passed": true
+  },
+  "hardware_tested": true,
+  "post_build_documentation_cleanup": {
+    "compiled_sources_unchanged": true,
+    "artifact_hashes_unchanged": true,
+    "source_hashes_refreshed": true
+  },
+  "physical_evidence": "../release/short-bench/result.json",
+  "physical_limitations": [
+    "Short unloaded functional timing and shutdown validation; no new long soak or loaded motor qualification.",
+    "Voltage amplitudes and precise lease latency are not calibrated measurements; native instrument settings are retained with source data."
+  ]
+}

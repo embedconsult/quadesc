@@ -1,0 +1,181 @@
+// Copyright 2025 Bloxide, all rights reserved
+
+pub use bloxide_spawn::SpawnCap;
+
+#[doc(hidden)]
+pub use bloxide_macros::dyn_channels as __dyn_channels_proc_macro;
+#[doc(hidden)]
+pub use bloxide_macros::next_actor_id as __next_actor_id_proc_macro;
+
+pub mod channel;
+pub mod mailbox;
+pub mod prelude;
+pub mod spawn;
+pub mod supervision;
+pub mod timer;
+
+pub use bloxide_child_management::ChildGroupBuilder;
+pub use bloxide_core::{run, RunConfig};
+pub use bloxide_core::{ChildLifecycleEvent, LifecycleCommand};
+pub use channel::{TokioSendError, TokioSender, TokioStream, TokioTrySendError};
+
+// ── TokioRuntime ──────────────────────────────────────────────────────────────
+
+/// The Tokio runtime capability handle (zero-sized type).
+#[derive(Clone, Copy)]
+pub struct TokioRuntime;
+
+// ── next_actor_id! macro ──────────────────────────────────────────────────────
+
+/// Allocate a compile-time actor ID from the same counter used by `channels!`.
+#[macro_export]
+macro_rules! next_actor_id {
+    () => {
+        $crate::__next_actor_id_proc_macro!()
+    };
+}
+
+// ── channels! macro ───────────────────────────────────────────────────────────
+
+/// Create all channels for an actor in one call using Tokio's dynamic channels.
+///
+/// Takes a comma-separated list of `MessageType(capacity)` pairs and returns
+/// `(refs_tuple, mailboxes_tuple)`.
+#[macro_export]
+macro_rules! channels {
+    ($($tt:tt)*) => {
+        $crate::__dyn_channels_proc_macro!($crate::TokioRuntime; $($tt)*)
+    };
+}
+
+// ── actor_task! macro ─────────────────────────────────────────────────────────
+
+/// Generate an async wrapper for an unsupervised bloxide actor.
+#[macro_export]
+macro_rules! actor_task {
+    ($name:ident, $spec:ty $(,)?) => {
+        async fn $name(
+            machine: ::bloxide_core::StateMachine<$spec>,
+            mailboxes: <$spec as ::bloxide_core::spec::MachineSpec>::Mailboxes<
+                $crate::TokioRuntime,
+            >,
+        ) {
+            $crate::run(
+                machine,
+                mailboxes,
+                $crate::RunConfig::<$crate::TokioRuntime>::unsupervised(),
+                0,
+            )
+            .await;
+        }
+    };
+}
+
+// ── actor_task_supervised! macro ──────────────────────────────────────────────
+
+/// Generate an async wrapper for a supervised bloxide actor.
+#[macro_export]
+macro_rules! actor_task_supervised {
+    ($name:ident, $spec:ty $(,)?) => {
+        async fn $name(
+            machine: ::bloxide_core::StateMachine<$spec>,
+            domain_mailboxes: <$spec as ::bloxide_core::spec::MachineSpec>::Mailboxes<
+                $crate::TokioRuntime,
+            >,
+            lifecycle_rx: $crate::TokioStream<$crate::LifecycleCommand>,
+            actor_id: ::bloxide_core::messaging::ActorId,
+            supervisor_notify: $crate::TokioSender<$crate::ChildLifecycleEvent>,
+        ) {
+            $crate::run(
+                machine,
+                domain_mailboxes,
+                $crate::RunConfig::<$crate::TokioRuntime>::supervised(
+                    lifecycle_rx,
+                    supervisor_notify,
+                ),
+                actor_id,
+            )
+            .await;
+        }
+    };
+}
+
+// ── root_task! macro ──────────────────────────────────────────────────────────
+
+/// Generate an async wrapper for a top-level supervisor or root actor.
+#[macro_export]
+macro_rules! root_task {
+    ($name:ident, $spec:ty, $on_done:expr $(,)?) => {
+        async fn $name(
+            machine: ::bloxide_core::StateMachine<$spec>,
+            mailboxes: <$spec as ::bloxide_core::spec::MachineSpec>::Mailboxes<
+                $crate::TokioRuntime,
+            >,
+        ) {
+            $crate::run(
+                machine,
+                mailboxes,
+                $crate::RunConfig::<$crate::TokioRuntime>::root(),
+                0,
+            )
+            .await;
+            $on_done
+        }
+    };
+    ($name:ident, $spec:ty $(,)?) => {
+        async fn $name(
+            machine: ::bloxide_core::StateMachine<$spec>,
+            mailboxes: <$spec as ::bloxide_core::spec::MachineSpec>::Mailboxes<
+                $crate::TokioRuntime,
+            >,
+        ) {
+            $crate::run(
+                machine,
+                mailboxes,
+                $crate::RunConfig::<$crate::TokioRuntime>::root(),
+                0,
+            )
+            .await;
+        }
+    };
+}
+
+// ── spawn_timer! macro ────────────────────────────────────────────────────────
+
+/// Spawn the timer service and return the `ActorRef<TimerCommand>` for it.
+///
+/// The timer task is spawned as a Tokio task and runs until it receives a
+/// `TimerCommand::Shutdown` message.
+#[macro_export]
+macro_rules! spawn_timer {
+    ($capacity:expr) => {{
+        let ((timer_ref,), (timer_stream,)) =
+            $crate::__dyn_channels_proc_macro!($crate::TokioRuntime; ::bloxide_timer::TimerCommand($capacity));
+        tokio::spawn(
+            <$crate::TokioRuntime as ::bloxide_timer::TimerService>::run_timer_service(
+                timer_stream,
+            ),
+        );
+        timer_ref
+    }};
+}
+
+// ── spawn_static_child! macro ─────────────────────────────────────────────────
+
+/// Spawn a supervised static child actor task using Tokio.
+///
+/// Creates the per-child lifecycle channel, registers the child in the
+/// `ChildGroupBuilder` with its `ChildPolicy`, and spawns the task with
+/// lifecycle arguments injected.
+///
+/// Unlike the Embassy version, there is no `spawner` parameter — Tokio tasks
+/// are spawned through the runtime's `SpawnCap` implementation.
+#[macro_export]
+macro_rules! spawn_static_child {
+    ($builder:expr, $task_fn:ident($machine:expr, $mbox:expr, $id:expr), $policy:expr) => {{
+        let (lc_rx, sup_notify) = $builder.add_child($id, $policy);
+        let _handle = <$crate::TokioRuntime as $crate::SpawnCap>::spawn($task_fn(
+            $machine, $mbox, lc_rx, $id, sup_notify,
+        ));
+    }};
+}

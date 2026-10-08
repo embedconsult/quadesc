@@ -1,0 +1,20 @@
+{
+  "capture": {
+    "client": "unmodified pyXCP 0.29.18",
+    "client_commit": "016cf3e44364e9cd93966d144a39d342578a0391",
+    "endpoint": "independent documented PTY simulator",
+    "host": "bloxide1 x86_64",
+    "python": "3.12.13",
+    "source_run_raw_uart_sha256": "84c6eb24469ea81f40f2677cfb26288851a0e4d04b9c10b68cfde837a439e002"
+  },
+  "exchange": [
+    {"direction":"host_to_endpoint","meaning":"CONNECT normal mode","frame_hex":"0200ff0001"},
+    {"direction":"endpoint_to_host","meaning":"S0 CONNECT response","frame_hex":"0800ff010008080001011a"},
+    {"direction":"host_to_endpoint","meaning":"GET_STATUS","frame_hex":"0101fdff"},
+    {"direction":"endpoint_to_host","meaning":"GET_STATUS response","frame_hex":"0601ff000000000006"},
+    {"direction":"host_to_endpoint","meaning":"SET_MTA led.period_ms","frame_hex":"0802f60000000010000010"},
+    {"direction":"endpoint_to_host","meaning":"positive response","frame_hex":"0102ff02"},
+    {"direction":"host_to_endpoint","meaning":"UPLOAD two bytes","frame_hex":"0203f502fc"},
+    {"direction":"endpoint_to_host","meaning":"period 1000 ms little-endian","frame_hex":"0303ffe803f0"}
+  ]
+}

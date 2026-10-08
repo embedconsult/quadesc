@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "baseline_commit": "e9c87dc2ed34ee16cf7a8e0c539cb093e35d37ed",
+  "corrected_firmware_commit": "802aacd360cb0237842ff9f18dfdac312318137e",
+  "framework_commit": "43c4faa14a934fc96b73c39978084220a273d5d0",
+  "contract_archive_sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db",
+  "inputs": [
+    {
+      "path": "original-inputs/src/chip/io.rs",
+      "sha256": "f58c45b94b79c10a9f90612e7b12ef7160bca2a583d1a95e6372f9efb065089c"
+    },
+    {
+      "path": "original-inputs/src/chip/gpio.rs",
+      "sha256": "423be65315a9a460394a4364295d0983b35620249e913e4ba0dc14a2ffc38976"
+    },
+    {
+      "path": "original-inputs/src/chip/sysctl.rs",
+      "sha256": "917c9962b8de58806663d8aea1495782dc1e54a73952532cbd6571d35ad962e1"
+    },
+    {
+      "path": "original-inputs/src/chip/uart.rs",
+      "sha256": "088f8b35ef2eb8deb21d2522cd63b4785f26629b75bce6cab40b55e45b6fbcc1"
+    },
+    {
+      "path": "original-inputs/src/board/pins.rs",
+      "sha256": "99f01ed7c6198335f8688b3e6e4c9d73b77b9b00160bad60cadf9d0236ca74fb"
+    },
+    {
+      "path": "original-inputs/src/board/init.rs",
+      "sha256": "8990ed2d246bc4fe2e0e176e78646f889f496142095d8777e7a1c041c9381e83"
+    },
+    {
+      "path": "original-inputs/src/board/led.rs",
+      "sha256": "00765418f3630249c47eb6a435ac969dde463829486449f48bb11928350829d2"
+    },
+    {
+      "path": "original-inputs/src/runtime.rs",
+      "sha256": "5d262a50005eca69c429102c334039a0de8d29ee0c0157654b558ec18f24912a"
+    },
+    {
+      "path": "original-inputs/Cargo.toml",
+      "sha256": "e3a68c406ee3d3d4936b71ec77b65da31d99e44c86cf43b801b20e9300a46810"
+    },
+    {
+      "path": "original-inputs/memory.x",
+      "sha256": "249df962b2844ddd028cc8adb5cbba16da9d20be2cc291c202bee6abb077e966"
+    },
+    {
+      "path": "original-inputs/uart-clock.md",
+      "sha256": "b4aa594d60e58dd2b91695d5b609fe3dcfc35a51a381013b1c3a3f8901b67752"
+    },
+    {
+      "path": "original-inputs/pin-sources.md",
+      "sha256": "0ff9a09fae127ac12fd9f9299e41d560abc27ec3bbde7824b48ba0e1954a00c9"
+    },
+    {
+      "path": "original-inputs/board-evidence.md",
+      "sha256": "af342b300f5fcf9807c4cf45ebd2c8aa018cc7db9f10a07682a3c4ec91fa3389"
+    },
+    {
+      "path": "original-inputs/references/sprujf2b.pdf",
+      "sha256": "31aa9d5365f2d892c76b08977001b2653712a1ebf4046c1e9e6d75639f62e53c"
+    },
+    {
+      "path": "original-inputs/references/sdk/am13e230x_sdk_26_01_00_03/source/device/am13e230x/include/hw/hw_unicommuart.h",
+      "sha256": "405e22b22548f943c7be3c16b21d7d58685fe61084e61c682d2e9d525fd94384"
+    },
+    {
+      "path": "original-inputs/references/sdk/am13e230x_sdk_26_01_00_03/source/device/am13e230x/include/hw/hw_sysctl.h",
+      "sha256": "bb397e51fdd41825e38332a355f321a54efb29948b3a728dc2d024249d94bac0"
+    },
+    {
+      "path": "original-inputs/references/sdk/am13e230x_sdk_26_01_00_03/source/device/am13e230x/include/hw/hw_gpio.h",
+      "sha256": "642361c35dd43876d35a1602619260aa59c4bd08d8c5619d5b907206d8e68d71"
+    },
+    {
+      "path": "original-inputs/references/sdk/am13e230x_sdk_26_01_00_03/source/driverlib/am13e230x/dl_unicommuart.c",
+      "sha256": "bbfdd081c2e46c78337a6d1203e16532f132135b22dabf9963a84b592fe59375"
+    },
+    {
+      "path": "original-inputs/pins/DRONE_ESC_v3.syscfg",
+      "sha256": "c9604e26c48c53444b386eea6d672ef648e0f302b5a905d1606ce4163dd28c71"
+    },
+    {
+      "path": "original-inputs/pins/summary.csv",
+      "sha256": "b5133da2acb38271c8f4ead1360551540f48a5ce7fc1465a61ff8e8d8dc5a0e1"
+    }
+  ],
+  "source_identity_labels": "Original input names and immutable hashes; current snapshot paths/hashes are in firmware/source-provenance.json."
+}

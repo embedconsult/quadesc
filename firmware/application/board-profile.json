@@ -1,0 +1,2217 @@
+{
+  "adc": [
+    {
+      "index": 0,
+      "adc_route": "A0_4",
+      "mcu_pad": "PA3",
+      "mcu_pin": 25,
+      "som_pin": "B3",
+      "net": "M4_IA",
+      "motor": 4,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc00_gain",
+      "offset": "adc00_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 4 phase A current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 3,
+      "driver_ref": "U4",
+      "driver_pin": "23",
+      "components": {
+        "R28": "1mOhm",
+        "NT19": "SP Kelvin tie to LS source",
+        "NT20": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R28=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 4 phase A current",
+      "raw": "adc00_PA3_A0_4",
+      "engineering": "adc00_engineering",
+      "flags": "adc00_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 1,
+      "adc_route": "A0_9",
+      "mcu_pad": "PB3",
+      "mcu_pin": 18,
+      "som_pin": "A4",
+      "net": "M4_BEMFA",
+      "motor": 4,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc01_gain",
+      "offset": "adc01_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 4 phase A voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R24": "33k to phase switch node",
+        "R25": "3.3k to M4_LSA"
+      },
+      "default_description": "R24=33k/R25=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 4 phase A voltage estimate",
+      "raw": "adc01_PB3_A0_9",
+      "engineering": "adc01_engineering",
+      "flags": "adc01_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 2,
+      "adc_route": "A0_11",
+      "mcu_pad": "PA28",
+      "mcu_pin": 51,
+      "som_pin": "K1",
+      "net": "unconnected-(J9-PadK1)",
+      "motor": null,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc02_gain",
+      "offset": "adc02_offset",
+      "unit": "V",
+      "kind": "spare",
+      "limitations": [
+        "Unused on this mainboard; not a motor measurement."
+      ],
+      "name": "Spare PA28 ADC input",
+      "formula": "engineering_V=raw*(3.3/4096)+offset",
+      "default_description": "Mainboard J9 K1 explicitly NC; SOM mikroBUS AN path; raw pad voltage only",
+      "label": "Spare PA28 ADC input",
+      "raw": "adc02_PA28_A0_11",
+      "engineering": "adc02_engineering",
+      "flags": "adc02_flags",
+      "default_gain": 0.0008056640625,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 3,
+      "adc_route": "A0_12",
+      "mcu_pad": "PA17",
+      "mcu_pin": 33,
+      "som_pin": "E3",
+      "net": "M2_BEMFA",
+      "motor": 2,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc03_gain",
+      "offset": "adc03_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 2 phase A voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R54": "33k to phase switch node",
+        "R55": "3.3k to M2_LSA"
+      },
+      "default_description": "R54=33k/R55=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 2 phase A voltage estimate",
+      "raw": "adc03_PA17_A0_12",
+      "engineering": "adc03_engineering",
+      "flags": "adc03_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 4,
+      "adc_route": "A0_15",
+      "mcu_pad": "PA16",
+      "mcu_pin": 32,
+      "som_pin": "C1",
+      "net": "M2_IA",
+      "motor": 2,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc04_gain",
+      "offset": "adc04_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 2 phase A current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 1,
+      "driver_ref": "U2",
+      "driver_pin": "23",
+      "components": {
+        "R58": "1mOhm",
+        "NT7": "SP Kelvin tie to LS source",
+        "NT8": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R58=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 2 phase A current",
+      "raw": "adc04_PA16_A0_15",
+      "engineering": "adc04_engineering",
+      "flags": "adc04_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 5,
+      "adc_route": "A0_18",
+      "mcu_pad": "PC14",
+      "mcu_pin": 45,
+      "som_pin": "H1",
+      "net": "M1_IA",
+      "motor": 1,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc05_gain",
+      "offset": "adc05_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 1 phase A current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 0,
+      "driver_ref": "U1",
+      "driver_pin": "23",
+      "components": {
+        "R73": "1mOhm",
+        "NT1": "SP Kelvin tie to LS source",
+        "NT2": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R73=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 1 phase A current",
+      "raw": "adc05_PC14_A0_18",
+      "engineering": "adc05_engineering",
+      "flags": "adc05_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 6,
+      "adc_route": "A0_19",
+      "mcu_pad": "PC15",
+      "mcu_pin": 46,
+      "som_pin": "H2",
+      "net": "M1_BEMFA",
+      "motor": 1,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc06_gain",
+      "offset": "adc06_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 1 phase A voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R69": "33k to phase switch node",
+        "R70": "3.3k to M1_LSA"
+      },
+      "default_description": "R69=33k/R70=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 1 phase A voltage estimate",
+      "raw": "adc06_PC15_A0_19",
+      "engineering": "adc06_engineering",
+      "flags": "adc06_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 7,
+      "adc_route": "A0_21",
+      "mcu_pad": "PB24",
+      "mcu_pin": 55,
+      "som_pin": "K3",
+      "net": "M3_IA",
+      "motor": 3,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc07_gain",
+      "offset": "adc07_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 3 phase A current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 2,
+      "driver_ref": "U3",
+      "driver_pin": "23",
+      "components": {
+        "R43": "1mOhm",
+        "NT13": "SP Kelvin tie to LS source",
+        "NT14": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R43=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 3 phase A current",
+      "raw": "adc07_PB24_A0_21",
+      "engineering": "adc07_engineering",
+      "flags": "adc07_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 8,
+      "adc_route": "A0_27",
+      "mcu_pad": "PB27",
+      "mcu_pin": 58,
+      "som_pin": "K4",
+      "net": "M3_BEMFA",
+      "motor": 3,
+      "phase": "A",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc08_gain",
+      "offset": "adc08_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 3 phase A voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R39": "33k to phase switch node",
+        "R40": "3.3k to M3_LSA"
+      },
+      "default_description": "R39=33k/R40=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 3 phase A voltage estimate",
+      "raw": "adc08_PB27_A0_27",
+      "engineering": "adc08_engineering",
+      "flags": "adc08_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 9,
+      "adc_route": "A1_5",
+      "mcu_pad": "PB4",
+      "mcu_pin": 30,
+      "som_pin": "D2",
+      "net": "M2_BEMFB",
+      "motor": 2,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc09_gain",
+      "offset": "adc09_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 2 phase B voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R59": "33k to phase switch node",
+        "R60": "3.3k to M2_LSB"
+      },
+      "default_description": "R59=33k/R60=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 2 phase B voltage estimate",
+      "raw": "adc09_PB4_A1_5",
+      "engineering": "adc09_engineering",
+      "flags": "adc09_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 10,
+      "adc_route": "A1_7",
+      "mcu_pad": "PB1",
+      "mcu_pin": 16,
+      "som_pin": "B5",
+      "net": "M3_BEMFB",
+      "motor": 3,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc10_gain",
+      "offset": "adc10_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 3 phase B voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R44": "33k to phase switch node",
+        "R45": "3.3k to M3_LSB"
+      },
+      "default_description": "R44=33k/R45=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 3 phase B voltage estimate",
+      "raw": "adc10_PB1_A1_7",
+      "engineering": "adc10_engineering",
+      "flags": "adc10_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 11,
+      "adc_route": "A1_12",
+      "mcu_pad": "PA18",
+      "mcu_pin": 34,
+      "som_pin": "D1",
+      "net": "M2_IB",
+      "motor": 2,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc11_gain",
+      "offset": "adc11_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 2 phase B current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 1,
+      "driver_ref": "U2",
+      "driver_pin": "22",
+      "components": {
+        "R63": "1mOhm",
+        "NT9": "SP Kelvin tie to LS source",
+        "NT10": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R63=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 2 phase B current",
+      "raw": "adc11_PA18_A1_12",
+      "engineering": "adc11_engineering",
+      "flags": "adc11_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 12,
+      "adc_route": "A1_13",
+      "mcu_pad": "PA5",
+      "mcu_pin": 27,
+      "som_pin": "B2",
+      "net": "M_TEMP2",
+      "motor": 2,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc12_gain",
+      "offset": "adc12_offset",
+      "unit": "ohm",
+      "kind": "ntc_resistance",
+      "limitations": [
+        "Celsius unavailable: TH part number, R25 and beta/Steinhart-Hart coefficients unspecified. Do not assume beta3950 or any other curve.",
+        "Ratiometric conversion assumes VAA and VREFHI equal (SOM R5=0)."
+      ],
+      "name": "Motor 2 thermistor resistance",
+      "formula": "engineering_ohm = (10000*raw/(4096-raw))*gain + offset; raw0/4095 invalid/saturated",
+      "components": {
+        "R5": "10k pullup to VAA",
+        "TH2": "Thermistor_NTC to GND; no MPN/beta/R25 in schematic"
+      },
+      "default_description": "R5=10k to same VAA as ADC reference; nonlinear divider resistance, gain1/offset0 trim",
+      "label": "Motor 2 thermistor resistance",
+      "raw": "adc12_PA5_A1_13",
+      "engineering": "adc12_engineering",
+      "flags": "adc12_flags",
+      "default_gain": 1.0,
+      "default_offset": 0.0,
+      "assumption_flags": 80,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 13,
+      "adc_route": "A1_16",
+      "mcu_pad": "PC10",
+      "mcu_pin": 41,
+      "som_pin": "F1",
+      "net": "M_TEMP1",
+      "motor": 1,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc13_gain",
+      "offset": "adc13_offset",
+      "unit": "ohm",
+      "kind": "ntc_resistance",
+      "limitations": [
+        "Celsius unavailable: TH part number, R25 and beta/Steinhart-Hart coefficients unspecified. Do not assume beta3950 or any other curve.",
+        "Ratiometric conversion assumes VAA and VREFHI equal (SOM R5=0)."
+      ],
+      "name": "Motor 1 thermistor resistance",
+      "formula": "engineering_ohm = (10000*raw/(4096-raw))*gain + offset; raw0/4095 invalid/saturated",
+      "components": {
+        "R2": "10k pullup to VAA",
+        "TH1": "Thermistor_NTC to GND; no MPN/beta/R25 in schematic"
+      },
+      "default_description": "R2=10k to same VAA as ADC reference; nonlinear divider resistance, gain1/offset0 trim",
+      "label": "Motor 1 thermistor resistance",
+      "raw": "adc13_PC10_A1_16",
+      "engineering": "adc13_engineering",
+      "flags": "adc13_flags",
+      "default_gain": 1.0,
+      "default_offset": 0.0,
+      "assumption_flags": 80,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 14,
+      "adc_route": "A1_18",
+      "mcu_pad": "PA8",
+      "mcu_pin": 69,
+      "som_pin": "J7",
+      "net": "M4_IB",
+      "motor": 4,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc14_gain",
+      "offset": "adc14_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 4 phase B current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 3,
+      "driver_ref": "U4",
+      "driver_pin": "22",
+      "components": {
+        "R33": "1mOhm",
+        "NT21": "SP Kelvin tie to LS source",
+        "NT22": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R33=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 4 phase B current",
+      "raw": "adc14_PA8_A1_18",
+      "engineering": "adc14_engineering",
+      "flags": "adc14_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 15,
+      "adc_route": "A1_19",
+      "mcu_pad": "PA9",
+      "mcu_pin": 70,
+      "som_pin": "K8",
+      "net": "M4_BEMFB",
+      "motor": 4,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc15_gain",
+      "offset": "adc15_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 4 phase B voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R29": "33k to phase switch node",
+        "R30": "3.3k to M4_LSB"
+      },
+      "default_description": "R29=33k/R30=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 4 phase B voltage estimate",
+      "raw": "adc15_PA9_A1_19",
+      "engineering": "adc15_engineering",
+      "flags": "adc15_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 16,
+      "adc_route": "A1_22",
+      "mcu_pad": "PB25",
+      "mcu_pin": 56,
+      "som_pin": "G3",
+      "net": "M_TEMP3",
+      "motor": 3,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc16_gain",
+      "offset": "adc16_offset",
+      "unit": "ohm",
+      "kind": "ntc_resistance",
+      "limitations": [
+        "Celsius unavailable: TH part number, R25 and beta/Steinhart-Hart coefficients unspecified. Do not assume beta3950 or any other curve.",
+        "Ratiometric conversion assumes VAA and VREFHI equal (SOM R5=0)."
+      ],
+      "name": "Motor 3 thermistor resistance",
+      "formula": "engineering_ohm = (10000*raw/(4096-raw))*gain + offset; raw0/4095 invalid/saturated",
+      "components": {
+        "R9": "10k pullup to VAA",
+        "TH3": "Thermistor_NTC to GND; no MPN/beta/R25 in schematic"
+      },
+      "default_description": "R9=10k to same VAA as ADC reference; nonlinear divider resistance, gain1/offset0 trim",
+      "label": "Motor 3 thermistor resistance",
+      "raw": "adc16_PB25_A1_22",
+      "engineering": "adc16_engineering",
+      "flags": "adc16_flags",
+      "default_gain": 1.0,
+      "default_offset": 0.0,
+      "assumption_flags": 80,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 17,
+      "adc_route": "A1_23",
+      "mcu_pad": "PC8",
+      "mcu_pin": 39,
+      "som_pin": "E1",
+      "net": "M_TEMP4",
+      "motor": 4,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc17_gain",
+      "offset": "adc17_offset",
+      "unit": "ohm",
+      "kind": "ntc_resistance",
+      "limitations": [
+        "Celsius unavailable: TH part number, R25 and beta/Steinhart-Hart coefficients unspecified. Do not assume beta3950 or any other curve.",
+        "Ratiometric conversion assumes VAA and VREFHI equal (SOM R5=0)."
+      ],
+      "name": "Motor 4 thermistor resistance",
+      "formula": "engineering_ohm = (10000*raw/(4096-raw))*gain + offset; raw0/4095 invalid/saturated",
+      "components": {
+        "R11": "10k pullup to VAA",
+        "TH4": "Thermistor_NTC to GND; no MPN/beta/R25 in schematic"
+      },
+      "default_description": "R11=10k to same VAA as ADC reference; nonlinear divider resistance, gain1/offset0 trim",
+      "label": "Motor 4 thermistor resistance",
+      "raw": "adc17_PC8_A1_23",
+      "engineering": "adc17_engineering",
+      "flags": "adc17_flags",
+      "default_gain": 1.0,
+      "default_offset": 0.0,
+      "assumption_flags": 80,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 18,
+      "adc_route": "A1_24",
+      "mcu_pad": "PC11",
+      "mcu_pin": 42,
+      "som_pin": "F2",
+      "net": "M1_BEMFB",
+      "motor": 1,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc18_gain",
+      "offset": "adc18_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 1 phase B voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R74": "33k to phase switch node",
+        "R75": "3.3k to M1_LSB"
+      },
+      "default_description": "R74=33k/R75=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 1 phase B voltage estimate",
+      "raw": "adc18_PC11_A1_24",
+      "engineering": "adc18_engineering",
+      "flags": "adc18_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 19,
+      "adc_route": "A1_25",
+      "mcu_pad": "PC12",
+      "mcu_pin": 43,
+      "som_pin": "G1",
+      "net": "M1_IB",
+      "motor": 1,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc19_gain",
+      "offset": "adc19_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 1 phase B current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 0,
+      "driver_ref": "U1",
+      "driver_pin": "22",
+      "components": {
+        "R78": "1mOhm",
+        "NT3": "SP Kelvin tie to LS source",
+        "NT4": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R78=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 1 phase B current",
+      "raw": "adc19_PC12_A1_25",
+      "engineering": "adc19_engineering",
+      "flags": "adc19_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 20,
+      "adc_route": "A1_30",
+      "mcu_pad": "PB30",
+      "mcu_pin": 61,
+      "som_pin": "K5",
+      "net": "M3_IB",
+      "motor": 3,
+      "phase": "B",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc20_gain",
+      "offset": "adc20_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 3 phase B current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 2,
+      "driver_ref": "U3",
+      "driver_pin": "22",
+      "components": {
+        "R48": "1mOhm",
+        "NT15": "SP Kelvin tie to LS source",
+        "NT16": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R48=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 3 phase B current",
+      "raw": "adc20_PB30_A1_30",
+      "engineering": "adc20_engineering",
+      "flags": "adc20_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 21,
+      "adc_route": "A2_2",
+      "mcu_pad": "PC9",
+      "mcu_pin": 40,
+      "som_pin": "F3",
+      "net": "M1_BEMFC",
+      "motor": 1,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc21_gain",
+      "offset": "adc21_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 1 phase C voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R79": "33k to phase switch node",
+        "R80": "3.3k to M1_LSC"
+      },
+      "default_description": "R79=33k/R80=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 1 phase C voltage estimate",
+      "raw": "adc21_PC9_A2_2",
+      "engineering": "adc21_engineering",
+      "flags": "adc21_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 22,
+      "adc_route": "A2_4",
+      "mcu_pad": "PC7",
+      "mcu_pin": 38,
+      "som_pin": "E2",
+      "net": "M4_BEMFC",
+      "motor": 4,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc22_gain",
+      "offset": "adc22_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 4 phase C voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R34": "33k to phase switch node",
+        "R35": "3.3k to M4_LSC"
+      },
+      "default_description": "R34=33k/R35=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 4 phase C voltage estimate",
+      "raw": "adc22_PC7_A2_4",
+      "engineering": "adc22_engineering",
+      "flags": "adc22_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 23,
+      "adc_route": "A2_5",
+      "mcu_pad": "PA29",
+      "mcu_pin": 52,
+      "som_pin": "J2",
+      "net": "M1_IC",
+      "motor": 1,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc23_gain",
+      "offset": "adc23_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 1 phase C current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 0,
+      "driver_ref": "U1",
+      "driver_pin": "21",
+      "components": {
+        "R83": "1mOhm",
+        "NT5": "SP Kelvin tie to LS source",
+        "NT6": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R83=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 1 phase C current",
+      "raw": "adc23_PA29_A2_5",
+      "engineering": "adc23_engineering",
+      "flags": "adc23_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 24,
+      "adc_route": "A2_7",
+      "mcu_pad": "PB26",
+      "mcu_pin": 57,
+      "som_pin": "H4",
+      "net": "M3_IC",
+      "motor": 3,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc24_gain",
+      "offset": "adc24_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 3 phase C current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 2,
+      "driver_ref": "U3",
+      "driver_pin": "21",
+      "components": {
+        "R53": "1mOhm",
+        "NT17": "SP Kelvin tie to LS source",
+        "NT18": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R53=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 3 phase C current",
+      "raw": "adc24_PB26_A2_7",
+      "engineering": "adc24_engineering",
+      "flags": "adc24_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 25,
+      "adc_route": "A2_10",
+      "mcu_pad": "PB29",
+      "mcu_pin": 60,
+      "som_pin": "H5",
+      "net": "M3_BEMFC",
+      "motor": 3,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc25_gain",
+      "offset": "adc25_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 3 phase C voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R49": "33k to phase switch node",
+        "R50": "3.3k to M3_LSC"
+      },
+      "default_description": "R49=33k/R50=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 3 phase C voltage estimate",
+      "raw": "adc25_PB29_A2_10",
+      "engineering": "adc25_engineering",
+      "flags": "adc25_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 26,
+      "adc_route": "A2_22",
+      "mcu_pad": "PA7",
+      "mcu_pin": 29,
+      "som_pin": "D3",
+      "net": "M2_IC",
+      "motor": 2,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc26_gain",
+      "offset": "adc26_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 2 phase C current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 1,
+      "driver_ref": "U2",
+      "driver_pin": "21",
+      "components": {
+        "R68": "1mOhm",
+        "NT11": "SP Kelvin tie to LS source",
+        "NT12": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R68=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 2 phase C current",
+      "raw": "adc26_PA7_A2_22",
+      "engineering": "adc26_engineering",
+      "flags": "adc26_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 27,
+      "adc_route": "A2_24",
+      "mcu_pad": "PB5",
+      "mcu_pin": 31,
+      "som_pin": "C2",
+      "net": "M2_BEMFC",
+      "motor": 2,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc27_gain",
+      "offset": "adc27_offset",
+      "unit": "V",
+      "kind": "phase_voltage",
+      "limitations": [
+        "Assumes LS source at GND; exact correction is -10*V_LS (=-10*Ishunt*0.001 V). Do not claim ground-referenced accuracy without this correction.",
+        "SOM-only readings are disconnected input, not mainboard voltage."
+      ],
+      "name": "Motor 2 phase C voltage estimate",
+      "formula": "engineering_V = raw*gain+offset; nominal11*Vadc. Exact ground-referenced phase voltage=11*Vadc-10*V_LS.",
+      "components": {
+        "R64": "33k to phase switch node",
+        "R65": "3.3k to M2_LSC"
+      },
+      "default_description": "R64=33k/R65=3.3k; 11x divider; lower resistor returns to LS source, not GND",
+      "label": "Motor 2 phase C voltage estimate",
+      "raw": "adc27_PB5_A2_24",
+      "engineering": "adc27_engineering",
+      "flags": "adc27_flags",
+      "default_gain": 0.0088623046875,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 28,
+      "adc_route": "A2_25",
+      "mcu_pad": "PA2",
+      "mcu_pin": 22,
+      "som_pin": "A2",
+      "net": "M4_IC",
+      "motor": 4,
+      "phase": "C",
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc28_gain",
+      "offset": "adc28_offset",
+      "unit": "A",
+      "kind": "current",
+      "limitations": [
+        "Actual gain/bias/normal-CSA readback must match assumption before marking current valid. SOM alone has no DRV/shunt attached.",
+        "LS current is not continuous motor winding current at every PWM switching state."
+      ],
+      "name": "Motor 4 phase C current",
+      "formula": "engineering_A = raw * gain + offset; defaults=(VREF/2 - raw*VREF/4096)/(20*0.001)",
+      "driver_device": 3,
+      "driver_ref": "U4",
+      "driver_pin": "21",
+      "components": {
+        "R38": "1mOhm",
+        "NT23": "SP Kelvin tie to LS source",
+        "NT24": "SN Kelvin tie to GND"
+      },
+      "positive_direction": "LS source through shunt to GND",
+      "required_drv_csa": {
+        "register": 6,
+        "mask": 1756,
+        "value": 640,
+        "description": "CSA_FET=0,VREF_DIV=1,CSA_GAIN=20 V/V,CSA_CAL_A/B/C=0"
+      },
+      "default_description": "R38=1m\u03a9; DRV inverting CSA assumed20V/V and VREF/2 bias; nominal3.3V ADC ref",
+      "label": "Motor 4 phase C current",
+      "raw": "adc28_PA2_A2_25",
+      "engineering": "adc28_engineering",
+      "flags": "adc28_flags",
+      "default_gain": -0.04028320312499999,
+      "default_offset": 82.49999999999999,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    },
+    {
+      "index": 29,
+      "adc_route": "A2_29",
+      "mcu_pad": "PB31",
+      "mcu_pin": 62,
+      "som_pin": "J5",
+      "net": "VBAT_SNS",
+      "motor": null,
+      "phase": null,
+      "verified": true,
+      "verification_scope": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation",
+      "gain": "adc29_gain",
+      "offset": "adc29_offset",
+      "unit": "V",
+      "kind": "battery_voltage",
+      "limitations": [],
+      "name": "Battery voltage",
+      "formula": "engineering_V = raw*gain+offset; gain=(3.3/4096)*(104700/4700)",
+      "components": {
+        "R19": "100k from +BATT",
+        "R21": "4.7k to GND",
+        "C27": "0.1uF to GND"
+      },
+      "default_description": "R19=100k/R21=4.7k; exact ratio104700/4700, nominal3.3V ADC reference",
+      "label": "Battery voltage",
+      "raw": "adc29_PB31_A2_29",
+      "engineering": "adc29_engineering",
+      "flags": "adc29_flags",
+      "default_gain": 0.017947452626329786,
+      "default_offset": 0,
+      "assumption_flags": 16,
+      "mapping_status": "Cross-netlist connector join + exact current BSP/SysConfig route; historical SOM netlist, not assembled hardware validation"
+    }
+  ],
+  "pwm": [
+    {
+      "index": 0,
+      "name": "Motor 3 phase A",
+      "motor": 3,
+      "phase": "A",
+      "mcu_pad": "PB13",
+      "mcu_pin": 7,
+      "som_pin": "A7",
+      "net": "M3_PWMA",
+      "mux": 5,
+      "module": 0,
+      "output": "1B",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 3 phase A",
+      "pad": "PB13"
+    },
+    {
+      "index": 1,
+      "name": "Motor 3 phase B",
+      "motor": 3,
+      "phase": "B",
+      "mcu_pad": "PA10",
+      "mcu_pin": 71,
+      "som_pin": "J8",
+      "net": "M3_PWMB",
+      "mux": 7,
+      "module": 0,
+      "output": "3A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 3 phase B",
+      "pad": "PA10"
+    },
+    {
+      "index": 2,
+      "name": "Motor 3 phase C",
+      "motor": 3,
+      "phase": "C",
+      "mcu_pad": "PA25",
+      "mcu_pin": 96,
+      "som_pin": "B10",
+      "net": "M3_PWMC",
+      "mux": 13,
+      "module": 0,
+      "output": "3B",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 3 phase C",
+      "pad": "PA25"
+    },
+    {
+      "index": 3,
+      "name": "Motor 1 phase A",
+      "motor": 1,
+      "phase": "A",
+      "mcu_pad": "PB6",
+      "mcu_pin": 65,
+      "som_pin": "H6",
+      "net": "M1_PWMA",
+      "mux": 5,
+      "module": 1,
+      "output": "1A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 1 phase A",
+      "pad": "PB6"
+    },
+    {
+      "index": 4,
+      "name": "Motor 1 phase B",
+      "motor": 1,
+      "phase": "B",
+      "mcu_pad": "PB7",
+      "mcu_pin": 66,
+      "som_pin": "K6",
+      "net": "M1_PWMB",
+      "mux": 5,
+      "module": 1,
+      "output": "2A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 1 phase B",
+      "pad": "PB7"
+    },
+    {
+      "index": 5,
+      "name": "Motor 1 phase C",
+      "motor": 1,
+      "phase": "C",
+      "mcu_pad": "PB8",
+      "mcu_pin": 67,
+      "som_pin": "J6",
+      "net": "M1_PWMC",
+      "mux": 5,
+      "module": 1,
+      "output": "3A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 1 phase C",
+      "pad": "PB8"
+    },
+    {
+      "index": 6,
+      "name": "FC current telemetry PWM",
+      "motor": null,
+      "phase": null,
+      "mcu_pad": "PB12",
+      "mcu_pin": 81,
+      "som_pin": "H9",
+      "net": "FC_Current",
+      "mux": 5,
+      "module": 1,
+      "output": "3B",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "FC current telemetry PWM",
+      "pad": "PB12"
+    },
+    {
+      "index": 7,
+      "name": "Motor 4 phase A",
+      "motor": 4,
+      "phase": "A",
+      "mcu_pad": "PC1",
+      "mcu_pin": 98,
+      "som_pin": "A10",
+      "net": "M4_PWMA",
+      "mux": 7,
+      "module": 2,
+      "output": "1A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 4 phase A",
+      "pad": "PC1"
+    },
+    {
+      "index": 8,
+      "name": "Motor 4 phase B",
+      "motor": 4,
+      "phase": "B",
+      "mcu_pad": "PC3",
+      "mcu_pin": 2,
+      "som_pin": "A9",
+      "net": "M4_PWMB",
+      "mux": 7,
+      "module": 2,
+      "output": "2A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 4 phase B",
+      "pad": "PC3"
+    },
+    {
+      "index": 9,
+      "name": "Motor 4 phase C",
+      "motor": 4,
+      "phase": "C",
+      "mcu_pad": "PA24",
+      "mcu_pin": 95,
+      "som_pin": "C9",
+      "net": "M4_PWMC",
+      "mux": 3,
+      "module": 2,
+      "output": "3A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 4 phase C",
+      "pad": "PA24"
+    },
+    {
+      "index": 10,
+      "name": "Motor 2 phase A",
+      "motor": 2,
+      "phase": "A",
+      "mcu_pad": "PC25",
+      "mcu_pin": 10,
+      "som_pin": "A6",
+      "net": "M2_PWMA",
+      "mux": 4,
+      "module": 3,
+      "output": "1A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 2 phase A",
+      "pad": "PC25"
+    },
+    {
+      "index": 11,
+      "name": "Motor 2 phase B",
+      "motor": 2,
+      "phase": "B",
+      "mcu_pad": "PC26",
+      "mcu_pin": 11,
+      "som_pin": "B6",
+      "net": "M2_PWMB",
+      "mux": 4,
+      "module": 3,
+      "output": "2A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 2 phase B",
+      "pad": "PC26"
+    },
+    {
+      "index": 12,
+      "name": "Motor 2 phase C",
+      "motor": 2,
+      "phase": "C",
+      "mcu_pad": "PC18",
+      "mcu_pin": 19,
+      "som_pin": "B4",
+      "net": "M2_PWMC",
+      "mux": 4,
+      "module": 3,
+      "output": "3A",
+      "verified": true,
+      "default_description": "Digital timing in Hz, percent, us; no analog gain/offset calibration.",
+      "label": "Motor 2 phase C",
+      "pad": "PC18"
+    }
+  ],
+  "drv": [
+    {
+      "motor": 1,
+      "driver_device": 0,
+      "driver_ref": "U1",
+      "driver_part": "DRV8323SRTAR",
+      "chip_select": {
+        "pad": "PC13",
+        "mcu_pin": 44,
+        "som_net": "PC13",
+        "som_pin": "G2",
+        "net": "SPI_nCSM1"
+      },
+      "fault": {
+        "pad": "PA30",
+        "mcu_pin": 53,
+        "som_net": "PA30",
+        "som_pin": "K2",
+        "net": "nFAULTM1"
+      },
+      "pwm_indices": [
+        3,
+        4,
+        5
+      ],
+      "adc_indices": [
+        5,
+        6,
+        13,
+        18,
+        19,
+        21,
+        23
+      ],
+      "device": 0,
+      "label": "Motor 1 U1"
+    },
+    {
+      "motor": 2,
+      "driver_device": 1,
+      "driver_ref": "U2",
+      "driver_part": "DRV8323SRTAR",
+      "chip_select": {
+        "pad": "PB14",
+        "mcu_pin": 8,
+        "som_net": "PB14",
+        "som_pin": "B7",
+        "net": "SPI_nCSM2"
+      },
+      "fault": {
+        "pad": "PB15",
+        "mcu_pin": 9,
+        "som_net": "PB15",
+        "som_pin": "C6",
+        "net": "nFAULTM2"
+      },
+      "pwm_indices": [
+        10,
+        11,
+        12
+      ],
+      "adc_indices": [
+        3,
+        4,
+        9,
+        11,
+        12,
+        26,
+        27
+      ],
+      "device": 1,
+      "label": "Motor 2 U2"
+    },
+    {
+      "motor": 3,
+      "driver_device": 2,
+      "driver_ref": "U3",
+      "driver_part": "DRV8323SRTAR",
+      "chip_select": {
+        "pad": "PB16",
+        "mcu_pin": 82,
+        "som_net": "PB16",
+        "som_pin": "H7",
+        "net": "SPI_nCSM3"
+      },
+      "fault": {
+        "pad": "PB17",
+        "mcu_pin": 83,
+        "som_net": "PB17",
+        "som_pin": "G10",
+        "net": "nFAULTM3"
+      },
+      "pwm_indices": [
+        0,
+        1,
+        2
+      ],
+      "adc_indices": [
+        7,
+        8,
+        10,
+        16,
+        20,
+        24,
+        25
+      ],
+      "device": 2,
+      "label": "Motor 3 U3"
+    },
+    {
+      "motor": 4,
+      "driver_device": 3,
+      "driver_ref": "U4",
+      "driver_part": "DRV8323SRTAR",
+      "chip_select": {
+        "pad": "PC5",
+        "mcu_pin": 4,
+        "som_net": "PC5",
+        "som_pin": "A8",
+        "net": "SPI_nCSM4"
+      },
+      "fault": {
+        "pad": "PB0",
+        "mcu_pin": 15,
+        "som_net": "PB0",
+        "som_pin": "A5",
+        "net": "nFAULTM4"
+      },
+      "pwm_indices": [
+        7,
+        8,
+        9
+      ],
+      "adc_indices": [
+        0,
+        1,
+        14,
+        15,
+        17,
+        22,
+        28
+      ],
+      "device": 3,
+      "label": "Motor 4 U4"
+    }
+  ],
+  "gate_controls": {
+    "drv_enable": {
+      "pad": "PB10",
+      "mcu_pin": 79,
+      "som_net": "PB10",
+      "som_pin": "G8",
+      "net": "DRV_ENABLE"
+    },
+    "inl_enable": {
+      "pad": "PB11",
+      "mcu_pin": 80,
+      "som_net": "PB11",
+      "som_pin": "H10",
+      "net": "INL_ENABLE"
+    },
+    "scope": "Both controls are global shared across all4 DRVs; no per-motor hardware gate enable. INL_ENABLE connects all12 INL pins. Explicitly label common enable."
+  },
+  "evidence_authority": "Actual copied dirty mainboard hierarchy joined by connector pin to historical20260922 SOM netlist, then exact current BSP and SysConfig. Old docs20/30/40/41 are conflicting historical intent, not used for mapping. Not assembly revision claim.",
+  "fixture_note": "SOM-only verified; mainboard electrical scaling, DRV and waveforms not verified",
+  "drv_registers": [
+    {
+      "address": 0,
+      "name": "Fault status 1",
+      "access": "r",
+      "write_mask": 0,
+      "read_mask": 2047,
+      "reset_value": 0,
+      "fields": [
+        {
+          "name": "FAULT",
+          "lsb": 10,
+          "width": 1,
+          "mask": 1024
+        },
+        {
+          "name": "VDS_OCP",
+          "lsb": 9,
+          "width": 1,
+          "mask": 512
+        },
+        {
+          "name": "GDF",
+          "lsb": 8,
+          "width": 1,
+          "mask": 256
+        },
+        {
+          "name": "UVLO",
+          "lsb": 7,
+          "width": 1,
+          "mask": 128
+        },
+        {
+          "name": "OTSD",
+          "lsb": 6,
+          "width": 1,
+          "mask": 64
+        },
+        {
+          "name": "VDS_HA",
+          "lsb": 5,
+          "width": 1,
+          "mask": 32
+        },
+        {
+          "name": "VDS_LA",
+          "lsb": 4,
+          "width": 1,
+          "mask": 16
+        },
+        {
+          "name": "VDS_HB",
+          "lsb": 3,
+          "width": 1,
+          "mask": 8
+        },
+        {
+          "name": "VDS_LB",
+          "lsb": 2,
+          "width": 1,
+          "mask": 4
+        },
+        {
+          "name": "VDS_HC",
+          "lsb": 1,
+          "width": 1,
+          "mask": 2
+        },
+        {
+          "name": "VDS_LC",
+          "lsb": 0,
+          "width": 1,
+          "mask": 1
+        }
+      ],
+      "readback_compare_mask": 0
+    },
+    {
+      "address": 1,
+      "name": "VGS status 2",
+      "access": "r",
+      "write_mask": 0,
+      "read_mask": 2047,
+      "reset_value": 0,
+      "fields": [
+        {
+          "name": "SA_OC",
+          "lsb": 10,
+          "width": 1,
+          "mask": 1024
+        },
+        {
+          "name": "SB_OC",
+          "lsb": 9,
+          "width": 1,
+          "mask": 512
+        },
+        {
+          "name": "SC_OC",
+          "lsb": 8,
+          "width": 1,
+          "mask": 256
+        },
+        {
+          "name": "OTW",
+          "lsb": 7,
+          "width": 1,
+          "mask": 128
+        },
+        {
+          "name": "CPUV",
+          "lsb": 6,
+          "width": 1,
+          "mask": 64
+        },
+        {
+          "name": "VGS_HA",
+          "lsb": 5,
+          "width": 1,
+          "mask": 32
+        },
+        {
+          "name": "VGS_LA",
+          "lsb": 4,
+          "width": 1,
+          "mask": 16
+        },
+        {
+          "name": "VGS_HB",
+          "lsb": 3,
+          "width": 1,
+          "mask": 8
+        },
+        {
+          "name": "VGS_LB",
+          "lsb": 2,
+          "width": 1,
+          "mask": 4
+        },
+        {
+          "name": "VGS_HC",
+          "lsb": 1,
+          "width": 1,
+          "mask": 2
+        },
+        {
+          "name": "VGS_LC",
+          "lsb": 0,
+          "width": 1,
+          "mask": 1
+        }
+      ],
+      "readback_compare_mask": 0
+    },
+    {
+      "address": 2,
+      "name": "Driver control",
+      "access": "rw",
+      "write_mask": 1023,
+      "read_mask": 2047,
+      "reset_value": 0,
+      "fields": [
+        {
+          "name": "DIS_CPUV",
+          "lsb": 9,
+          "width": 1,
+          "mask": 512
+        },
+        {
+          "name": "DIS_GDF",
+          "lsb": 8,
+          "width": 1,
+          "mask": 256
+        },
+        {
+          "name": "OTW_REP",
+          "lsb": 7,
+          "width": 1,
+          "mask": 128
+        },
+        {
+          "name": "PWM_MODE",
+          "lsb": 5,
+          "width": 2,
+          "mask": 96,
+          "values": {
+            "0": "6 PWM",
+            "1": "3 PWM",
+            "2": "1 PWM",
+            "3": "Independent PWM"
+          }
+        },
+        {
+          "name": "1PWM_COM",
+          "lsb": 4,
+          "width": 1,
+          "mask": 16,
+          "values": {
+            "0": "Synchronous",
+            "1": "Asynchronous"
+          }
+        },
+        {
+          "name": "1PWM_DIR",
+          "lsb": 3,
+          "width": 1,
+          "mask": 8
+        },
+        {
+          "name": "COAST",
+          "lsb": 2,
+          "width": 1,
+          "mask": 4
+        },
+        {
+          "name": "BRAKE",
+          "lsb": 1,
+          "width": 1,
+          "mask": 2
+        },
+        {
+          "name": "CLR_FLT",
+          "lsb": 0,
+          "width": 1,
+          "mask": 1,
+          "description": "Self-clearing pulse; never retry or save automatically."
+        }
+      ],
+      "readback_compare_mask": 1022
+    },
+    {
+      "address": 3,
+      "name": "Gate drive HS",
+      "access": "rw",
+      "write_mask": 2047,
+      "read_mask": 2047,
+      "reset_value": 1023,
+      "fields": [
+        {
+          "name": "LOCK",
+          "lsb": 8,
+          "width": 3,
+          "mask": 1792,
+          "description": "Write6 locks; write3 unlocks. Other codes do not change lock state."
+        },
+        {
+          "name": "IDRIVEP_HS",
+          "lsb": 4,
+          "width": 4,
+          "mask": 240,
+          "values": {
+            "0": "10 mA",
+            "1": "30 mA",
+            "2": "60 mA",
+            "3": "80 mA",
+            "4": "120 mA",
+            "5": "140 mA",
+            "6": "170 mA",
+            "7": "190 mA",
+            "8": "260 mA",
+            "9": "330 mA",
+            "10": "370 mA",
+            "11": "440 mA",
+            "12": "570 mA",
+            "13": "680 mA",
+            "14": "820 mA",
+            "15": "1000 mA"
+          }
+        },
+        {
+          "name": "IDRIVEN_HS",
+          "lsb": 0,
+          "width": 4,
+          "mask": 15,
+          "values": {
+            "0": "20 mA",
+            "1": "60 mA",
+            "2": "120 mA",
+            "3": "160 mA",
+            "4": "240 mA",
+            "5": "280 mA",
+            "6": "340 mA",
+            "7": "380 mA",
+            "8": "520 mA",
+            "9": "660 mA",
+            "10": "740 mA",
+            "11": "880 mA",
+            "12": "1140 mA",
+            "13": "1360 mA",
+            "14": "1640 mA",
+            "15": "2000 mA"
+          }
+        }
+      ],
+      "readback_compare_mask": 2047
+    },
+    {
+      "address": 4,
+      "name": "Gate drive LS",
+      "access": "rw",
+      "write_mask": 2047,
+      "read_mask": 2047,
+      "reset_value": 2047,
+      "fields": [
+        {
+          "name": "CBC",
+          "lsb": 10,
+          "width": 1,
+          "mask": 1024
+        },
+        {
+          "name": "TDRIVE",
+          "lsb": 8,
+          "width": 2,
+          "mask": 768,
+          "values": {
+            "0": "500 ns",
+            "1": "1000 ns",
+            "2": "2000 ns",
+            "3": "4000 ns"
+          }
+        },
+        {
+          "name": "IDRIVEP_LS",
+          "lsb": 4,
+          "width": 4,
+          "mask": 240,
+          "values": {
+            "0": "10 mA",
+            "1": "30 mA",
+            "2": "60 mA",
+            "3": "80 mA",
+            "4": "120 mA",
+            "5": "140 mA",
+            "6": "170 mA",
+            "7": "190 mA",
+            "8": "260 mA",
+            "9": "330 mA",
+            "10": "370 mA",
+            "11": "440 mA",
+            "12": "570 mA",
+            "13": "680 mA",
+            "14": "820 mA",
+            "15": "1000 mA"
+          }
+        },
+        {
+          "name": "IDRIVEN_LS",
+          "lsb": 0,
+          "width": 4,
+          "mask": 15,
+          "values": {
+            "0": "20 mA",
+            "1": "60 mA",
+            "2": "120 mA",
+            "3": "160 mA",
+            "4": "240 mA",
+            "5": "280 mA",
+            "6": "340 mA",
+            "7": "380 mA",
+            "8": "520 mA",
+            "9": "660 mA",
+            "10": "740 mA",
+            "11": "880 mA",
+            "12": "1140 mA",
+            "13": "1360 mA",
+            "14": "1640 mA",
+            "15": "2000 mA"
+          }
+        }
+      ],
+      "readback_compare_mask": 2047
+    },
+    {
+      "address": 5,
+      "name": "Overcurrent protection",
+      "access": "rw",
+      "write_mask": 2047,
+      "read_mask": 2047,
+      "reset_value": 345,
+      "fields": [
+        {
+          "name": "TRETRY",
+          "lsb": 10,
+          "width": 1,
+          "mask": 1024,
+          "values": {
+            "0": "4 ms",
+            "1": "50 us"
+          }
+        },
+        {
+          "name": "DEAD_TIME",
+          "lsb": 8,
+          "width": 2,
+          "mask": 768,
+          "values": {
+            "0": "50 ns",
+            "1": "100 ns",
+            "2": "200 ns",
+            "3": "400 ns"
+          }
+        },
+        {
+          "name": "OCP_MODE",
+          "lsb": 6,
+          "width": 2,
+          "mask": 192,
+          "values": {
+            "0": "Latched fault",
+            "1": "Automatic retry",
+            "2": "Report only",
+            "3": "Disabled"
+          }
+        },
+        {
+          "name": "OCP_DEG",
+          "lsb": 4,
+          "width": 2,
+          "mask": 48,
+          "values": {
+            "0": "2 us",
+            "1": "4 us",
+            "2": "6 us",
+            "3": "8 us"
+          }
+        },
+        {
+          "name": "VDS_LVL",
+          "lsb": 0,
+          "width": 4,
+          "mask": 15,
+          "values": {
+            "0": "0.06 V",
+            "1": "0.13 V",
+            "2": "0.2 V",
+            "3": "0.26 V",
+            "4": "0.31 V",
+            "5": "0.45 V",
+            "6": "0.53 V",
+            "7": "0.6 V",
+            "8": "0.68 V",
+            "9": "0.75 V",
+            "10": "0.94 V",
+            "11": "1.13 V",
+            "12": "1.3 V",
+            "13": "1.5 V",
+            "14": "1.7 V",
+            "15": "1.88 V"
+          }
+        }
+      ],
+      "readback_compare_mask": 2047
+    },
+    {
+      "address": 6,
+      "name": "Current sense amplifier",
+      "access": "rw",
+      "write_mask": 2047,
+      "read_mask": 2047,
+      "reset_value": 643,
+      "fields": [
+        {
+          "name": "CSA_FET",
+          "lsb": 10,
+          "width": 1,
+          "mask": 1024,
+          "values": {
+            "0": "SP input",
+            "1": "SH input; sets LS_REF"
+          }
+        },
+        {
+          "name": "VREF_DIV",
+          "lsb": 9,
+          "width": 1,
+          "mask": 512,
+          "values": {
+            "0": "Unidirectional VREF",
+            "1": "Bidirectional VREF/2"
+          }
+        },
+        {
+          "name": "LS_REF",
+          "lsb": 8,
+          "width": 1,
+          "mask": 256,
+          "values": {
+            "0": "SH to SP",
+            "1": "SH to SN"
+          }
+        },
+        {
+          "name": "CSA_GAIN",
+          "lsb": 6,
+          "width": 2,
+          "mask": 192,
+          "values": {
+            "0": "5 V/V",
+            "1": "10 V/V",
+            "2": "20 V/V",
+            "3": "40 V/V"
+          }
+        },
+        {
+          "name": "DIS_SEN",
+          "lsb": 5,
+          "width": 1,
+          "mask": 32
+        },
+        {
+          "name": "CSA_CAL_A",
+          "lsb": 4,
+          "width": 1,
+          "mask": 16
+        },
+        {
+          "name": "CSA_CAL_B",
+          "lsb": 3,
+          "width": 1,
+          "mask": 8
+        },
+        {
+          "name": "CSA_CAL_C",
+          "lsb": 2,
+          "width": 1,
+          "mask": 4
+        },
+        {
+          "name": "SEN_LVL",
+          "lsb": 0,
+          "width": 2,
+          "mask": 3,
+          "values": {
+            "0": "0.25 V",
+            "1": "0.5 V",
+            "2": "0.75 V",
+            "3": "1 V"
+          }
+        }
+      ],
+      "readback_compare_mask": 2047
+    }
+  ],
+  "all_motor_pwm": {
+    "selector": 13,
+    "label": "All motors A/B/C",
+    "routes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "mask": 8127,
+    "frequency_hz": 20000,
+    "duty_percent": 20,
+    "phase_synchronized": false,
+    "single_pulse": false
+  },
+  "adc_pwm_diagnostic": {
+    "version": 1,
+    "reference": "PWM0",
+    "hardware_trigger": 6,
+    "windows_cycles": [
+      128,
+      256,
+      448
+    ],
+    "normal_window_cycles": 448,
+    "max_samples": 8192,
+    "lease_ms": 1500,
+    "deadline_ms": 15000,
+    "modules_synchronized": false,
+    "raw_capacity": 2048
+  },
+  "schema_version": 7,
+  "a2l_sha256": "5ffaabd963d6f7035d482a94df6fdfeb866bd9b20046fb09ed977d28b569cfa6",
+  "persist": [
+    "led_period_ms",
+    "led_duty_percent",
+    "adc00_gain",
+    "adc00_offset",
+    "adc01_gain",
+    "adc01_offset",
+    "adc02_gain",
+    "adc02_offset",
+    "adc03_gain",
+    "adc03_offset",
+    "adc04_gain",
+    "adc04_offset",
+    "adc05_gain",
+    "adc05_offset",
+    "adc06_gain",
+    "adc06_offset",
+    "adc07_gain",
+    "adc07_offset",
+    "adc08_gain",
+    "adc08_offset",
+    "adc09_gain",
+    "adc09_offset",
+    "adc10_gain",
+    "adc10_offset",
+    "adc11_gain",
+    "adc11_offset",
+    "adc12_gain",
+    "adc12_offset",
+    "adc13_gain",
+    "adc13_offset",
+    "adc14_gain",
+    "adc14_offset",
+    "adc15_gain",
+    "adc15_offset",
+    "adc16_gain",
+    "adc16_offset",
+    "adc17_gain",
+    "adc17_offset",
+    "adc18_gain",
+    "adc18_offset",
+    "adc19_gain",
+    "adc19_offset",
+    "adc20_gain",
+    "adc20_offset",
+    "adc21_gain",
+    "adc21_offset",
+    "adc22_gain",
+    "adc22_offset",
+    "adc23_gain",
+    "adc23_offset",
+    "adc24_gain",
+    "adc24_offset",
+    "adc25_gain",
+    "adc25_offset",
+    "adc26_gain",
+    "adc26_offset",
+    "adc27_gain",
+    "adc27_offset",
+    "adc28_gain",
+    "adc28_offset",
+    "adc29_gain",
+    "adc29_offset"
+  ]
+}

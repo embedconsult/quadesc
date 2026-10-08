@@ -1,0 +1,15 @@
+format = 1
+[package]
+name = "bloxide-led"
+version = "0.1.0"
+blox-schema = 1
+[[crates]]
+name = "led-messages"
+path = "crates/led-messages/Cargo.toml"
+[[crates]]
+name = "led-context"
+path = "crates/led-context/Cargo.toml"
+[[bloxes]]
+name = "led-owner"
+path = "bloxes/led-owner/blox.toml"
+crate = "led-owner-blox"

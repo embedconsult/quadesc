@@ -1,0 +1,16 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "blox-ctx-pool-ref"
+version.workspace = true
+edition.workspace = true
+description = "Domain context crate: worker→pool/worker→worker action functions"
+repository.workspace = true
+license.workspace = true
+
+[features]
+default = []
+
+[dependencies]
+bloxide-core = { workspace = true }
+bloxide-peers = { workspace = true }
+pool-messages = { workspace = true }

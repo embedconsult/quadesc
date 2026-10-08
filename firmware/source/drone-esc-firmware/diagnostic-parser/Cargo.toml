@@ -1,0 +1,6 @@
+[package]
+name = "am13-diagnostic-parser"
+version = "0.1.0"
+edition = "2024"
+[dependencies]
+led-messages = { path = "../../bloxide-led/crates/led-messages" }

@@ -1,0 +1,312 @@
+{
+  "format": 1,
+  "scope": "future independent implementation acceptance; NOT executed by design checker",
+  "acceptance": [
+    {
+      "id": "A1",
+      "clause": "Simulated cut at every erase/program stage retains old or new valid configuration",
+      "status": "unmet_product_implementation_not_dispatched"
+    },
+    {
+      "id": "A2",
+      "clause": "Unknown version/corruption yields explicit defaults/rejection",
+      "status": "unmet_product_implementation_not_dispatched"
+    },
+    {
+      "id": "A3",
+      "clause": "Writes are serialized and wear budget documented",
+      "status": "unmet_product_implementation_not_dispatched"
+    },
+    {
+      "id": "A4",
+      "clause": "Protocol save acceptance distinguished from durable completion",
+      "status": "unmet_product_implementation_not_dispatched"
+    },
+    {
+      "id": "A5",
+      "clause": "Capability is consumed from its declared repository by an independent downstream fixture with no drone-specific dependency",
+      "status": "unmet_product_implementation_not_dispatched"
+    }
+  ],
+  "geometries": [
+    {
+      "G": 1,
+      "E": 1024
+    },
+    {
+      "G": 8,
+      "E": 1024
+    },
+    {
+      "G": 16,
+      "E": 1024
+    },
+    {
+      "G": 64,
+      "E": 4096
+    },
+    {
+      "G": 256,
+      "E": 4096
+    }
+  ],
+  "initial_conditions": [
+    "blank defaults",
+    "A valid seq7 B valid seq6",
+    "B valid seq7 A valid seq6"
+  ],
+  "oracle": {
+    "owner": "independent reviewer/fixture, distinct from product decoder",
+    "valid_set": "{old complete snapshot,new captured snapshot}, or {validated defaults,new} for blank media",
+    "comparison": "entire schema/length/canonical bytes, record sequence and explicit status; never CRC alone",
+    "exclusions": [
+      "unqualified/violated R1 monotone-transition, stable read, ECC visibility or isolation contract; separate physical qualification, never a CRC-collision exception for permitted cuts",
+      "independent arbitrary nonmonotone valid-codeword replacement; information-theoretic residual risk, not a modeled interruption success"
+    ],
+    "preconditions": "Healthy selected old or validated defaults; every erase Q-qualified before permit. All modeled subsets, including original F1 transition, remain in scope. Unsupported/ambiguity/Q-unsafe prestates reject writes explicitly.",
+    "proof": "specs/erase-integrity-proof.md; arbitrary-subset theorem distinct from finite test counts"
+  },
+  "cases": [
+    {
+      "id": "C01",
+      "acceptance": [
+        "A1"
+      ],
+      "title": "All destructive byte prefixes",
+      "workload": "5 geometries x 3 initial configurations x every erase byte prefix 0..E and every body/marker granule byte prefix 0..G; reboot at each prefix",
+      "oracle": "Independent raw-media decoder selects old/new only; blank start defaults/new. Check whole canonical payload, unchanged active RAM and untouched current slot.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C02",
+      "acceptance": [
+        "A1"
+      ],
+      "title": "Non-prefix bits, directed codeword transformations and ECC",
+      "workload": "Retain exact raw-v1 F1 programs/images/mask and expected exit1. Apply witness mask to corrected data rails; independently generate complete accepted bodies differing in sequence/version/schema/duplicate-sequence/source labels/CRC. Search both erase and program partial orders, enumerate all two-bit pair states/transitions and all 256 partial-byte program masks at every G1 command. Each larger G: every single transition, alternating masks,4096 seeded subsets (17,1701) per geometry.",
+      "oracle": "All R1 cuts recover old/new; no distinct complementary accepted body is erase-reachable. Check stored CRC is encoded too and complement validation precedes unsupported/sequence selection. Pair algebra supplies all-subsets proof; samples are not physical proof. ECC explicit read-only/fallback/default.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C03",
+      "acceptance": [
+        "A1",
+        "A2"
+      ],
+      "title": "Single-bit and structured corruption",
+      "workload": "Flip every bit in each E1024 slot for G8,16384 single-bit images. Independently invalid target with pair00, pair11, nonzero marker, bad logical padding/CRC/reserved and damaged physical alignment/tail; include a high-sequence record repaired by erase if Q is bypassed.",
+      "oracle": "Malformed record never decoded as Valid. Q1/Q2/Q3-safe invalid prestates cannot gain authority during any erase; Q-unsafe00/damaged-tail negative controls deny erase before permit and preserve old RAM/media. Arbitrary nonmonotone accepted-codeword replacement explicitly outside theorem; no CRC exception for modeled cuts.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C04",
+      "acceptance": [
+        "A1",
+        "A2"
+      ],
+      "title": "Version and semantic recovery",
+      "workload": "Formats0/1/2/3/65535; schema0/1/2/65535, older/equal/newer seq and both slot orders. Generate fully complementary unknown envelopes with valid CRC to test genuine Unsupported dominance; directed searches toward unknown versions/schemas from each valid predecessor, and bit changes to magic/length/reserved/CRC/padding. Raw-v1 record must not be a compatibility alias.",
+      "oracle": "R3 classification: pair validity BEFORE common-envelope/CRC BEFORE unknown lookup BEFORE selection. No erased predecessor can become a new Unsupported record; genuine intact unknown locks writes. Explicit invalid defaults/error behavior. Q still mandatory on corrupt media.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C05",
+      "acceptance": [
+        "A1",
+        "A2"
+      ],
+      "title": "Sequence edges and duplicate records",
+      "workload": "Sequences0/1/2/6/7/8/14/MAX-1/MAX; both slot orders; exact duplicates and equal-sequence different payload/source labels. Directed complete-codeword comparisons attempt predecessor->greater sequence and predecessor->selected sequence with different bytes, with freshly correct stored CRC. Four exhaustion saves plus exact DurableExisting.",
+      "oracle": "No different accepted codeword reachable by erase/program partial order. Numeric ordering; seq0 invalid; genuine equal-different ambiguous/read-only; identical duplicate deterministic A; no wrap and no erase at MAX for changed save. Same snapshot needs no wear.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C06",
+      "acceptance": [
+        "A1",
+        "A3"
+      ],
+      "title": "Reset and retry at every state",
+      "workload": "10 active/reconciliation boundaries x Reset/Stop/reconnect/power-cycle x 3 repeat arrivals =120 traces; old completion after every io_epoch change",
+      "oracle": "Resources never reacquired; admitted operation reconciled, no duplicate erase/program, result/fence retained until release; reboot scans authoritative.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C07",
+      "acceptance": [
+        "A3",
+        "A4"
+      ],
+      "title": "Snapshot versus later RAM edit",
+      "workload": "1000 runs alternating LED values; capture revision R, edit R+1 before each of six storage phases; T07 u32 revision wrap fixture from reviewed API tests",
+      "oracle": "Durable bytes always captured R, active remains later bytes; CRC, sequence and readback match immutable capture, revision wrap not treated as identity.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C08",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "One and four clients",
+      "workload": "1 then 4 clients; 10000 interleaved requests, duplicates, busy, result saturation, disconnects; deterministic seeds 7 and17",
+      "oracle": "One global flash operation, four bounded client results, no lost/evicted outcome; exact release-before-next ordering and stale/retired fence.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C09",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Deadline, cancellation and Ready",
+      "workload": "Arrival at deadline-1,deadline,deadline+1; delay validation clock; ResolveOrCancel before/after admission; 32 lifecycle/key combinations",
+      "oracle": "Fresh deadline sample at C; cancelled tombstone blocks later save; pending cannot be cancelled; no admission before Ready or during quiesce.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C10",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Finite wear across reboot",
+      "workload": "W_A=W_B=100; 200 successful alternating saves, 201st rejected; repeat with every 3rd erase interrupted and reboot; 100 duplicate permit completions; resumed attempts require backend authorization and Q; unavailable or Q-unsafe media must not reset/extend allowance; fixed200 receipt entries outside simulated MCU reset domain.",
+      "oracle": "Total physical erase admissions <=200 including uncertain attempts. No token refresh/reissue; unavailable authority rejects. One-second synthetic rate gate.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C11",
+      "acceptance": [
+        "A1",
+        "A3"
+      ],
+      "title": "Backend failure and quarantine",
+      "workload": "Inject error/timeout/read ECC at every command index for all 5 geometries; marker issued/completed but completion lost; quiesce failure; 3 retries per terminal",
+      "oracle": "Before marker definite NoNewCommit only with stopped engine; after marker exact reread or Indeterminate. No blind retry or quarantine clearing on Reset.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C12",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Allocation and cleanup",
+      "workload": "Guard all four allocator entry points after freeze; 10000 operations one/four clients including C06/C08/C11, first poll, timers, Stop/Reset/fault and task cleanup",
+      "oracle": "Zero attempted heap calls; deliberate forbidden-call controls prove guard. Actual runtime separately required; tests own allocations excluded explicitly.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C13",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Command correlation and saturation",
+      "workload": "Capacity-one command/completion slots; duplicate/out-of-order/wrong-slot/wrong-epoch completions at each of 99 commands (including wear acquisition) for G8/E1024; 1000 pump schedules",
+      "oracle": "Owned outstanding command retained and reconciled, no concurrent operation or lost wake; retained completion never overwritten.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C14",
+      "acceptance": [
+        "A2"
+      ],
+      "title": "Independent layout/checksum vectors",
+      "workload": "All 9 supported G, payload lengths1/4/8/255/256; manually derived LED vector and CRC32C check123456789; invalid geometry G0/3/512,E0/511/65537,misalignment/overlap; E512 rejected for every G; all legal E values satisfy M+G<=E; CRC domain logical0..60+64..320 independent of G; full complementary byte-pair vectors.",
+      "oracle": "Independent encoder/decoder agrees bytes/CRC/marker offset; malformed geometry rejected before backend use.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C15",
+      "acceptance": [
+        "A2",
+        "A3"
+      ],
+      "title": "Validation and boot installation",
+      "workload": "LED bounds 99/100/10000/10001 and duty0/500/1000/1001; thermostat scalar/cross-field bounds; invalid defaults",
+      "oracle": "Only validated complete values installed once before Ready; boot active revision0 and saved source revision separate. Failed save never changes RAM.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C16",
+      "acceptance": [
+        "A1"
+      ],
+      "title": "Torn/restored marker and repeated interruptions",
+      "workload": "G1 exhaust256 marker masks; G8 marker prefixes0..8; paired destructive command boundaries at G8/E1024:83^2 pairs (before erase + after erase + after each of 80 body commands + after commit). Reerase interrupted erase/body/commit prestates after explicit backend authorization AND Q. Check marker unchangedzero/partiallyerased/allFF, prohibition on restoring zero by erase, and full erase then later reprogram same zero marker with different capture.",
+      "oracle": "Inductive Q invariant and old/new after each admitted cut; same marker bytes do not confer authority on mixed/old body. Full FF verification separates erase from new programming. Q-unsafe independently invalid state rejects before erase; quiescence/quarantine/wear still independent requirements.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C17",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Same durable snapshot and rate budget",
+      "workload": "1000 same snapshot requests, then equal bytes/new revision, then same revision/different bytes and epoch; saturated slot and MAX seq",
+      "oracle": "Exact identity+bytes yields zero flash/wear; changed capture requires record, Busy never evicts; readback remains truthful.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C18",
+      "acceptance": [
+        "A3"
+      ],
+      "title": "Bounded storage and resource ownership",
+      "workload": "Maximum E65536 G256 payload256, four clients,32 trace slots; sizeof/static/linker report and constructor/drop instrumentation; two1024-byte physical images +320 decoded logical scratch; stream Q flags without E-sized RAM.",
+      "oracle": "Core+adapter+slots <=8192 bytes; streaming scans, no double initialization/move, no heap cleanup/reacquisition.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C19",
+      "acceptance": [
+        "A1",
+        "A5"
+      ],
+      "title": "Independent unrelated consumer",
+      "workload": "Thermostat schema2, immutable Git dependency in external workspace;100 alternating saves/reboots plus every G8/E1024 erase/program prefix",
+      "oracle": "Real library consumed; independent oracle sees old/new valid thermostat, no drone/platform dependency or copied codec.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C20",
+      "acceptance": [
+        "A3",
+        "A5"
+      ],
+      "title": "Pinned adapter and targets",
+      "workload": "Git pin T07 exact accepted rev; --locked host tests and no_std thumb check; dependency tree and source/manifest hashes",
+      "oracle": "No mutable neighbor paths, fabricated lock or runtime in messages; library reuse proof separate from hardware and T36.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C21",
+      "acceptance": [
+        "A4"
+      ],
+      "title": "P wire accepted/pending/durable",
+      "workload": "Actual endpoint plus pinned unchanged pyXCP;100 saves with held backend completion, GET_STATUS polls and all320 readback bytes; RAM edit after capture",
+      "oracle": "FF means admitted only, bit0 pending then fulfilled, stable readback matches capture; raw and decoded assertions. Deferred P-OPEN-1/2.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C22",
+      "acceptance": [
+        "A4"
+      ],
+      "title": "P failures and S0 immutability",
+      "workload": "S0 F9 negative; P short/long/mode/id invalid, busy, lost FF, late flash error, reconnect/reboot;10 repeats each",
+      "oracle": "Exact reviewed error/status vectors, no repeat F9 after unknown result, no PGM; P late-failure expectations deferred until primary evidence review.",
+      "status": "planned_not_executed"
+    },
+    {
+      "id": "C23",
+      "acceptance": [
+        "A4",
+        "A5"
+      ],
+      "title": "P metadata and readback",
+      "workload": "Pinned pya2ldb parse; mismatched schema/build/profile refuses writes; four320-byte latches;7-byte upload chunks; all blob write addresses",
+      "oracle": "No private save register; coherent immutable view and readonly rejection; raw upstream sources unmodified. P activation deferred.",
+      "status": "planned_not_executed"
+    }
+  ],
+  "design_revision": "F1-r2 complementary body + Q pre-erase predicate"
+}

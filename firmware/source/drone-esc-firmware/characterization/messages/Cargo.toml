@@ -1,0 +1,6 @@
+[package]
+name = "mainboard-messages"
+version = "0.1.0"
+edition = "2024"
+[dependencies]
+xcp-core = { path = "../../../bloxide-xcp/crates/xcp-core" }

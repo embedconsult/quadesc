@@ -1,0 +1,27 @@
+[system]
+name = "fixture-embedded"
+runtime = "embassy"
+profile = "embedded"
+target = "thumbv8m.main-none-eabi"
+[platform]
+impl_crate = "fixture_platform"
+entry = "cortex-m-rt"
+init = "initialize"
+on_error = "startup_failed"
+freeze = "freeze"
+resources = "Resources"
+cleanup = "process-lifetime"
+[[services]]
+name = "led_io"
+impl_crate = "fixture_platform"
+start = "start_led"
+resource = "led_service"
+[[actors]]
+name = "lamp"
+blox = "lamp::lamp"
+channel_capacity = 2
+[actors.inject]
+output = { source = "resource", field = "led_output" }
+[[actors.bootstrap]]
+message = "LampMsg::SetLevel"
+payload = { value = 73 }

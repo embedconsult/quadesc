@@ -1,0 +1,62 @@
+{
+  "scope": "metadata syntax/semantic fields only; no endpoint",
+  "positive": {
+    "segment": [
+      "led_page",
+      4096,
+      4
+    ],
+    "scalars": {
+      "led_period_ms": [
+        4096,
+        100.0,
+        10000.0,
+        "VALUE",
+        "scalar_u16",
+        0
+      ],
+      "led_duty_permille": [
+        4098,
+        0.0,
+        1000.0,
+        "VALUE",
+        "scalar_u16",
+        0
+      ]
+    },
+    "blobs": {
+      "persistence_view": [
+        65536,
+        640,
+        "NO_CALIBRATION"
+      ],
+      "persistence_identity": [
+        66560,
+        128,
+        "NO_CALIBRATION"
+      ]
+    }
+  },
+  "negative_controls": [
+    {
+      "change": "DATA RAM INTERN 0x1000 8",
+      "rejected_at": "segment_map"
+    },
+    {
+      "change": "VALUE 0x1004",
+      "rejected_at": "scalars"
+    },
+    {
+      "change": "99 10000",
+      "rejected_at": "scalars"
+    },
+    {
+      "change": "0 NO_COMPU_METHOD 0 1001",
+      "rejected_at": "scalars"
+    },
+    {
+      "change": "CALIBRATION_ACCESS CALIBRATION",
+      "rejected_at": "readonly_blobs"
+    }
+  ]
+}

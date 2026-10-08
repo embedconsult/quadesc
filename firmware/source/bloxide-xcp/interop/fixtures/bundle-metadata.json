@@ -1,0 +1,18 @@
+{
+  "schema": "led-s0-companion-bundle/0.1.0",
+  "profile": "S0",
+  "identity": {
+    "build_id": {
+      "address": 0,
+      "size": 32,
+      "encoding": "raw_sha256",
+      "value_hex": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+    },
+    "schema_id": {
+      "address": 32,
+      "size": 32,
+      "encoding": "raw_sha256",
+      "value_hex": "abababababababababababababababababababababababababababababababab"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "format": 2,
+  "endian": "little",
+  "header_bytes": 64,
+  "max_payload_bytes": 256,
+  "granules": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    256
+  ],
+  "erase_min": 512,
+  "erase_max": 65536,
+  "fields": [
+    {
+      "name": "magic",
+      "offset": 0,
+      "bytes": 8
+    },
+    {
+      "name": "format",
+      "offset": 8,
+      "bytes": 2
+    },
+    {
+      "name": "schema",
+      "offset": 10,
+      "bytes": 2
+    },
+    {
+      "name": "length",
+      "offset": 12,
+      "bytes": 4
+    },
+    {
+      "name": "record_sequence",
+      "offset": 16,
+      "bytes": 8
+    },
+    {
+      "name": "source_epoch",
+      "offset": 24,
+      "bytes": 8
+    },
+    {
+      "name": "source_revision",
+      "offset": 32,
+      "bytes": 4
+    },
+    {
+      "name": "session_generation",
+      "offset": 36,
+      "bytes": 4
+    },
+    {
+      "name": "operation_sequence",
+      "offset": 40,
+      "bytes": 8
+    },
+    {
+      "name": "reserved",
+      "offset": 48,
+      "bytes": 12
+    },
+    {
+      "name": "crc32c",
+      "offset": 60,
+      "bytes": 4
+    }
+  ],
+  "commit_offset": "round_up(640,G)",
+  "commit_bytes": "G",
+  "crc_domain": [
+    [
+      0,
+      60
+    ],
+    [
+      64,
+      320
+    ]
+  ],
+  "crc_check": "e3069283",
+  "marker_byte": 0,
+  "padding_byte": 255,
+  "logical_body_bytes": 320,
+  "encoded_body_bytes": 640,
+  "encoding": "S[2*i]=L[i]; S[2*i+1]=L[i] XOR 255; i=0..319",
+  "field_offset_space": "logical",
+  "magic_hex": "424c585045525332",
+  "supported_record_format": 2,
+  "crc_domain_space": "decoded_logical",
+  "max_programmed_span": 1024,
+  "physical_alignment_padding": [
+    "640",
+    "M"
+  ],
+  "physical_tail": [
+    "M+G",
+    "E"
+  ],
+  "erase_eligibility": "R3 Q1 OR Q2 OR Q3, plus global recovery/quarantine/write admission gates",
+  "slot_bytes": "E",
+  "reserved_flash_bytes": "2*E",
+  "minimum_erase_bytes": "round_up(max(512,M+G),G)",
+  "normal_save_commands": "3 + M/G + 4*ceil(E/256)",
+  "boot_read_commands": "2*ceil(E/256)",
+  "maximum_physical_image_bytes": 1024,
+  "logical_scratch_bytes": 320
+}

@@ -1,0 +1,26 @@
+[package]
+name = "am13-rs"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94"
+description = "Bounded AM13E23019 chip support and Embassy time driver"
+[features]
+default = []
+embassy = ["dep:embassy-executor", "dep:embassy-time-driver", "dep:embassy-time", "dep:embedded-io-async"]
+[dependencies]
+critical-section = "=1.2.0"
+embedded-hal = "=1.0.0"
+embedded-io = "=0.6.1"
+embedded-io-async = { version = "=0.6.1", optional = true }
+embassy-executor = { version = "=0.9.1", optional = true }
+embassy-time-driver = { version = "=0.2.2", features = ["tick-hz-10_000"], optional = true }
+embassy-time = { version = "=0.5.1", optional = true }
+[target.'cfg(target_arch = "arm")'.dependencies]
+cortex-m = { version = "=0.7.7", features = ["critical-section-single-core"] }
+cortex-m-rt = { version = "=0.7.6", features = ["set-sp", "set-vtor", "zero-init-ram"] }
+[dev-dependencies]
+critical-section = { version = "=1.2.0", features = ["std"] }
+[profile.release]
+panic = "abort"
+lto = true
+codegen-units = 1

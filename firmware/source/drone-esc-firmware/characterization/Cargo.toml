@@ -1,0 +1,9 @@
+[package]
+name = "mainboard-characterization"
+version = "0.1.0"
+edition = "2024"
+[dependencies]
+xcp-core = { path = "../../bloxide-xcp/crates/xcp-core" }
+xcp-messages = { path = "../../bloxide-xcp/crates/xcp-messages" }
+mainboard-messages = { path = "messages" }
+critical-section = "1.2.0"

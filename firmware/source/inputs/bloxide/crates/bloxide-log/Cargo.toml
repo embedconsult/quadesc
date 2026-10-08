@@ -1,0 +1,17 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "bloxide-log"
+version.workspace = true
+edition.workspace = true
+description = "Feature-gated logging macros for bloxide (log / defmt backends)"
+repository.workspace = true
+license.workspace = true
+
+[features]
+default = []
+log = ["dep:log"]
+defmt = ["dep:defmt"]
+
+[dependencies]
+log = { version = "0.4", default-features = false, optional = true }
+defmt = { version = "0.3", optional = true }

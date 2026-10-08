@@ -1,0 +1,19 @@
+# Copyright 2025 Bloxide, all rights reserved
+[package]
+name = "bloxide-spawn"
+version.workspace = true
+edition.workspace = true
+description = "Spawn capability for bloxide — SpawnCap, Kill, spawn_dynamic_child helper"
+repository.workspace = true
+license.workspace = true
+
+[features]
+default = []
+std = ["bloxide-core/std"]
+
+[dependencies]
+bloxide-child-management = { workspace = true }
+bloxide-core = { workspace = true }
+
+[dev-dependencies]
+bloxide-test-runtime = { workspace = true }

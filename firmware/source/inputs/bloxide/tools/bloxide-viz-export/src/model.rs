@@ -1,0 +1,252 @@
+// Copyright 2025 Bloxide, all rights reserved
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct WiringGraph {
+    pub runtime: String,
+    pub actors: Vec<WiringActor>,
+    pub connections: Vec<WiringConnection>,
+    pub supervisors: Vec<WiringSupervisor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct WiringActor {
+    pub blox: String,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct WiringConnection {
+    pub from: String,
+    pub to: String,
+    pub message: String,
+    pub channel_capacity: Option<usize>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct WiringSupervisor {
+    pub name: String,
+    pub strategy: String,
+    pub children: Vec<WiringSupervisorChild>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct WiringSupervisorChild {
+    pub actor: String,
+    pub restart_max: Option<u32>,
+    /// `stop = true` — the supervisor stops the group when this child ends.
+    #[serde(default)]
+    pub stop: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct BloxSpec {
+    pub name: String,
+    pub crate_path: String,
+    pub states: Vec<State>,
+    pub events: Vec<Event>,
+    pub handlers: Vec<Handler>,
+    pub entry_exit: HashMap<String, EntryExit>,
+    pub message_sets: Vec<MessageSet>,
+    pub messages: Vec<MessageDef>,
+    pub actions: Vec<ActionDef>,
+    pub context: Option<ContextDef>,
+    /// Wiring graph — present only for system specs (exported from
+    /// a `system.toml` manifest, not a blox crate).
+    #[serde(default)]
+    pub wiring: Option<WiringGraph>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct State {
+    pub name: String,
+    pub kind: StateKind,
+    pub parent: Option<String>,
+    pub description: String,
+    pub depth: usize,
+    /// True when this state is the machine's initial state
+    /// (`initial = true` in `blox.toml`).
+    #[serde(default)]
+    pub initial: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum StateKind {
+    Leaf,
+    Composite,
+    Error,
+}
+
+impl StateKind {
+    pub fn is_leaf(&self) -> bool {
+        matches!(self, StateKind::Leaf | StateKind::Error)
+    }
+
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            StateKind::Leaf => "",
+            StateKind::Composite => "◇",
+            StateKind::Error => "◈",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Event {
+    pub message_set: String,
+    pub variant: String,
+    pub full_name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MessageSet {
+    pub name: String,
+    pub variants: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Handler {
+    pub state: String,
+    pub event: String,
+    pub label: String,
+    /// Full match pattern from blox.toml (e.g.
+    /// `SupervisorEvent::Child(Envelope(_, ChildLifecycleEvent::Killed { .. }))`).
+    #[serde(default)]
+    pub pattern: String,
+    /// Feature gate (`#[cfg(feature = "...")]`) when set.
+    #[serde(default)]
+    pub feature: Option<String>,
+    pub actions: Vec<String>,
+    pub guard: Guard,
+    pub target: Target,
+    pub source: HandlerSource,
+    pub on_entry: Vec<String>,
+    pub on_exit: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum HandlerSource {
+    Explicit,
+    Inherited(String),
+    Dropped,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum Target {
+    Stay,
+    Transition(String),
+    Reset,
+    Stop,
+    Done,
+    Fail,
+}
+
+impl Target {
+    pub fn display(&self) -> String {
+        match self {
+            Target::Stay => "stay".to_string(),
+            Target::Transition(s) => s.clone(),
+            Target::Reset => "reset".to_string(),
+            Target::Stop => "stop".to_string(),
+            Target::Done => "done".to_string(),
+            Target::Fail => "fail".to_string(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Guard {
+    pub description: String,
+    pub raw: String,
+    pub branches: Vec<GuardBranch>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct GuardBranch {
+    pub condition: String,
+    pub target: Target,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EntryExit {
+    pub on_entry: Vec<String>,
+    pub on_exit: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MessageDef {
+    pub crate_name: String,
+    pub enum_name: String,
+    pub variants: Vec<MessageVariant>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MessageVariant {
+    pub name: String,
+    pub fields: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ActionDef {
+    pub crate_name: String,
+    pub function_name: String,
+    pub signature: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ContextDef {
+    pub struct_name: String,
+    pub fields: Vec<ContextField>,
+    /// Fields contributed by composable context crates (`[[context.uses]]`).
+    pub uses: Vec<ContextField>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ContextField {
+    pub name: String,
+    pub ty: String,
+    pub annotations: Vec<String>,
+}
+
+impl BloxSpec {
+    pub fn leaf_states(&self) -> Vec<&State> {
+        self.states.iter().filter(|s| s.kind.is_leaf()).collect()
+    }
+
+    pub fn composite_states(&self) -> Vec<&State> {
+        self.states
+            .iter()
+            .filter(|s| matches!(s.kind, StateKind::Composite))
+            .collect()
+    }
+
+    pub fn state_by_name(&self, name: &str) -> Option<&State> {
+        self.states.iter().find(|s| s.name == name)
+    }
+
+    pub fn handler_for(&self, state: &str, event: &str) -> Option<&Handler> {
+        self.handlers
+            .iter()
+            .find(|h| h.state == state && h.event == event)
+    }
+
+    pub fn events_for_set(&self, set_name: &str) -> Vec<&Event> {
+        self.events
+            .iter()
+            .filter(|e| e.message_set == set_name)
+            .collect()
+    }
+
+    pub fn message_sets_for_events(&self) -> Vec<MessageSet> {
+        let mut sets: HashMap<String, Vec<String>> = HashMap::new();
+        for event in &self.events {
+            sets.entry(event.message_set.clone())
+                .or_default()
+                .push(event.variant.clone());
+        }
+        sets.into_iter()
+            .map(|(name, variants)| MessageSet { name, variants })
+            .collect()
+    }
+}

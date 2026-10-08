@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "dependencies": [
+    {
+      "name": "am13-rs",
+      "kind": "explicit-fetched-path",
+      "path": "../am13-rs",
+      "canonical_url": "git@github.com:bloxide-com/am13-rs.git",
+      "revision": "a1e88ac88ea4d3a4db9a4e5fce4952099181c61f",
+      "tree": "560910f1427f60d8d53d33fb71f8be671720d1ba",
+      "dirty": false,
+      "files": {
+        "Cargo.toml": "991abcee613fcf1a053e0d48a6a89335410582962de3ec2b4b218be54f8a6bbd",
+        "Cargo.lock": "70ecfd7b7de0622b4acfecc344d38592cb98ad2c10fab918e4b453b891e09341"
+      }
+    }
+  ],
+  "external_dependencies": "Cargo.lock checksums",
+  "contract_archive_sha256": "f6f75d443d96dd762d3640e1acc76480243eabc88fd441574b4cad4f4f6705db"
+}

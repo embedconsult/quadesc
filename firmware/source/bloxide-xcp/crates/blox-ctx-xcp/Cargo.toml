@@ -1,0 +1,15 @@
+[package]
+name = "blox-ctx-xcp"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+description = "Portable synchronous context actions for the XCP S0 session blox"
+
+[dependencies]
+critical-section = "1"
+bloxide-core.workspace = true
+xcp-core.workspace = true
+xcp-messages.workspace = true
+
+[lints]
+workspace = true

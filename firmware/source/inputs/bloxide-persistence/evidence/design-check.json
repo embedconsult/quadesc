@@ -1,0 +1,286 @@
+{
+  "status": "passed_design_checks_only",
+  "product_tests_executed": 0,
+  "power_loss_proof": false,
+  "layout_negative_controls": 11,
+  "planned_cases": 23,
+  "acceptance_mapping": {
+    "A1": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C11",
+      "C16",
+      "C19"
+    ],
+    "A2": [
+      "C03",
+      "C04",
+      "C05",
+      "C14",
+      "C15"
+    ],
+    "A3": [
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C15",
+      "C17",
+      "C18",
+      "C20"
+    ],
+    "A4": [
+      "C07",
+      "C21",
+      "C22",
+      "C23"
+    ],
+    "A5": [
+      "C19",
+      "C20",
+      "C23"
+    ]
+  },
+  "all_legal_geometry_checks": [
+    {
+      "G": 1,
+      "minimum_E": 641,
+      "legal_E_count": 64896,
+      "maximum_save_commands": 1667
+    },
+    {
+      "G": 2,
+      "minimum_E": 642,
+      "legal_E_count": 32448,
+      "maximum_save_commands": 1347
+    },
+    {
+      "G": 4,
+      "minimum_E": 644,
+      "legal_E_count": 16224,
+      "maximum_save_commands": 1187
+    },
+    {
+      "G": 8,
+      "minimum_E": 648,
+      "legal_E_count": 8112,
+      "maximum_save_commands": 1107
+    },
+    {
+      "G": 16,
+      "minimum_E": 656,
+      "legal_E_count": 4056,
+      "maximum_save_commands": 1067
+    },
+    {
+      "G": 32,
+      "minimum_E": 672,
+      "legal_E_count": 2028,
+      "maximum_save_commands": 1047
+    },
+    {
+      "G": 64,
+      "minimum_E": 704,
+      "legal_E_count": 1014,
+      "maximum_save_commands": 1037
+    },
+    {
+      "G": 128,
+      "minimum_E": 768,
+      "legal_E_count": 507,
+      "maximum_save_commands": 1032
+    },
+    {
+      "G": 256,
+      "minimum_E": 1024,
+      "legal_E_count": 253,
+      "maximum_save_commands": 1030
+    }
+  ],
+  "geometries": [
+    {
+      "G": 1,
+      "E": 1024,
+      "M": 640,
+      "body_programs": 640,
+      "marker_programs": 1,
+      "erase_commands": 1,
+      "preflight_plus_verification_reads": 16,
+      "commands_including_wear": 659,
+      "prefix_labels_per_initial_state": 2307,
+      "prefix_labels_all_three_initial_states": 6921,
+      "ordered_labels_sha256": "d71b1380147d8fa4af67af213a77682fd91c76e7b48cfbea3600287698eaf382",
+      "boundary_examples": [
+        [
+          "erase",
+          0,
+          0
+        ],
+        [
+          "erase",
+          0,
+          1024
+        ],
+        [
+          "body",
+          0,
+          0
+        ],
+        [
+          "commit",
+          640,
+          1
+        ]
+      ]
+    },
+    {
+      "G": 8,
+      "E": 1024,
+      "M": 640,
+      "body_programs": 80,
+      "marker_programs": 1,
+      "erase_commands": 1,
+      "preflight_plus_verification_reads": 16,
+      "commands_including_wear": 99,
+      "prefix_labels_per_initial_state": 1754,
+      "prefix_labels_all_three_initial_states": 5262,
+      "ordered_labels_sha256": "5b3fc362504f92ba1f967dc0d08f8c4f1aaf784d424566a383ceb5b238cd9255",
+      "boundary_examples": [
+        [
+          "erase",
+          0,
+          0
+        ],
+        [
+          "erase",
+          0,
+          1024
+        ],
+        [
+          "body",
+          0,
+          0
+        ],
+        [
+          "commit",
+          640,
+          8
+        ]
+      ]
+    },
+    {
+      "G": 16,
+      "E": 1024,
+      "M": 640,
+      "body_programs": 40,
+      "marker_programs": 1,
+      "erase_commands": 1,
+      "preflight_plus_verification_reads": 16,
+      "commands_including_wear": 59,
+      "prefix_labels_per_initial_state": 1722,
+      "prefix_labels_all_three_initial_states": 5166,
+      "ordered_labels_sha256": "17e9d0ca04c4c62e1ae7aa798cc79b44788d1515305717baf9118734e3030556",
+      "boundary_examples": [
+        [
+          "erase",
+          0,
+          0
+        ],
+        [
+          "erase",
+          0,
+          1024
+        ],
+        [
+          "body",
+          0,
+          0
+        ],
+        [
+          "commit",
+          640,
+          16
+        ]
+      ]
+    },
+    {
+      "G": 64,
+      "E": 4096,
+      "M": 640,
+      "body_programs": 10,
+      "marker_programs": 1,
+      "erase_commands": 1,
+      "preflight_plus_verification_reads": 64,
+      "commands_including_wear": 77,
+      "prefix_labels_per_initial_state": 4812,
+      "prefix_labels_all_three_initial_states": 14436,
+      "ordered_labels_sha256": "f14651179371243c1b3c539845592326d5a8603ae7596e141ccd8d5cb1c6d897",
+      "boundary_examples": [
+        [
+          "erase",
+          0,
+          0
+        ],
+        [
+          "erase",
+          0,
+          4096
+        ],
+        [
+          "body",
+          0,
+          0
+        ],
+        [
+          "commit",
+          640,
+          64
+        ]
+      ]
+    },
+    {
+      "G": 256,
+      "E": 4096,
+      "M": 768,
+      "body_programs": 3,
+      "marker_programs": 1,
+      "erase_commands": 1,
+      "preflight_plus_verification_reads": 64,
+      "commands_including_wear": 70,
+      "prefix_labels_per_initial_state": 5125,
+      "prefix_labels_all_three_initial_states": 15375,
+      "ordered_labels_sha256": "a00c294c4d066771972e14f8b726422d8c238f683441a7787f1677e0cd9dde46",
+      "boundary_examples": [
+        [
+          "erase",
+          0,
+          0
+        ],
+        [
+          "erase",
+          0,
+          4096
+        ],
+        [
+          "body",
+          0,
+          0
+        ],
+        [
+          "commit",
+          768,
+          256
+        ]
+      ]
+    }
+  ],
+  "total_planned_prefix_runs": 47160
+}
