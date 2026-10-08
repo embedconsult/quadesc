@@ -1,0 +1,7 @@
+<nav class="bd-docs-nav bd-links" aria-label="Manual navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Manual navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <a class="reference internal" href="{{ pathto('index') }}">Manual overview</a>
+    {{ generate_toctree_html('sidebar', startdepth=0, show_nav_level=2, maxdepth=2, collapse=False, includehidden=True, titles_only=True) }}
+  </div>
+</nav>

@@ -1,13 +1,7 @@
-# Firmware and source
+# Firmware sources
 
-The application is schema 7 with 252 parameters, based on the complete schema 6 source selection and its modified and untracked AM13/board dependencies. The source snapshot includes all eight components in `source/`: the board application, LED service, XCP service, AM13 HAL, Bloxide framework/code generator, calibration library, persistence library and SoM board library. Only `source/drone-esc-firmware/examples/am13-xcp-control/system.toml` defines the delivered board demo.
+This directory contains the board application and its supporting libraries in `source/`, existing application artifacts in `application/`, and a separate loader with its own source tree in `loader/`.
 
-`application/` contains the matching programmed BIN, ABI1 AB1 package, ELF, contract, A2L, AML and board profile. `loader/` contains the matching ABI1 loader and its separate source snapshot. Loader and application HAL snapshots are deliberately independent: changing the application HAL does not silently change the qualified loader. Neither transferring an artifact nor running a software test installs it.
+The application and loader source trees are independent. Build instructions and configuration belong to their respective source projects.
 
-Motor 4 has the same raw fault interlock as the other drivers. IDs 222–226 are retired and absent. The read-only `drv_enable_state_known` descriptor is ID 297, UWORD at `0x1534`. Its value is 1 after GPIO confirmations; 0 means enable state is unknown. Shutdown stops PWM, attempts both independent deassertions and clears the applied enable mask only after both confirmations. Unknown state fences actuation, SPI diagnostics, SAVE and reboot. Explicit stop/disable retries update command sequences/status normally and never restore the old PWM configuration.
-
-A valid, already connected session can explicitly retry disable after command-side shutdown failure. An uncertain Synchronize/Quiesce completion fences the XCP lifecycle, including new CONNECTs. That lifecycle fence requires external fixture cutoff, fault correction and deliberate physical reset/startup confirmation; reconnecting alone is not a recovery procedure. Outputs start disabled after reset.
-
-Authored code consists of Rust policy/HAL/transport libraries, `blox.toml` actors, `system.toml` wiring and `characterization/contract.json`. The active `characterization/generate.py` produces typed Rust descriptors, A2L and board metadata. The included `cargo-blox` generator produces the actor and application Rust workspace from TOML. Build-generated files are regenerated in a new work directory and excluded from the source snapshots. Do not edit generated descriptors by hand.
-
-Run the [build, test and verification commands](../tools/firmware/README.md). Exact imported revisions and content hashes are recorded in `source-provenance.json`; a revision alone does not identify the dirty dependency inputs. Calibration record/storage code, allocated calibration sectors, other descriptor addresses and loader ABI1 are preserved. Customer-facing engineering details are in the [engineering manual](../documentation/html/engineering/index.html).
+Hardware interfaces and general programming access are documented in the [AM13E SoM programming guide](../documentation/source/som/firmware.md) and [QuadESC manual](../documentation/source/quadesc/index.md). The documentation CI builds the hardware manuals independently of these firmware trees.
