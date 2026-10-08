@@ -1,0 +1,49 @@
+# Build review artifacts for merge requests; publish only the default branch.
+image: python:3.12.11-slim-bookworm
+
+stages:
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+cache:
+  key:
+    files:
+      - tools/documentation/requirements.txt
+  paths:
+    - .cache/pip/
+
+documentation:
+  stage: build
+  script:
+    - python -m pip install -r tools/documentation/requirements.txt
+    - python tools/documentation/build.py
+  artifacts:
+    name: "documentation-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - public/
+    expire_in: 7 days
+
+# Keep the classic `pages` job name/public artifact convention for compatibility
+# with OpenBeagle installations predating GitLab's newer pages.publish keyword.
+pages:
+  stage: deploy
+  needs:
+    - job: documentation
+      artifacts: true
+  script:
+    - test -s public/index.html
+  artifacts:
+    paths:
+      - public/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

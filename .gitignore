@@ -32,3 +32,10 @@ fp-info-cache
 
 # Other
 desktop.ini
+
+# Generated documentation site, build cache and local Python environment
+/public/
+/.docs-build/
+/.venv-docs/
+/.cache/pip/
+__pycache__/

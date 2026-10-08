@@ -1,0 +1,53 @@
+/* BeagleBoard.org palette; official logo bundled for offline reading. */
+html[data-theme="light"] {
+ --pst-color-primary: #C7480D; --pst-color-secondary: #C7480D;
+ --pst-color-background: #ffffff; --pst-color-on-background: #ffffff;
+ --pst-color-surface: #f3f4f5; --pst-color-text-base: #273039;
+ --pst-color-link: #C7480D; --pst-color-link-hover: #74310e;
+}
+html[data-theme="dark"] {
+ --pst-color-primary: #ffb073; --pst-color-secondary: #f6b88b;
+ --pst-color-background: #25282b; --pst-color-on-background: #292d30;
+ --pst-color-surface: #303a43; --pst-color-text-base: #eef0f2;
+ --pst-color-link: #ffb073; --pst-color-link-hover: #ffd6b5;
+}
+body {font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height:1.65;}
+.bd-header {border-top:4px solid #F16321; box-shadow:0 1px 8px #0001;}
+.navbar-brand {font-weight:750; letter-spacing:-.03em;}
+.bd-page-width {max-width:100rem;}
+.bd-main .bd-content .bd-article-container {max-width:57rem; padding:2.1rem 2.4rem;}
+h1,h2,h3 {font-weight:680; letter-spacing:-.025em; line-height:1.25;}
+h1 {font-size:2.65rem; margin-bottom:1.2rem;}
+h2 {margin-top:2.4rem;}
+p {max-width:78ch;}
+table {font-size:.92rem;}
+td,th {vertical-align:top; white-space:normal!important;}
+code {overflow-wrap:anywhere;}
+pre {line-height:1.5;}
+.bd-sidebar-primary {font-size:.94rem;}
+.bd-sidebar-secondary {font-size:.87rem;}
+.bd-article img {border-radius:.5rem; height:auto;}
+a:focus-visible,button:focus-visible {outline:3px solid var(--pst-color-primary); outline-offset:3px;}
+@media (max-width:767px) {.bd-main .bd-content .bd-article-container {padding:1.3rem .95rem;} h1 {font-size:2rem;} .bd-article .table-wrapper {overflow-x:auto;}}
+@media print {
+ .bd-header,.bd-sidebar-primary,.bd-sidebar-secondary,.bd-footer,.prev-next-area,.headerlink,.back-to-top {display:none!important;}
+ html,body,.bd-main,.bd-content,.bd-article-container {background:white!important;color:#111!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;}
+ h1,h2,h3 {break-after:avoid;} tr,figure,pre {break-inside:avoid;} a {color:#333!important;text-decoration:underline;}
+ table {font-size:9pt;} body {font-size:11pt;} .bd-article img {max-height:230mm;}
+}
+
+html[data-theme] .bd-header {background:#25282b!important; color:#fff;}
+.bd-header .btn,.bd-header .nav-link,.bd-header .theme-switch-button {color:#fff;}
+.bd-header .navbar-brand img {width:190px; max-height:42px; height:auto;}
+.manual-title {color:#fff; font-weight:600; white-space:nowrap; margin:0 1rem;}
+.brand-print {display:none;}
+@media (max-width:575px) {
+ .bd-header .navbar-brand img {width:125px;}
+ .manual-title {font-size:.8rem; margin:0 .35rem;}
+ .bd-header .navbar-header-items__start {gap:0;}
+}
+@media print {.brand-print {display:block; background:#25282b!important; padding:10px; print-color-adjust:exact;} .brand-print img {width:190px;}}
+
+.bd-header .navbar-brand img,.brand-print img {background:white; border-radius:3px; padding:3px;}
+
+html[data-theme] .bd-header .pst-navbar-icon {color:#fff!important;}
