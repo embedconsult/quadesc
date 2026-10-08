@@ -60,10 +60,10 @@
           "hatch_smoothing_level": 0,
           "hatch_smoothing_value": 0.1,
           "hatch_thickness": 1.0,
-          "min_clearance": 0.5,
+          "min_clearance": 0.2,
           "min_island_area": 10.0,
-          "min_thickness": 0.25,
-          "pad_connection": 1,
+          "min_thickness": 0.2,
+          "pad_connection": 2,
           "remove_islands": 0,
           "thermal_relief_gap": 0.2,
           "thermal_relief_spoke_width": 0.5
@@ -134,103 +134,7 @@
           ""
         ],
         [
-          "clearance|108115000|122380000|350842cd-0829-4d92-84d7-f5b010718656|29a550d2-5e69-4c18-9f1c-2dc4088024f8",
-          ""
-        ],
-        [
-          "clearance|120949999|101474501|f17fcdc1-3ac7-429d-be18-c245275e959a|c2ea5aea-1932-4e29-89c6-bedb352ee37c",
-          ""
-        ],
-        [
-          "clearance|120949999|108974501|63ed1ecb-9085-4150-89dc-1c96c0b8a0a9|ad3128e1-c84a-4eaf-939b-2cc850f61375",
-          ""
-        ],
-        [
-          "clearance|120949999|116474501|061cb71c-6160-485d-986f-1589e938fd20|392ae20b-ac56-4711-8c02-4136587dfe40",
-          ""
-        ],
-        [
-          "clearance|120949999|78974501|beedc195-6b70-42e6-95c5-3cce61c3a4c1|8dec056c-ce6e-4c97-9782-a7b5984ca933",
-          ""
-        ],
-        [
-          "clearance|120949999|86474501|d191a88d-fa1e-4426-bb30-b9c7d19b5cd8|5f64419f-1abe-4b67-a6b2-b80bce728e39",
-          ""
-        ],
-        [
-          "clearance|120949999|93974501|6be67ba7-f9ba-40fc-ae50-1735fe68fe1b|d081d720-e635-4a64-a096-2d24eae62ba5",
-          ""
-        ],
-        [
-          "clearance|125050001|101474501|06f20398-c2dc-4d9e-9bb5-d60714802095|33b6f63e-4c8e-42ca-b4a5-e84bb245caea",
-          ""
-        ],
-        [
-          "clearance|125050001|108974501|ed9db9d8-0f27-462e-8a65-bc7a965b5677|86e23470-2546-49da-881d-dd7cbc10541c",
-          ""
-        ],
-        [
-          "clearance|125050001|116474501|fd5c4f9d-f2db-45c5-b0af-a89f1f6c71fc|f1b04ba4-c5a9-4fb7-a60b-58728b732175",
-          ""
-        ],
-        [
-          "clearance|125050001|78974501|348e5e1c-da9f-464a-b94b-2d8d10fcf6e4|10fc1d55-495d-4224-8ca1-1e76f0346009",
-          ""
-        ],
-        [
-          "clearance|125050001|86474501|dd37e896-5b5f-4d6c-86ec-293fc208eb63|e4e56299-b776-44c1-a407-fee546e8b86b",
-          ""
-        ],
-        [
-          "clearance|125050001|93974501|ac970eb3-a8ea-492a-a532-032a00727680|c9e654d0-a4ac-446f-9725-9b11335b9cea",
-          ""
-        ],
-        [
-          "clearance|74949999|106025499|893893de-de3a-4a36-983f-f93aa7c470bc|dcf991df-a38d-43ae-a684-7d0339b534b0",
-          ""
-        ],
-        [
-          "clearance|74949999|113525499|e39663f5-f528-4092-98a3-b10191228fc5|5feb5e47-380e-4fcb-8e90-4c789a6b5bd9",
-          ""
-        ],
-        [
-          "clearance|74949999|121025499|0b022eff-050e-4ac3-be3d-5b551aa48af7|0b40dbbf-b47f-408a-afe0-d0f79adb33a3",
-          ""
-        ],
-        [
-          "clearance|74949999|83525499|02e4a360-4441-4411-90dd-8795fbebfca2|93a40f8d-c27f-4731-b308-514aa0454cda",
-          ""
-        ],
-        [
-          "clearance|74949999|91025499|a1d6edfc-3de4-4ccb-8202-111402be1aea|c6a69138-da3b-4b49-a2f4-2a7c552a965b",
-          ""
-        ],
-        [
-          "clearance|74949999|98525499|4f0827d5-2e81-48b3-b1a1-02849d0630bf|292aac9e-06d0-48d6-bc5b-aaf9787af7c2",
-          ""
-        ],
-        [
-          "clearance|79050001|106025499|09787375-130a-458f-adc6-617d042b84ad|6c5fd45a-6ec4-461f-9101-6c088b8be7c5",
-          ""
-        ],
-        [
-          "clearance|79050001|113525499|9c9351ad-8cd6-40d9-b776-db33965b74ce|a7de29fc-511c-4d10-9411-95e3aa600a93",
-          ""
-        ],
-        [
-          "clearance|79050001|121025499|296aa660-8fc3-42f8-a528-c3fc54767524|4391620f-8693-4e4e-8af4-254a1f4d3a35",
-          ""
-        ],
-        [
-          "clearance|79050001|83525499|eb725901-3120-417e-9f63-382dd61436f7|37d128fc-6f3d-4af0-a0d1-0fd9acc4c0bd",
-          ""
-        ],
-        [
-          "clearance|79050001|91025499|70fb28cc-2ddc-4f2c-beb8-91d383d3f821|4c11d0c9-6881-4e7e-9064-994b3881a35d",
-          ""
-        ],
-        [
-          "clearance|79050001|98525499|5476671f-a1d9-4d52-a570-17c1c6f2a3ac|92a44f95-8536-415d-b008-decde6e9811d",
+          "clearance|108115000|122380000|29a550d2-5e69-4c18-9f1c-2dc4088024f8|350842cd-0829-4d92-84d7-f5b010718656",
           ""
         ],
         [
@@ -889,7 +793,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "A"
+      "sch_revision": "A2"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -1205,9 +1109,9 @@
     "last_paths": {
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "fab/",
       "specctra_dsn": "",
-      "step": "",
+      "step": "fab/mainboard.pdf",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -1258,28 +1162,28 @@
           "show": true
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from BOM",
           "name": "${EXCLUDE_FROM_BOM}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Board",
           "name": "${EXCLUDE_FROM_BOARD}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Simulation",
           "name": "${EXCLUDE_FROM_SIM}",
-          "show": true
+          "show": false
         },
         {
-          "group_by": true,
+          "group_by": false,
           "label": "Exclude from Position Files",
           "name": "${EXCLUDE_FROM_POS_FILES}",
-          "show": true
+          "show": false
         },
         {
           "group_by": true,
@@ -1291,7 +1195,7 @@
           "group_by": false,
           "label": "Datasheet",
           "name": "Datasheet",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -1369,7 +1273,7 @@
         "uuid": "8ee60709-b137-4b38-9741-362103a631fd"
       }
     ],
-    "used_designators": "L1-2,RT4,D1-3,#PWR1-126,U1-30,C1-88,C106,J1-11,R1-91,NT1-24,LGA1,TH1-4",
+    "used_designators": "L1-2,RT4,LGA1,D1-3,C1-100,C106,#PWR1-126,U1-30,J1-11,R1-91,NT1-24,TH1-4",
     "variants": []
   },
   "sheets": [

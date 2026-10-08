@@ -3881,7 +3881,6 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "d1e27897-7228-4e11-a516-ecb4105e0a45")
 		(property "Reference" "U3"
 			(at 173.99 130.81 0)
@@ -3894,7 +3893,7 @@
 			)
 		)
 		(property "Value" "TS5A3166YZPR"
-			(at 173.99 133.35 0)
+			(at 173.736 133.858 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

@@ -1766,6 +1766,12 @@
 		(uuid "5a7eae3b-a8dc-4e76-b68d-c74628a17039")
 	)
 	(junction
+		(at 165.1 133.35)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "660fd504-5326-48ff-86f2-ca0530daf656")
+	)
+	(junction
 		(at 110.49 109.22)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1782,6 +1788,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "70439084-e5bb-4c37-bd6d-6a9d4103611f")
+	)
+	(junction
+		(at 182.88 133.35)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "91d26488-09b9-41c3-8f77-e0d99980d6d5")
 	)
 	(junction
 		(at 73.66 105.41)
@@ -1969,6 +1981,16 @@
 	)
 	(wire
 		(pts
+			(xy 182.88 133.35) (xy 182.88 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3c938a10-bf63-4684-8c2c-2ea571d24668")
+	)
+	(wire
+		(pts
 			(xy 99.06 76.2) (xy 109.22 76.2)
 		)
 		(stroke
@@ -1976,6 +1998,16 @@
 			(type default)
 		)
 		(uuid "3e61a2c1-fa17-48bd-9930-60440439515f")
+	)
+	(wire
+		(pts
+			(xy 182.88 121.92) (xy 182.88 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4cc0d81e-a530-4f92-aa0b-35d5367faa25")
 	)
 	(wire
 		(pts
@@ -2126,6 +2158,16 @@
 			(type default)
 		)
 		(uuid "8053d394-d358-4bb9-bde1-ac61c594d5e1")
+	)
+	(wire
+		(pts
+			(xy 177.8 133.35) (xy 182.88 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8cd215be-46b0-4651-a1e7-1deefc646aa1")
 	)
 	(wire
 		(pts
@@ -2369,6 +2411,16 @@
 	)
 	(wire
 		(pts
+			(xy 165.1 121.92) (xy 165.1 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cc4730d6-fd63-48da-ab21-80e4ba143d41")
+	)
+	(wire
+		(pts
 			(xy 151.13 127) (xy 151.13 124.46)
 		)
 		(stroke
@@ -2399,6 +2451,16 @@
 	)
 	(wire
 		(pts
+			(xy 165.1 133.35) (xy 170.18 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d5c72ccf-62fe-4931-920b-12ff12150df3")
+	)
+	(wire
+		(pts
 			(xy 110.49 99.06) (xy 110.49 101.6)
 		)
 		(stroke
@@ -2406,6 +2468,16 @@
 			(type default)
 		)
 		(uuid "d6aca3eb-a3ab-46aa-973c-c3f1ee643cce")
+	)
+	(wire
+		(pts
+			(xy 165.1 133.35) (xy 165.1 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d8656d25-428a-4a51-a36f-a1362dd04ddc")
 	)
 	(wire
 		(pts
@@ -2577,7 +2649,7 @@
 	)
 	(global_label "M1_SPA"
 		(shape input)
-		(at 165.1 121.92 270)
+		(at 165.1 135.89 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2587,7 +2659,7 @@
 		)
 		(uuid "432e9d21-b06e-4d2c-a87a-c561de19d4f8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 165.1 132.1018 90)
+			(at 165.1 146.0718 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2697,7 +2769,7 @@
 	)
 	(global_label "M1_SNA"
 		(shape input)
-		(at 182.88 121.92 270)
+		(at 182.88 135.89 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2707,7 +2779,7 @@
 		)
 		(uuid "cb7d696b-c848-46a1-953c-abda7843675f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 182.88 132.1623 90)
+			(at 182.88 146.1323 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3166,7 +3238,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2uF"
+		(property "Value" "10uF"
 			(at 90.17 81.2799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3462,6 +3534,86 @@
 			(project "mainboard"
 				(path "/8ee60709-b137-4b38-9741-362103a631fd/0f800f3f-298b-45fd-8a4f-33d5262ba0df/ca8898ba-f72a-4c12-8f26-052a846cebf6"
 					(reference "C64")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 173.99 133.35 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "65138609-154e-4cd8-bc98-37040664898f")
+		(property "Reference" "C89"
+			(at 173.99 125.73 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1nF"
+			(at 173.99 128.27 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 177.8 132.3848 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 173.99 133.35 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 173.99 133.35 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3820265f-bf6c-473f-bc05-3f4f8c124cfc")
+		)
+		(pin "2"
+			(uuid "705e1d6f-f84c-4f76-afec-fe57dba6eb0e")
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd/0f800f3f-298b-45fd-8a4f-33d5262ba0df/ca8898ba-f72a-4c12-8f26-052a846cebf6"
+					(reference "C89")
 					(unit 1)
 				)
 			)

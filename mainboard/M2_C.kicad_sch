@@ -1676,6 +1676,12 @@
 		(uuid "08ebed2b-6e4f-4b0a-b1bb-8398f3a77127")
 	)
 	(junction
+		(at 189.23 120.65)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0fe6630c-e2e8-441c-affd-5e1e9b0dcc66")
+	)
+	(junction
 		(at 158.75 105.41)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1814,6 +1820,12 @@
 		(uuid "c9f9c59d-b343-4274-aba1-add00d8cc2b6")
 	)
 	(junction
+		(at 175.26 120.65)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d3a2a64a-2e6f-42d3-9906-2c40b0df4cd3")
+	)
+	(junction
 		(at 118.11 95.25)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1929,6 +1941,16 @@
 	)
 	(wire
 		(pts
+			(xy 175.26 110.49) (xy 175.26 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "26f9e78b-168c-4ab2-b4f1-5d5c3225f474")
+	)
+	(wire
+		(pts
 			(xy 105.41 87.63) (xy 105.41 93.98)
 		)
 		(stroke
@@ -1966,6 +1988,16 @@
 			(type default)
 		)
 		(uuid "2bc1eeca-dbcf-47d6-9cbf-f9cf8c043d7e")
+	)
+	(wire
+		(pts
+			(xy 175.26 120.65) (xy 175.26 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2d3d858e-94c5-48f5-9e68-06bf8e004b44")
 	)
 	(wire
 		(pts
@@ -2319,6 +2351,16 @@
 	)
 	(wire
 		(pts
+			(xy 181.61 120.65) (xy 175.26 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8e560512-a926-44a3-aa2d-801f60987820")
+	)
+	(wire
+		(pts
 			(xy 162.56 95.25) (xy 166.37 95.25)
 		)
 		(stroke
@@ -2379,6 +2421,16 @@
 	)
 	(wire
 		(pts
+			(xy 189.23 110.49) (xy 189.23 120.65)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b2d44a93-9117-41f7-9157-097e4f146bc8")
+	)
+	(wire
+		(pts
 			(xy 156.21 74.93) (xy 158.75 74.93)
 		)
 		(stroke
@@ -2426,6 +2478,16 @@
 			(type default)
 		)
 		(uuid "c0dfd9fd-9215-4aac-909a-3eb4289a742e")
+	)
+	(wire
+		(pts
+			(xy 189.23 120.65) (xy 189.23 128.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c1c38bf8-dce8-446a-8caf-b20d4c9caa25")
 	)
 	(wire
 		(pts
@@ -2591,7 +2653,7 @@
 	)
 	(global_label "M2_SPC"
 		(shape input)
-		(at 175.26 110.49 270)
+		(at 175.26 128.27 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2601,7 +2663,7 @@
 		)
 		(uuid "6097dc66-178c-4ed9-bd3b-9584b68e97e9")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 175.26 120.8532 90)
+			(at 175.26 138.6332 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2639,7 +2701,7 @@
 	)
 	(global_label "M2_SNC"
 		(shape input)
-		(at 189.23 110.49 270)
+		(at 189.23 128.27 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2649,7 +2711,7 @@
 		)
 		(uuid "7d519b76-dd23-4709-abb7-9f53fbb66233")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 189.23 120.9137 90)
+			(at 189.23 138.6937 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2728,6 +2790,86 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 185.42 120.65 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1caae0c5-741d-4f16-8329-24ce6ec3fea7")
+		(property "Reference" "C94"
+			(at 185.42 113.03 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1nF"
+			(at 185.42 115.57 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 189.23 119.6848 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 185.42 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 185.42 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a299b0b0-bf11-423e-8a87-3e5e5da81876")
+		)
+		(pin "2"
+			(uuid "1d46e5ad-12bb-4107-94d0-8043ffbb4378")
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd/b03d805f-ef11-42a0-a6f5-a318e83b0aaa/a14e003a-a6ac-416e-a6b9-2c757865e742"
+					(reference "C94")
+					(unit 1)
+				)
 			)
 		)
 	)
@@ -3800,7 +3942,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2uF"
+		(property "Value" "10uF"
 			(at 97.79 69.8499 0)
 			(show_name no)
 			(do_not_autoplace no)

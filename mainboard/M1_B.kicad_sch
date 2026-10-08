@@ -1724,10 +1724,22 @@
 		(uuid "69847387-b825-42e3-b71d-ebc6e3724b8e")
 	)
 	(junction
+		(at 203.2 129.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "70df73f2-5c7e-4438-b4ba-99894a52fa74")
+	)
+	(junction
 		(at 187.96 113.03)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7751d021-dc96-4766-b548-5389aa37b87b")
+	)
+	(junction
+		(at 187.96 129.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7a6ee569-32f4-48d8-85ed-16d6367195f2")
 	)
 	(junction
 		(at 119.38 72.39)
@@ -1999,6 +2011,16 @@
 	)
 	(wire
 		(pts
+			(xy 187.96 129.54) (xy 187.96 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29ed3422-a97f-4258-95d7-fbd375641d4c")
+	)
+	(wire
+		(pts
 			(xy 133.35 102.87) (xy 130.81 102.87)
 		)
 		(stroke
@@ -2106,6 +2128,16 @@
 			(type default)
 		)
 		(uuid "4791ada3-6311-4380-9b9d-523d5f536ef4")
+	)
+	(wire
+		(pts
+			(xy 194.31 129.54) (xy 187.96 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5070a413-4d2b-406f-943a-14268b30b499")
 	)
 	(wire
 		(pts
@@ -2236,6 +2268,16 @@
 			(type default)
 		)
 		(uuid "747471f5-0053-4459-b7dc-cef1c3c986a0")
+	)
+	(wire
+		(pts
+			(xy 201.93 129.54) (xy 203.2 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "75ad183d-21af-4ed7-b360-5ffffb981549")
 	)
 	(wire
 		(pts
@@ -2399,6 +2441,16 @@
 	)
 	(wire
 		(pts
+			(xy 187.96 118.11) (xy 187.96 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b83f52c0-0be5-4ecc-ba6e-cfa7ac0dbc69")
+	)
+	(wire
+		(pts
 			(xy 106.68 72.39) (xy 119.38 72.39)
 		)
 		(stroke
@@ -2459,6 +2511,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 129.54) (xy 203.2 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db81d54e-7d73-41d4-ac0b-f421ec12b5eb")
+	)
+	(wire
+		(pts
 			(xy 168.91 115.57) (xy 171.45 115.57)
 		)
 		(stroke
@@ -2486,6 +2548,16 @@
 			(type default)
 		)
 		(uuid "f43c66ac-092a-4063-beb1-de996631c40a")
+	)
+	(wire
+		(pts
+			(xy 203.2 118.11) (xy 203.2 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6093a2a-1dc3-4577-bee4-bd6b682e571a")
 	)
 	(wire
 		(pts
@@ -2639,7 +2711,7 @@
 	)
 	(global_label "M1_SNB"
 		(shape input)
-		(at 203.2 118.11 270)
+		(at 203.2 134.62 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2649,7 +2721,7 @@
 		)
 		(uuid "8b7d5c4c-c028-47ef-9022-5e9f84d54259")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 203.2 128.5337 90)
+			(at 203.2 145.0437 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2687,7 +2759,7 @@
 	)
 	(global_label "M1_SPB"
 		(shape input)
-		(at 187.96 118.11 270)
+		(at 187.96 134.62 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -2697,7 +2769,7 @@
 		)
 		(uuid "a21a25ca-c421-41b6-8a50-daa4b59969d7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 187.96 128.4732 90)
+			(at 187.96 144.9832 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2754,7 +2826,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "2.2uF"
+		(property "Value" "10uF"
 			(at 110.49 77.4699 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3216,6 +3288,86 @@
 			(project "mainboard"
 				(path "/8ee60709-b137-4b38-9741-362103a631fd/0f800f3f-298b-45fd-8a4f-33d5262ba0df/a81825d7-7a18-4e0a-8c65-1eca3ec2a137"
 					(reference "R74")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 198.12 129.54 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "9f7a1b7e-9862-42e9-8c67-52b0f3cb86b7")
+		(property "Reference" "C90"
+			(at 198.12 121.92 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1nF"
+			(at 198.12 124.46 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric"
+			(at 201.93 128.5748 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 198.12 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 198.12 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4e6888b1-ef59-4f69-aa09-0a6cc5e649ac")
+		)
+		(pin "2"
+			(uuid "dbf71431-1a54-4d63-949c-190d2207a3c5")
+		)
+		(instances
+			(project "mainboard"
+				(path "/8ee60709-b137-4b38-9741-362103a631fd/0f800f3f-298b-45fd-8a4f-33d5262ba0df/a81825d7-7a18-4e0a-8c65-1eca3ec2a137"
+					(reference "C90")
 					(unit 1)
 				)
 			)

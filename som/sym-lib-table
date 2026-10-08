@@ -1,0 +1,18 @@
+(sym_lib_table
+  (version 7)
+
+  (lib (name "2026-08-09_16-32-33") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/XAM13E23019GTPZ/ul_XAM13E23019GTPZ/KiCADv6/2026-08-09_16-32-33.kicad_sym") (options "") (descr ""))
+  (lib (name "ACT1210-101") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/ACT1210-101-2P-TL00/ACT1210_101_2P_TL00/KiCADv6/2026-08-12_20-39-14.kicad_sym") (options "") (descr ""))
+  (lib (name "CL05C180JB5NNNC") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/CL05C180JB5NNNC/symbol.kicad_sym") (options "") (descr ""))
+  (lib (name "Connector") (type "KiCad") (uri "${KIPRJMOD}/../library/standard/symbols/Connector.kicad_sym") (options "") (descr ""))
+  (lib (name "Device") (type "KiCad") (uri "${KIPRJMOD}/../library/standard/symbols/Device.kicad_sym") (options "") (descr ""))
+  (lib (name "ECS-250-12-33-AGN-TR") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/ECS-250-12-33-AGN-TR/ECS_250_12_33_AGN_TR/ECS-250-12-33-AGN-TR.kicad_sym") (options "") (descr ""))
+  (lib (name "ESD2CAN24DBZRQ1") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/ESD2CAN24DBZRQ1/KiCADv6/2026-08-10_15-45-11.kicad_sym") (options "") (descr ""))
+  (lib (name "LGA100_1.0mm_0.5x0.3NSMD_B") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/LGA100_1.0mm_0.5x0.3NSMD_B/symbol.kicad_sym") (options "") (descr ""))
+  (lib (name "RC0603FR-07100KL") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/RC0603FR-07100KL/symbol.kicad_sym") (options "") (descr ""))
+  (lib (name "TCAN844DRBRQ1") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/TCAN844DRBRQ1/KiCADv6/2026-08-10_15-30-15.kicad_sym") (options "") (descr ""))
+  (lib (name "TPS2116DRLR") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/TPS2116DRLR/KiCADv6/2026-08-10_02-18-45.kicad_sym") (options "") (descr ""))
+  (lib (name "TPS22950YBHR") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/TPS22950YBHR/TPS22950YBHR.kicad_sym") (options "") (descr ""))
+  (lib (name "TPS7A2633") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/TPS7A2633DRVR/TPS7A2633DRVR/KiCADv6/2026-08-09_16-28-57.kicad_sym") (options "") (descr ""))
+  (lib (name "TS5A3166") (type "KiCad") (uri "${KIPRJMOD}/../library/parts/TS5A3166/ul_TS5A3166YZPR/KiCADv6/2026-08-24_13-09-03.kicad_sym") (options "") (descr ""))
+  (lib (name "power") (type "KiCad") (uri "${KIPRJMOD}/../library/standard/symbols/power.kicad_sym") (options "") (descr "")))

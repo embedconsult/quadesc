@@ -63,7 +63,7 @@
           "min_clearance": 0.18,
           "min_island_area": 10.0,
           "min_thickness": 0.18,
-          "pad_connection": 1,
+          "pad_connection": 2,
           "remove_islands": 0,
           "thermal_relief_gap": 0.18,
           "thermal_relief_spoke_width": 0.18
@@ -86,7 +86,7 @@
           ""
         ],
         [
-          "clearance|98700000|88800000|165280f5-904a-4b5b-a2aa-44f6ccc4a70f|66d86f70-8430-4bd3-a246-e6345c68227e",
+          "clearance|98700000|88800000|66d86f70-8430-4bd3-a246-e6345c68227e|165280f5-904a-4b5b-a2aa-44f6ccc4a70f",
           ""
         ],
         [
@@ -94,7 +94,7 @@
           ""
         ],
         [
-          "clearance|98900000|88600000|165280f5-904a-4b5b-a2aa-44f6ccc4a70f|39acb50e-819c-427b-b69b-c6da963e9f70",
+          "clearance|98900000|88600000|39acb50e-819c-427b-b69b-c6da963e9f70|165280f5-904a-4b5b-a2aa-44f6ccc4a70f",
           ""
         ],
         [
@@ -602,7 +602,7 @@
     "last_paths": {
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "fab/",
       "specctra_dsn": "",
       "step": "../library/parts/LGA100_1.0mm_0.5x0.3NSMD_B/som.step",
       "vrml": ""
@@ -814,7 +814,7 @@
         "uuid": "e4559485-d7d4-484b-a95c-f1b86ccdac46"
       }
     ],
-    "used_designators": "#PWR1-47,#PWR94,L1-2,D1-3,U1-9,C1-55,FB1,R1-23,J1-7,CR1,Y1",
+    "used_designators": "#PWR1-50,#PWR94,L1-2,D1-3,U1-9,C1-55,FB1,R1-23,J1-7,CR1,Y1",
     "variants": []
   },
   "sheets": [
