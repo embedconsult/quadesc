@@ -1,30 +1,30 @@
 # Experimental: DShot transmit/receive pinmux switching
 
-On QuadESC, receive a flight controller's command, transmit telemetry in the permitted reply slot, then release the wire and return to reception. This experiment changes each DShot pad's peripheral function at runtime between edge capture and timed output.
+On BeagleConnect QuadESC, receive a flight controller's command, transmit telemetry in the permitted reply slot, then release the wire and return to reception. This experiment changes each DShot pad's peripheral function at runtime between edge capture and timed output.
 
 AM13E provides the mux, PWM and capture resources for this experiment. A complete bidirectional DShot implementation still needs finite frame generation, edge buffering, decoding and measured turnaround timing. The steps below describe an experimental implementation for your application.
 
 (decide-which-end-the-som-is-playing)=
 ## Command and reply direction
 
-QuadESC normally waits with the line released and command capture armed. The flight controller sends the command; QuadESC drives the line only during its telemetry reply slot.
+BeagleConnect QuadESC normally waits with the line released and command capture armed. The flight controller sends the command; BeagleConnect QuadESC drives the line only during its telemetry reply slot.
 
 Bidirectional DShot returns telemetry on the command wire. Commands and replies have different encodings: the controller sends a 16-bit command frame; the reply uses GCR encoding and transition coding. Bidirectional command signalling is inverted, with an idle-high line. Match polarity, checksum and reply decoding to the selected peer. These protocol details are described in [Betaflight’s DShot API documentation](https://betaflight.com/docs/development/API/Dshot).
 
-On QuadESC, the separate `FC_Telemetry` signal is another connection. It is not the same wire as the bidirectional reply described here.
+On BeagleConnect QuadESC, the separate `FC_Telemetry` signal is another connection. It is not the same wire as the bidirectional reply described here.
 
 ## Pads and peripheral choices
 
-QuadESC’s four FC command pads each offer output and capture routes. The table allocates distinct resources for commands and replies. “PF” is the IOMUX peripheral-function value from TI’s pin table. These selections give you a starting point for the experiment.
+BeagleConnect QuadESC’s four FC command pads each offer output and capture routes. The table allocates distinct resources for commands and replies. “PF” is the IOMUX peripheral-function value from TI’s pin table. These selections give you a starting point for the experiment.
 
-| Signal | SoM pad / package pin | SoM J1 / QuadESC J9 pad | QuadESC FC header | Proposed TX output / PF | Proposed RX capture / PF |
+| Signal | SoM pad / package pin | SoM J1 / BeagleConnect QuadESC J9 pad | BeagleConnect QuadESC FC header | Proposed TX output / PF | Proposed RX capture / PF |
 |---|---|---|---|---|---|
 | DSHOT1 | PA27 / 50 | H3 | J6.5 | MCPWM4_2B / 2 | TIMG12_0_CCP1 / 4 |
 | DSHOT2 | PA4 / 26 | A1 | J6.6 | MCPWM4_3B / 3 | TIMG4_0_CCP1 / 4 |
 | DSHOT3 | PB28 / 59 | J4 | J6.7 | MCPWM4_2A / 5 | TIMG4_0_CCP0 / 2 |
 | DSHOT4 | PA26 / 47 | J1 | J6.8 | MCPWM4_3A / 6 | TIMG12_0_CCP0 / 4 |
 
-The connector names in the FC-header column belong to **QuadESC**; the SoM has its own connector numbering. See [QuadESC connections](connections.md) and the <a href="../som/connectors.html">SoM connector reference</a>.
+The connector names in the FC-header column belong to **BeagleConnect QuadESC**; the SoM has its own connector numbering. See [BeagleConnect QuadESC connections](connections.md) and the <a href="../som/connectors.html">SoM connector reference</a>.
 
 This allocation gives the four wires distinct output signals and distinct CCP inputs across two TIMG instances. Some alternatives alias: PA27 and PA4 both offer TIMG4_0_CCP1; PB28 and PA26 both offer TIMG4_0_CCP0. Selecting those alternatives on both pads would not create independent capture channels. Likewise, PA26 also offers MCPWM4_2A, already used here by PB28; the proposed table chooses its 3A alternative.
 
@@ -62,9 +62,9 @@ Capture registers are not a complete packet buffer. Drain timestamps through a s
 ## One exchange, two ownership changes
 
 ```text
-FC TX:       [ complete command ] | released....................[ next command ]
-QuadESC RX:  [ capture + decode ] | disabled.....................[ capture ... ]
-QuadESC TX:  released.............| reply slot [ telemetry ] | released
+FC TX:                     [ complete command ] | released....................[ next command ]
+BeagleConnect QuadESC RX:   [ capture + decode ] | disabled.....................[ capture ... ]
+BeagleConnect QuadESC TX:   released.............| reply slot [ telemetry ] | released
                                                           → rearm RX
 ```
 
@@ -99,7 +99,7 @@ Do not transmit outside the controller's reply slot. A malformed command or rece
 
 ## Verify the signal exchange
 
-Begin with a single signal and common ground, using compatible logic levels and a known peer or waveform source. For a QuadESC signal experiment, keep the motor gate enables inactive; the pinmux exchange can be investigated without energizing a motor.
+Begin with a single signal and common ground, using compatible logic levels and a known peer or waveform source. For BeagleConnect QuadESC signal experiment, keep the motor gate enables inactive; the pinmux exchange can be investigated without energizing a motor.
 
 Use an oscilloscope to see analog levels and a logic analyzer to compare decoded edges. If available, mark the software’s “TX complete,” “released” and “capture armed” points on a spare debug output. Those markers reveal scheduling latency; the signal trace establishes what actually happened on the wire.
 

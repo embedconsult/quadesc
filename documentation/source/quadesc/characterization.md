@@ -1,6 +1,6 @@
 # Specifications and compatibility
 
-QuadESC combines a four-channel power stage with a reusable controller module. The values below describe the power-stage design targets and help explain the intended battery range and cooling needs.
+BeagleConnect QuadESC combines a four-channel power stage with a reusable controller module. The values below describe the power-stage design targets and help explain the intended battery range and cooling needs.
 
 ## Electrical targets
 

@@ -4,13 +4,13 @@
 
 BeagleConnect Torque is a compact processor module for motor control, motion control and CAN-based sensing, actuation and display designs. It combines a TI AM13E23019 200 MHz Arm Cortex-M33 microcontroller with 512 KB flash, 128 KB SRAM, a TinyEngine neural-network accelerator, a trigonometric math unit and hardware security capabilities.
 
-Torque is the central controller in BeagleConnect QuadESC, a four-channel brushless DC motor electronic speed controller. The standalone solder-down module is intended for custom carriers, rapid prototyping and production designs. The motor gate drivers and power transistors are on the QuadESC carrier, not on Torque.
+Torque is the central controller in BeagleConnect QuadESC, a four-channel brushless DC motor electronic speed controller. The standalone solder-down module is intended for custom carriers, rapid prototyping and production designs. The motor gate drivers and power transistors are on BeagleConnect QuadESC, not on Torque.
 
-The design is developed in the USA, with assembly in Michigan as specified for the product. Editable hardware designs and firmware sources are available in the [QuadESC repository](https://github.com/embedconsult/quadesc). Production origin, compliance, certification and ordering details require release confirmation.
+The design is developed in the USA, with assembly in Michigan as specified for the product. Editable hardware designs and firmware sources are available in [BeagleConnect QuadESC repository](https://github.com/embedconsult/quadesc). Production origin, compliance, certification and ordering details require release confirmation.
 
 ## Applications
 
-- Drone electronic speed controllers, including the four-channel QuadESC carrier.
+- Drone electronic speed controllers, including BeagleConnect QuadESC as a four-channel carrier.
 - Robot joints and wheel drives, gimbals, actuators, positioning stages, pumps and fans.
 - Field-oriented control (FOC), sensorless control and custom motion algorithms with suitable application firmware and external power stages.
 - Local neural-network inference for motor fault and anomaly detection with application-specific models and firmware.
@@ -33,7 +33,7 @@ Use the underside LGA interface to integrate Torque into a custom carrier. Beagl
 | Memory | 512 KB flash; 128 KB SRAM |
 | Acceleration | TinyEngine NPU, trigonometric math unit and floating-point unit |
 | Security | MCU secure boot, secure debug, secure firmware update and cryptographic acceleration; application configuration and provisioning required |
-| Motor control | Controller for four three-phase motor channels on QuadESC; external power stages and application firmware required |
+| Motor control | Controller for four three-phase motor channels on BeagleConnect QuadESC; external power stages and application firmware required |
 | CAN hardware | U2 TCAN844DRBRQ1 transceiver; J5 four-pin JST-GH connector: 1 +5V, 2 CANH, 3 CANL, 4 GND |
 | CAN termination | R10 120 Ω resistor switched by U3 TS5A3166YZPR; MCU PC0 / `CAN_TERM`, also available at J1.B9 |
 | Qwiic | J4: ground, 3.3 V, I²C SDA and SCL |
@@ -63,7 +63,7 @@ The connector supply rails share their capacity with onboard loads. See [power](
 | RoHS / REACH | Planned; declarations and production verification pending |
 | Open source hardware certification | Certification and identifier to be confirmed |
 | Standalone package | One Torque module; static-shielding bag and final packaging to be confirmed |
-| Product configurations | Standalone module or integrated QuadESC controller; release ordering details to be confirmed |
+| Product configurations | Standalone module or integrated BeagleConnect QuadESC controller; release ordering details to be confirmed |
 
 ## Board views
 

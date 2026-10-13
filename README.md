@@ -1,12 +1,12 @@
-# QuadESC
+# BeagleConnect QuadESC
 
-QuadESC is a four-motor power board with an installed BeagleConnect Torque system-on-module. This repository contains the editable mainboard and module designs, schematics, firmware sources and hardware manuals.
+BeagleConnect QuadESC is a four-motor power board with BeagleConnect Torque installed as its system-on-module. This repository contains the editable mainboard and module designs, schematics, firmware sources and hardware manuals.
 
 ## Hardware documentation
 
 The handoff manuals are maintained as Markdown in [`documentation/source/`](documentation/source/):
 
-- [QuadESC manual](documentation/source/quadesc/index.md): power, connections, sensing, control resources and mechanical integration.
+- [BeagleConnect QuadESC manual](documentation/source/quadesc/index.md): power, connections, sensing, control resources and mechanical integration.
 - [BeagleConnect Torque product brief](documentation/source/som/product-brief.md): applications, features and design-backed specifications.
 - [Word product brief](documentation/BeagleConnect-Torque-Features-and-Description.docx): complete specifications and board renders.
 - [BeagleConnect Torque manual](documentation/source/som/index.md): module interfaces, pin assignments, power selection, TI BSL programming and debug.
@@ -19,7 +19,7 @@ See [documentation build instructions](documentation/README.md) to generate the 
 
 | Path | Contents |
 | --- | --- |
-| `mainboard/` | Editable QuadESC mainboard design |
+| `mainboard/` | Editable BeagleConnect QuadESC mainboard design |
 | `som/` | Editable BeagleConnect Torque module design |
 | `mainboard_schematic.pdf`, `som_schematic.pdf` | Exported schematics |
 | `documentation/source/` | Markdown manuals, shared diagrams and styling |

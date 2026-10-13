@@ -34,7 +34,7 @@ Each MCPWM pair has two compare registers, CMPA and CMPB, and separate action-qu
 | Asymmetric dual-edge waveform | The pair’s compare resources serve one independently positioned waveform |
 | Complementary output with dead band | The outputs have a deliberate relationship through the dead-band path |
 
-To use A and B for unrelated duties, preserve their separate action-qualifier signals through the output path; a complementary configuration derived from one signal couples them. Pair features and the module’s time base remain shared. QuadESC’s <a href="../quadesc/control.html">motor-control page</a> shows a practical use of this distinction.
+To use A and B for unrelated duties, preserve their separate action-qualifier signals through the output path; a complementary configuration derived from one signal couples them. Pair features and the module’s time base remain shared. BeagleConnect QuadESC’s <a href="../quadesc/control.html">motor-control page</a> shows a practical use of this distinction.
 
 ## Let the timer choose the sampling instant
 

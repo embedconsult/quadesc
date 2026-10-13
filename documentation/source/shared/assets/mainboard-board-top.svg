@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1150" viewBox="0 0 1600 1150">
 <rect width="1600" height="1150" rx="20" fill="#f7f6f0"/>
 <rect width="1600" height="12" fill="#ed8b23"/>
-<text x="55" y="69" font-family="Arial, sans-serif" font-size="38" fill="#263c46" text-anchor="start">QuadESC mainboard / TOP</text>
+<text x="55" y="69" font-family="Arial, sans-serif" font-size="38" fill="#263c46" text-anchor="start">BeagleConnect QuadESC mainboard / TOP</text>
 <text x="55" y="112" font-family="Arial, sans-serif" font-size="23" fill="#263c46" text-anchor="start">Component and connector guide</text>
 <text x="55" y="150" font-family="Arial, sans-serif" font-size="23" fill="#263c46" text-anchor="start">Top view</text>
 <g transform="translate(380.0 230) scale(14)"><g transform=""><polygon points="0.0,0.0 60.0,0.0 60.0,48.0 0.0,48.0 0.0,0.0" fill="#215d50"/><g opacity="0.3"><ns0:g xmlns:ns0="http://www.w3.org/2000/svg" style="fill:#72a69a; fill-opacity:1.0000;stroke:#72a69a; stroke-opacity:1.0000; stroke-linecap:round; stroke-linejoin:round;" transform="translate(0 0) scale(1 1)">

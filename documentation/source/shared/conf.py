@@ -1,6 +1,6 @@
 from pathlib import Path
 
-project = 'QuadESC documentation'
+project = 'BeagleConnect QuadESC documentation'
 release = ''
 version = release
 configuration = Path(__file__).resolve().with_name('config.py')

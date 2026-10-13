@@ -5,7 +5,7 @@
 	(uuid "42e4fcf3-735d-4282-a598-f4243dbc0439")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC SoM — Power")
+		(title "BeagleConnect Torque — Power")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "SoM power: VBAT buck to 5V, low-noise LDOs for analog/digital 3V3")

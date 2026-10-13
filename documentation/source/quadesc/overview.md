@@ -1,18 +1,18 @@
 # Board overview and motor channels
 
-QuadESC includes four three-phase power stages and an installed BeagleConnect Torque. Each channel has a gate driver, three half bridges, low-side current sensing and divided phase-voltage sensing. The BeagleConnect Torque at J9 supplies the controller and connects these signals to its timers, ADCs and communication peripherals.
+BeagleConnect QuadESC includes four three-phase power stages with BeagleConnect Torque installed. Each channel has a gate driver, three half bridges, low-side current sensing and divided phase-voltage sensing. BeagleConnect Torque at J9 supplies the controller and connects these signals to its timers, ADCs and communication peripherals.
 
 The channels are **Motor 1 through Motor 4**. Their phase connections are J2 through J5 respectively. U1–U4 are **DRV8323SRTAR** gate drivers; U5–U16 are **CSD88599Q5DC** half-bridge devices.
 
 ## Board views
 
 ```{image} ../shared/assets/mainboard-board-top.svg
-:alt: QuadESC mainboard top assembly and connector locator
+:alt: BeagleConnect QuadESC mainboard top assembly and connector locator
 :target: _images/mainboard-board-top.svg
 ```
 
 ```{image} ../shared/assets/mainboard-board-bottom.svg
-:alt: QuadESC mainboard underside assembly and connector locator
+:alt: BeagleConnect QuadESC mainboard underside assembly and connector locator
 :target: _images/mainboard-board-bottom.svg
 ```
 

@@ -1,7 +1,7 @@
 (fc-and-som-integration)=
 # Flight-controller integration
 
-QuadESC connects the SoM's control and sensing resources to four power stages. J9 joins the module to the mainboard, and J6 brings command and reporting signals to an external flight controller.
+BeagleConnect QuadESC connects the SoM's control and sensing resources to four power stages. J9 joins the module to the mainboard, and J6 brings command and reporting signals to an external flight controller.
 
 ## Flight-controller boundary
 
@@ -25,4 +25,4 @@ When connecting a control application, check the gate response during startup, M
 
 ## Trying bidirectional DShot
 
-The [experimental DShot pinmux walkthrough](dshot-pinmux.md) describes a hardware approach for changing a signal pin between receive and transmit. On QuadESC, the flight controller sends the command and the ESC sends the reply. The walkthrough covers releasing the line, switching peripheral functions and rearming capture for the next command.
+The [experimental DShot pinmux walkthrough](dshot-pinmux.md) describes a hardware approach for changing a signal pin between receive and transmit. On BeagleConnect QuadESC, the flight controller sends the command and the ESC sends the reply. The walkthrough covers releasing the line, switching peripheral functions and rearming capture for the next command.

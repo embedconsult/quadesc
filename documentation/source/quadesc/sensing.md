@@ -1,6 +1,6 @@
 # Sensing and engineering units
 
-QuadESC supplies **29 logical analog signals**: twelve currents, twelve phase voltages, four thermistor nodes and battery voltage. The phase-feedback connections are dedicated to analog sensing. Each motor’s A/B/C currents are assigned to ADC0/1/2, and its A/B/C phase voltages follow the same split.
+BeagleConnect QuadESC supplies **29 logical analog signals**: twelve currents, twelve phase voltages, four thermistor nodes and battery voltage. The phase-feedback connections are dedicated to analog sensing. Each motor’s A/B/C currents are assigned to ADC0/1/2, and its A/B/C phase voltages follow the same split.
 
 This arrangement was chosen for FOC: the three phases of a measurement group can be sampled at the same moment. Current and voltage are separate groups, and the four motors share the three converters. The route reference lists 30 ADC selections; PA28 / J9 K1 is spare on this carrier.
 

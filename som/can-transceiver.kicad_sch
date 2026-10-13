@@ -5,7 +5,7 @@
 	(uuid "aafe9dc4-6a34-4ba7-928f-a9b87af9ffd8")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC SoM — CAN transceiver")
+		(title "BeagleConnect Torque — CAN transceiver")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "CAN transceiver, split termination and ESD protection")

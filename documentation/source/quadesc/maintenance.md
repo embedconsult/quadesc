@@ -11,7 +11,7 @@ A changed shunt, divider or current-sense gain changes the conversion from ADC c
 (firmware-and-replacement-modules)=
 ## Firmware and controller service
 
-The SoM is installed as part of QuadESC. The [mounting guide](assembly.md) covers clearance, cooling and programming access. The <a href="../som/maintenance.html">SoM service guide</a> covers module-specific rework checks.
+The SoM is installed as part of BeagleConnect QuadESC. The [mounting guide](assembly.md) covers clearance, cooling and programming access. The <a href="../som/maintenance.html">SoM service guide</a> covers module-specific rework checks.
 
 Use an application suited to the mainboard's shared enables, driver connections and feedback routes. The [compatibility guide](characterization.md) describes the requirements for motor-control code, and the <a href="../som/boot.html">SoM boot guide</a> covers programming access.
 
