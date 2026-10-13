@@ -1,20 +1,20 @@
-# QuadESC documentation
+# BeagleConnect QuadESC documentation
 
-Hardware and application integration guides for QuadESC and its BeagleConnect Torque system-on-module.
+Hardware and application integration guides for BeagleConnect QuadESC and its BeagleConnect Torque system-on-module.
 
-## QuadESC
+## BeagleConnect QuadESC
 
-The QuadESC manual covers board connections, power stages, shared controls, sensing and flight-controller integration.
+BeagleConnect QuadESC manual covers board connections, power stages, shared controls, sensing and flight-controller integration.
 
-- <a href="quadesc/index.html">Read the QuadESC manual</a>
+- <a href="quadesc/index.html">Read BeagleConnect QuadESC manual</a>
 - <a href="quadesc/print.html">Open the complete printable manual</a>
-- <a href="quadesc/search.html">Search the QuadESC manual</a>
+- <a href="quadesc/search.html">Search BeagleConnect QuadESC manual</a>
 
 ## BeagleConnect Torque
 
 The standalone SoM manual covers module power, connectors, peripherals, application programming, boot and carrier integration.
 
-- <a href="som/index.html">Read the BeagleConnect Torque manual</a>
+- <a href="som/index.html">Read BeagleConnect Torque manual</a>
 - <a href="som/print.html">Open the complete printable manual</a>
 - <a href="som/search.html">Search the SoM manual</a>
 

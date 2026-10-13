@@ -1,7 +1,7 @@
 (mechanical-assembly)=
 # Mounting and cooling
 
-The QuadESC PCB is **60 × 48 mm**. Allow room on both sides for components, the installed SoM, connectors and wiring. The PCB outline alone is not the full assembly envelope.
+BeagleConnect QuadESC PCB is **60 × 48 mm**. Allow room on both sides for components, the installed SoM, connectors and wiring. The PCB outline alone is not the full assembly envelope.
 
 ## Fit the board into your system
 

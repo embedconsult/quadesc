@@ -39,7 +39,7 @@ ADC2                 ┗━━ acquire signal C ━━┫ convert C → result
 
 Use matching acquisition timing and leave the cores free to accept the event together. Different pending work or sequence priorities can delay one core even when the trigger source is shared.
 
-A second triplet needs another acquisition window. Three converters do not sample every connected input at once. This matters for any application comparing changing signals: a three-axis sensor, a multi-channel power measurement, or QuadESC’s <a href="../quadesc/sensing.html">phase feedback</a>.
+A second triplet needs another acquisition window. Three converters do not sample every connected input at once. This matters for any application comparing changing signals: a three-axis sensor, a multi-channel power measurement, or BeagleConnect QuadESC’s <a href="../quadesc/sensing.html">phase feedback</a>.
 
 ## Triggers, sequences and background measurements
 

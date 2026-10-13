@@ -5,7 +5,7 @@
 	(uuid "e1741323-6621-4c5d-bb79-f02f59327956")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC SoM — IO connectors")
+		(title "BeagleConnect Torque — IO connectors")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "SoM IO connectors: SWD debug, CAN bus, module IO")

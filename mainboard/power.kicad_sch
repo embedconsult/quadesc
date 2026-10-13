@@ -5,7 +5,7 @@
 	(uuid "f5eae4fc-87f6-4441-9a0b-21e4c281e085")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC Mainboard — Power")
+		(title "BeagleConnect QuadESC Mainboard — Power")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "Battery input, TVS clamp, VBAT sense divider, GND net ties")

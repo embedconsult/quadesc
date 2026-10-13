@@ -1,10 +1,10 @@
-# QuadESC
+# BeagleConnect QuadESC
 
-QuadESC is an assembled four-channel motor-control board with its **BeagleConnect Torque already installed**. It provides four three-phase power stages, current, voltage and temperature sensing, and regulated controller power. Factory ROM provides **TI BSL**. Load suitable motor-control firmware before operating connected motors.
+BeagleConnect QuadESC is an assembled four-channel motor-control board with its **BeagleConnect Torque already installed**. It provides four three-phase power stages, current, voltage and temperature sensing, and regulated controller power. Factory ROM provides **TI BSL**. Load suitable motor-control firmware before operating connected motors.
 
-Use the <a href="../som/index.html">standalone BeagleConnect Torque manual</a> for module power selection, MCU interfaces, programming, boot and debug. This manual covers the power stages, shared controls, connections and software design for QuadESC. Start with the board overview to find your way around, or go straight to the connection guide when wiring the board.
+Use <a href="../som/index.html">BeagleConnect Torque standalone manual</a> for module power selection, MCU interfaces, programming, boot and debug. This manual covers the power stages, shared controls, connections and software design for BeagleConnect QuadESC. Start with the board overview to find your way around, or go straight to the connection guide when wiring the board.
 
-![QuadESC control flow](../shared/assets/quad-control.svg)
+![BeagleConnect QuadESC control flow](../shared/assets/quad-control.svg)
 
 ## First use
 

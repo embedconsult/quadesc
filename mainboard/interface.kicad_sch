@@ -5,7 +5,7 @@
 	(uuid "ec5aa362-6f83-4c2f-af9a-8850db10cbf4")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC Mainboard — Interface")
+		(title "BeagleConnect QuadESC Mainboard — Interface")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "SoM LGA100 interface, ESC test connector, status LED")

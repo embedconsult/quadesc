@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Nominal QuadESC ADC-to-Celsius conversion using the VAA reference.
+"""Nominal BeagleConnect QuadESC ADC-to-Celsius conversion using the VAA reference.
 
 Assumes a 10k pull-up, R25=10k and B=3380 K. Confirm the fitted
 thermistor's part and R/T curve before using this estimate for thermal control.

@@ -5,7 +5,7 @@
 	(uuid "66d0181b-2e41-446a-8ab8-617c72582e82")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC Mainboard — Motor 3")
+		(title "BeagleConnect QuadESC Mainboard — Motor 3")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "Motor 3 gate drive + power stage")

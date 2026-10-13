@@ -5,7 +5,7 @@
 	(uuid "8ee60709-b137-4b38-9741-362103a631fd")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC Mainboard — Root / block diagram")
+		(title "BeagleConnect QuadESC Mainboard — Root / block diagram")
 		(date "2026-08-06")
 		(rev "A2")
 		(comment 1 "Root / block diagram")

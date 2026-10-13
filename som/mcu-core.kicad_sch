@@ -5,7 +5,7 @@
 	(uuid "254b4af2-cb70-43f9-8504-936c37d84b89")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC SoM — MCU core")
+		(title "BeagleConnect Torque — MCU core")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "XAM13E SoM core: MCU, crystal, decoupling")

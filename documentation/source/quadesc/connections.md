@@ -1,6 +1,6 @@
 # Connection cheat sheet and orientation
 
-QuadESC arrives with the SoM installed. Connect external power, motor leads, a flight controller and programming tools using the tables below. Disconnect power before attaching wires, and load your application before motor operation.
+BeagleConnect QuadESC arrives with the SoM installed. Connect external power, motor leads, a flight controller and programming tools using the tables below. Disconnect power before attaching wires, and load your application before motor operation.
 
 ![Mainboard connector locator](../shared/assets/quadesc-connectors.svg)
 

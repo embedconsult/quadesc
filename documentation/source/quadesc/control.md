@@ -1,6 +1,6 @@
 # Motor-control design and shared resources
 
-QuadESC’s pin allocation was chosen to support field-oriented control (FOC): each motor has a PWM time base, and each three-phase feedback group is spread across ADC0, ADC1 and ADC2 so its phases can be measured together. The feedback connections are dedicated to analog sensing, with digital control carried on separate signals.
+BeagleConnect QuadESC’s pin allocation was chosen to support field-oriented control (FOC): each motor has a PWM time base, and each three-phase feedback group is spread across ADC0, ADC1 and ADC2 so its phases can be measured together. The feedback connections are dedicated to analog sensing, with digital control carried on separate signals.
 
 The drive path is **SoM PWM → DRV8323 → half bridges → motor phases**. SPI configures and inspects the four drivers, nFAULT reports digital fault states, and the ADCs receive phase currents, phase voltages and slower monitoring signals. These connections provide the hardware foundation; a closed-loop application supplies the modulation, acquisition schedule, rotor angle and control algorithm.
 
@@ -33,7 +33,7 @@ PB12 carries the FC current-telemetry PWM through MCPWM1_3B. It shares Motor 1�
 
 FOC uses the phase-current vector together with the rotor’s electrical angle. A Clarke transform expresses the phase currents in stationary α/β coordinates; a Park transform rotates those components into the rotor-oriented d/q frame. The controller can then regulate the components associated with flux and torque and produce the next phase commands. TI’s [FOC overview](https://www.ti.com/zh-tw/video/3881563245001) introduces this sequence.
 
-The currents should describe the motor at one instant. If phase A is sampled before a switching edge and phase B after it, their combination contains time skew as well as the actual current vector. QuadESC spreads A/B/C across three ADCs to support simultaneous three-phase sampling for this reason.
+The currents should describe the motor at one instant. If phase A is sampled before a switching edge and phase B after it, their combination contains time skew as well as the actual current vector. BeagleConnect QuadESC spreads A/B/C across three ADCs to support simultaneous three-phase sampling for this reason.
 
 A useful control cycle is:
 

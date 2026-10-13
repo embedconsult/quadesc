@@ -5,7 +5,7 @@
 	(uuid "e4559485-d7d4-484b-a95c-f1b86ccdac46")
 	(paper "USLetter")
 	(title_block
-		(title "AM13E QuadESC SoM — Root / block diagram")
+		(title "BeagleConnect Torque — Root / block diagram")
 		(date "2026-08-06")
 		(rev "A")
 		(comment 1 "Root / block diagram")

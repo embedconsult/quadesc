@@ -1,6 +1,6 @@
 # Identification and mechanical reference
 
-The BeagleConnect Torque is a **25.4 × 38.1 mm** controller module built around the **XAM13E23019GTPZ** 100-pin MCU. U2 is the **TCAN844DRBRQ1** CAN transceiver, and U3 switches bus termination. U4, U5 and U6 handle power selection, load switching and digital regulation.
+BeagleConnect Torque is a **25.4 × 38.1 mm** controller module built around the **XAM13E23019GTPZ** 100-pin MCU. U2 is the **TCAN844DRBRQ1** CAN transceiver, and U3 switches bus termination. U4, U5 and U6 handle power selection, load switching and digital regulation.
 
 ## Connector orientation
 
