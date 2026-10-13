@@ -1,6 +1,6 @@
-# AM13E SoM
+# BeagleConnect Torque
 
-Welcome to the AM13E SoM manual. This small controller module brings together an AM13E23019 microcontroller, CAN transceiver, power selection and accessible debug and expansion connections. Use it for sensing, timed outputs, communications or control on a carrier of your own. The module is reusable and can operate independently of QuadESC.
+Welcome to the BeagleConnect Torque manual. This small controller module brings together an AM13E23019 microcontroller, CAN transceiver, power selection and accessible debug and expansion connections. Use it for sensing, timed outputs, communications or control on a carrier of your own. The module is reusable and can operate independently of QuadESC.
 
 The module ships with **TI ROM BSL only**. Start with power and programming access, then load the application for your project. If you are designing a carrier, the interface and pad references help you connect the peripherals your project needs.
 
@@ -17,6 +17,7 @@ The module ships with **TI ROM BSL only**. Start with power and programming acce
 :maxdepth: 1
 :caption: Start here
 
+product-brief
 getting-started
 identity
 power

@@ -1,6 +1,6 @@
 # Getting started
 
-The AM13E SoM ships with **TI's ROM bootloader (BSL) only**. Load your application before using its sensing, communications or timed outputs. The module can serve a custom carrier or a standalone development setup.
+The BeagleConnect Torque ships with **TI's ROM bootloader (BSL) only**. Load your application before using its sensing, communications or timed outputs. The module can serve a custom carrier or a standalone development setup.
 
 ## Power and connections
 

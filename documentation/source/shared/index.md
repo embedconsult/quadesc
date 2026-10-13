@@ -1,6 +1,6 @@
 # QuadESC documentation
 
-Hardware and application integration guides for QuadESC and its AM13E system-on-module.
+Hardware and application integration guides for QuadESC and its BeagleConnect Torque system-on-module.
 
 ## QuadESC
 
@@ -10,11 +10,11 @@ The QuadESC manual covers board connections, power stages, shared controls, sens
 - <a href="quadesc/print.html">Open the complete printable manual</a>
 - <a href="quadesc/search.html">Search the QuadESC manual</a>
 
-## AM13E SoM
+## BeagleConnect Torque
 
 The standalone SoM manual covers module power, connectors, peripherals, application programming, boot and carrier integration.
 
-- <a href="som/index.html">Read the AM13E SoM manual</a>
+- <a href="som/index.html">Read the BeagleConnect Torque manual</a>
 - <a href="som/print.html">Open the complete printable manual</a>
 - <a href="som/search.html">Search the SoM manual</a>
 
