@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1150" viewBox="0 0 1600 1150">
+<title>BeagleConnect Torque top view with connector first-pad markers</title>
+<desc>Orange rings and leader lines identify J2, J3, J4, J5 and J6 pin 1.</desc>
 <rect width="1600" height="1150" rx="20" fill="#f7f6f0"/>
 <rect width="1600" height="12" fill="#ed8b23"/>
 <text x="55" y="69" font-family="Arial, sans-serif" font-size="38" fill="#263c46" text-anchor="start">BeagleConnect Torque / TOP</text>
@@ -5552,25 +5554,25 @@
 <ns0:circle fill="#f7f6f0" stroke="none" cx="9.4250" cy="11.3000" r="0.1016" />
 </ns0:g>
 </g></g></g>
-<polyline points="300,253 533.7,253 697.4,262.94999999999993" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="697.4" cy="262.94999999999993" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="55" y="245" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J4</text>
+<polyline points="300,253 533.7,253 725.900,302.821" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="725.900" cy="302.821" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="55" y="245" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J4 · pin 1</text>
 <text x="55" y="274" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Qwiic</text>
-<polyline points="300,458 533.7,458 582.8299999999999,325.64999999999986" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="582.8299999999999" cy="325.64999999999986" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="55" y="450" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J3</text>
+<polyline points="300,458 533.7,458 580.930,325.650" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="580.930" cy="325.650" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="55" y="450" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J3 · pin 1</text>
 <text x="55" y="479" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Expansion row</text>
 <polyline points="300,718 533.7,718 800.0000000000001,686.6499999999999" fill="none" stroke="#af741b" stroke-width="2"/>
 <circle cx="800.0000000000001" cy="686.6499999999999" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
 <text x="55" y="710" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">U1</text>
 <text x="55" y="739" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">100-pin MCU</text>
-<polyline points="300,958 533.7,958 968.9100000000001,904.77" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="968.9100000000001" cy="904.77" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="55" y="950" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J2</text>
+<polyline points="300,958 533.7,958 968.910,902.870" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="968.910" cy="902.870" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="55" y="950" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J2 · pin 1</text>
 <text x="55" y="979" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Debug / UART</text>
-<polyline points="1280,253 1066.3,253 895.0000000000001,262.94999999999993" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="895.0000000000001" cy="262.94999999999993" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="1305" y="245" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J5</text>
+<polyline points="1280,253 1066.3,253 930.625,298.575" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="930.625" cy="298.575" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="1305" y="245" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J5 · pin 1</text>
 <text x="1305" y="274" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">CAN / power</text>
 <polyline points="1280,348 1066.3,348 659.6375,395.94999999999993" fill="none" stroke="#af741b" stroke-width="2"/>
 <circle cx="659.6375" cy="395.94999999999993" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
@@ -5580,12 +5582,13 @@
 <circle cx="946.3000000000002" cy="508.52499999999986" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
 <text x="1305" y="450" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">U2</text>
 <text x="1305" y="479" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">CAN transceiver</text>
-<polyline points="1280,728 1066.3,728 1017.1700000000003,325.64999999999986" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="1017.1700000000003" cy="325.64999999999986" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="1305" y="720" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J6</text>
+<polyline points="1280,728 1066.3,728 1019.070,325.650" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="1019.070" cy="325.650" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="1305" y="720" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J6 · pin 1</text>
 <text x="1305" y="749" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Expansion row</text>
 <text x="55" y="1060" font-family="Arial, sans-serif" font-size="23" fill="#263c46" text-anchor="start">25.4 × 38.1 mm</text>
 <text x="55" y="1100" font-family="Arial, sans-serif" font-size="20" fill="#263c46" text-anchor="start">Gold: solder contacts. Pale outlines: components and silkscreen.</text>
 <path d="M 1130,1060 h 190 m 0,-7 v 14 M 1130,1053 v 14" stroke="#263c46" stroke-width="3"/>
 <text x="1130" y="1100" font-family="Arial, sans-serif" font-size="17" fill="#263c46" text-anchor="start">10 mm • scale applies within this image</text>
+<text x="55" y="1020" font-family="Arial, sans-serif" font-size="23" fill="#c7480d">Orange rings identify pin 1.</text>
 </svg>
