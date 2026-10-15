@@ -3,6 +3,27 @@
 
 Build an image for the AM13E23019, load it through TI BSL or SWD, and reset to start it. Factory ROM provides TI BSL. Choose an application and toolchain suited to your connected devices.
 
+## What programming and debugging mean
+
+**Programming** writes an application into flash so it remains after power is removed. **Debugging** connects a host computer to the MCU so you can stop execution, inspect registers and memory, set breakpoints and resume it. Connecting a debugger alone does not install an application.
+
+| Action | What happens |
+|---|---|
+| Connect / halt | The debugger gains access to the core and stops execution. |
+| Load Program | The tool writes executable code and loads its symbols; flash programming needs device-specific support. |
+| Load Symbols | The debugger learns function and variable names without writing the application. |
+| Breakpoint | Execution stops when it reaches the selected instruction. |
+| Step / resume | Execute one instruction or source line, or continue until the next stop. |
+| Reset | Restart through the device's boot path; this differs from resuming a halted application. |
+
+Start with a simple check: connect, halt, inspect the program counter, then resume. Next, use a breakpoint at your application's entry point to establish that startup reaches it. Source-line stepping requires an executable built with debug information; otherwise use symbols, registers and disassembly.
+
+## Use the firmware supplied in this repository
+
+The module's factory ROM and the repository's application are separate. The repository also contains a custom reset loader. Installing only an application that expects this loader does not make a blank module boot it.
+
+Follow the [repository firmware instructions](https://github.com/embedconsult/quadesc/blob/main/firmware/README.md) to identify the delivered images, their addresses, loader requirements and current installation limitations. Then use [XDS110 setup](xds110.md) for the physical connection and CCS session. Do not move an image to address zero merely to make it start.
+
 (choose-a-starting-point)=
 ## Build for the MCU
 
@@ -15,6 +36,8 @@ rustup target add thumbv8m.main-none-eabi
 A working executable also needs device startup code, an interrupt vector table, a linker memory layout and peripheral initialization. The target triple alone does not provide these. For another language or toolchain, select the AM13E23019 device and its matching startup and linker files. Build host programming utilities for the computer running them, separately from the MCU image.
 
 ## Load and start the image
+
+For TI's XDS110, use the [probe wiring, power selection and CCS programming procedure](xds110.md).
 
 1. Select ROM BSL or SWD using the connections in [boot and recovery](boot.md).
 2. Use the image's linker layout to determine its programming address and size. Keep writes within application memory and clear of reserved regions and device configuration. A raw binary does not carry its own destination address.

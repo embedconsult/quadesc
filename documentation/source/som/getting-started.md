@@ -14,6 +14,8 @@ Debug power runs the digital circuitry. ADC acquisition also needs VAA, and the 
 
 ## Check your application's first output
 
+For TI's XDS110 probe, follow [XDS110 wiring and CCS setup](xds110.md), including the separate power-input and voltage-reference connections.
+
 Choose an observable startup action in your application, such as a debug breakpoint or UART message. For UART, configure UC4 on PA0/PA1 and use matching host settings. The [interface guide](interfaces.md) lists the mux values. If startup is silent, check the linked image address, boot selection and UART configuration using [debugging and peripheral checks](diagnostics.md).
 
 ## Explore the interfaces

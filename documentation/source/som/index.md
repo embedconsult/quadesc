@@ -37,6 +37,7 @@ carrier
 :caption: Development and service
 
 firmware
+xds110
 diagnostics
 boot
 troubleshooting
