@@ -3,7 +3,6 @@
 import argparse
 from pathlib import Path
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -20,21 +19,6 @@ SCHEMATICS = (
     ('mainboard/mainboard.kicad_sch', 'mainboard_schematic.pdf'),
     ('som/som.kicad_sch', 'som_schematic.pdf'),
 )
-# KiCad 10.0.6 emits the colon-separated form. Also recognize standard PDF dates.
-CREATION_DATE = re.compile(
-    rb'/CreationDate \(D:(?:[0-9]{14}|[0-9]{4}(?::[0-9]{2}){5})\)'
-)
-
-
-def same_pdf_content(first, second):
-    """Ignore only one exact KiCad CreationDate field; preserve every other byte."""
-    if first == second:
-        return True
-    if first.count(b'/CreationDate') != 1 or second.count(b'/CreationDate') != 1:
-        return False
-    first, first_count = CREATION_DATE.subn(b'/CreationDate (unchanged)', first)
-    second, second_count = CREATION_DATE.subn(b'/CreationDate (unchanged)', second)
-    return first_count == second_count == 1 and first == second
 
 
 def export_pdfs(output, local=False):
@@ -67,10 +51,6 @@ def export_pdfs(output, local=False):
             generated = (temporary / name).read_bytes()
             if not generated.startswith(b'%PDF-'):
                 raise ValueError(f'KiCad did not produce a PDF: {name}')
-            previous = ROOT / name
-            if previous.is_file() and same_pdf_content(previous.read_bytes(), generated):
-                # Keep existing bytes rather than rewriting PDF metadata or xref offsets.
-                shutil.copyfile(previous, temporary / name)
         output.mkdir(parents=True, exist_ok=True)
         for _, name in SCHEMATICS:
             shutil.copyfile(temporary / name, output / name)

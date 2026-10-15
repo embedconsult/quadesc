@@ -40,5 +40,7 @@ desktop.ini
 /.cache/pip/
 __pycache__/
 
-# Local schematic PDF export artifacts
+# Generated schematic PDFs are workflow artifacts and release assets, never Git source.
+/mainboard_schematic.pdf
+/som_schematic.pdf
 /build/schematic-pdfs/

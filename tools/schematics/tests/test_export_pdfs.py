@@ -1,4 +1,4 @@
-"""Guard the narrow date-only comparison used to avoid empty PDF refreshes."""
+"""Ensure failed exports preserve both previous outputs."""
 import importlib.util
 from pathlib import Path
 import unittest
@@ -9,33 +9,6 @@ import tempfile
 SPEC = importlib.util.spec_from_file_location('export_pdfs', Path(__file__).resolve().parents[1] / 'export_pdfs.py')
 EXPORT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(EXPORT)
-
-
-class PdfComparisonTests(unittest.TestCase):
-    def test_actual_kicad_date_only_change_is_unchanged(self):
-        old = b'%PDF-1.5\n/CreationDate (D:2026:10:15:10:21:41)\nschematic data'
-        new = old.replace(b'10:21:41', b'11:22:42')
-        self.assertTrue(EXPORT.same_pdf_content(old, new))
-
-    def test_standard_pdf_date_only_change_is_unchanged(self):
-        old = b'%PDF-1.5\n/CreationDate (D:20261015102141)\nschematic data'
-        new = old.replace(b'20261015102141', b'20261016112242')
-        self.assertTrue(EXPORT.same_pdf_content(old, new))
-
-    def test_schematic_change_with_same_date_must_update(self):
-        old = b'%PDF-1.5\n/CreationDate (D:2026:10:15:10:21:41)\nold schematic'
-        self.assertFalse(EXPORT.same_pdf_content(old, old.replace(b'old schematic', b'new schematic')))
-
-    def test_other_metadata_change_must_update(self):
-        old = b'/CreationDate (D:2026:10:15:10:21:41)\n/Title (old)'
-        self.assertFalse(EXPORT.same_pdf_content(old, old.replace(b'(old)', b'(new)')))
-
-    def test_unrecognized_date_is_not_ignored(self):
-        self.assertFalse(EXPORT.same_pdf_content(b'/CreationDate (old)', b'/CreationDate (new)'))
-
-    def test_duplicate_date_fields_are_not_ignored(self):
-        old = b'/CreationDate (D:20261015102141) /CreationDate (D:20261015102141)'
-        self.assertFalse(EXPORT.same_pdf_content(old, old.replace(b'20261015102141', b'20261016112242')))
 
 
 class ExportFailureTests(unittest.TestCase):
