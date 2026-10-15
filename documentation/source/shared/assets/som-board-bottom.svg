@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1150" viewBox="0 0 1600 1150">
+<title>BeagleConnect Torque bottom view with connector first-pad markers</title>
+<desc>Orange rings and leader lines identify J2, J3 and J6 pin 1, and J1 pad A1. This is a mirrored underside view.</desc>
 <rect width="1600" height="1150" rx="20" fill="#f7f6f0"/>
 <rect width="1600" height="12" fill="#ed8b23"/>
 <text x="55" y="69" font-family="Arial, sans-serif" font-size="38" fill="#263c46" text-anchor="start">BeagleConnect Torque / BOTTOM</text>
@@ -2678,28 +2680,29 @@
 <ns0:circle fill="#f7f6f0" stroke="none" cx="9.4250" cy="11.3000" r="0.1016" />
 </ns0:g>
 </g></g></g>
-<polyline points="300,408 533.7,408 582.8299999999998,325.64999999999986" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="582.8299999999998" cy="325.64999999999986" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="55" y="400" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J6</text>
+<polyline points="300,408 533.7,408 580.930,325.650" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="580.930" cy="325.650" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="55" y="400" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J6 · pin 1</text>
 <text x="55" y="429" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Expansion through-holes</text>
 <polyline points="300,698 533.7,698 800.0,686.6499999999999" fill="none" stroke="#af741b" stroke-width="2"/>
 <circle cx="800.0" cy="686.6499999999999" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
 <text x="55" y="690" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J1</text>
 <text x="55" y="719" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">100-pad LGA</text>
-<polyline points="300,958 533.7,958 631.0899999999999,904.77" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="631.0899999999999" cy="904.77" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="55" y="950" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J2</text>
+<polyline points="300,958 533.7,958 631.090,902.870" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="631.090" cy="902.870" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="55" y="950" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J2 · pin 1</text>
 <text x="55" y="979" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Debug through-holes</text>
-<polyline points="1280,408 1066.3,408 1017.1700000000001,325.64999999999986" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="1017.1700000000001" cy="325.64999999999986" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
-<text x="1305" y="400" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J3</text>
+<polyline points="1280,408 1066.3,408 1019.070,325.650" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="1019.070" cy="325.650" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
+<text x="1305" y="400" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J3 · pin 1</text>
 <text x="1305" y="429" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">Expansion through-holes</text>
-<polyline points="1280,618 1066.3,618 908.585,578.0649999999998" fill="none" stroke="#af741b" stroke-width="2"/>
-<circle cx="908.585" cy="578.0649999999998" r="5" fill="#fff" stroke="#af741b" stroke-width="2"/>
+<polyline points="1280,618 1066.3,618 908.585,578.065" fill="none" stroke="#af741b" stroke-width="2"/>
+<circle cx="908.585" cy="578.065" r="10" fill="none" stroke="#c7480d" stroke-width="4"/>
 <text x="1305" y="610" font-family="Arial, sans-serif" font-size="26" fill="#263c46" text-anchor="start">J1</text>
-<text x="1305" y="639" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">A1 • carrier alignment</text>
+<text x="1305" y="639" font-family="Arial, sans-serif" font-size="18" fill="#263c46" text-anchor="start">A1 • first pad / carrier alignment</text>
 <text x="55" y="1060" font-family="Arial, sans-serif" font-size="23" fill="#263c46" text-anchor="start">25.4 × 38.1 mm</text>
 <text x="55" y="1100" font-family="Arial, sans-serif" font-size="20" fill="#263c46" text-anchor="start">Gold: solder contacts. Pale outlines: components and silkscreen.</text>
 <path d="M 1130,1060 h 190 m 0,-7 v 14 M 1130,1053 v 14" stroke="#263c46" stroke-width="3"/>
 <text x="1130" y="1100" font-family="Arial, sans-serif" font-size="17" fill="#263c46" text-anchor="start">10 mm • scale applies within this image</text>
+<text x="55" y="1020" font-family="Arial, sans-serif" font-size="23" fill="#c7480d">Orange rings identify pin 1 (J1 uses A1).</text>
 </svg>
