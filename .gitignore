@@ -39,3 +39,6 @@ desktop.ini
 /.venv-docs/
 /.cache/pip/
 __pycache__/
+
+# Local schematic PDF export artifacts
+/build/schematic-pdfs/

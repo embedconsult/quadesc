@@ -28,4 +28,6 @@ See [documentation build instructions](documentation/README.md) to generate the 
 | `firmware/` | Firmware sources and existing application/loader artifacts |
 | `drone-flasher-swd/` | SWD programming utility |
 
+The **Schematic PDFs** GitHub Actions workflow rebuilds exported PDFs after schematic changes. See [schematic PDF generation](tools/schematics/README.md) for pull-request previews, automatic updates on `main`, and local export instructions.
+
 Documentation builds use only the manuals and their reference assets. See the [programming guide](documentation/source/som/firmware.md) for module programming interfaces.
