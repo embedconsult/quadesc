@@ -1,5 +1,7 @@
 # BeagleConnect QuadESC
 
+[Download BeagleConnect QuadESC schematic PDF](https://github.com/embedconsult/quadesc/releases/download/schematic-pdfs/mainboard_schematic.pdf). This release asset is generated from the latest revised KiCad schematics on `main`.
+
 BeagleConnect QuadESC is an assembled four-channel motor-control board with its **BeagleConnect Torque already installed**. It provides four three-phase power stages, current, voltage and temperature sensing, and regulated controller power. Factory ROM provides **TI BSL**. Load suitable motor-control firmware before operating connected motors.
 
 Use <a href="../som/index.html">BeagleConnect Torque standalone manual</a> for module power selection, MCU interfaces, programming, boot and debug. This manual covers the power stages, shared controls, connections and software design for BeagleConnect QuadESC. Start with the board overview to find your way around, or go straight to the connection guide when wiring the board.

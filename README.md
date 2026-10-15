@@ -11,6 +11,13 @@ The handoff manuals are maintained as Markdown in [`documentation/source/`](docu
 - [Word product brief](documentation/BeagleConnect-Torque-Features-and-Description.docx): complete specifications and board renders.
 - [BeagleConnect Torque manual](documentation/source/som/index.md): module interfaces, pin assignments, power selection, TI BSL programming and debug.
 
+Download the latest schematic PDFs generated from `main`:
+
+- [BeagleConnect QuadESC schematic PDF](https://github.com/embedconsult/quadesc/releases/download/schematic-pdfs/mainboard_schematic.pdf)
+- [BeagleConnect Torque schematic PDF](https://github.com/embedconsult/quadesc/releases/download/schematic-pdfs/som_schematic.pdf)
+
+GitHub Actions publishes these files as assets of the rolling **Schematic PDFs** prerelease after revised schematics reach `main`. Pull requests provide downloadable preview artifacts. Generated PDFs are not stored in Git.
+
 Connector references retain pin numbers, net names and electrical mappings. Use the KiCad designs for physical board geometry.
 
 See [documentation build instructions](documentation/README.md) to generate the HTML site locally. CI builds and checks the same source for merge requests and pull requests, and publishes the manuals from `main` through GitHub Pages on [embedconsult/quadesc](https://github.com/embedconsult/quadesc), with an optional GitLab Pages pipeline for OpenBeagle. Generated HTML is a CI artifact rather than checked-in content.
@@ -21,11 +28,12 @@ See [documentation build instructions](documentation/README.md) to generate the 
 | --- | --- |
 | `mainboard/` | Editable BeagleConnect QuadESC mainboard design |
 | `som/` | Editable BeagleConnect Torque module design |
-| `mainboard_schematic.pdf`, `som_schematic.pdf` | Exported schematics |
 | `documentation/source/` | Markdown manuals, shared diagrams and styling |
 | `documentation/reference/` | Electrical connector, GPIO and analog reference data |
 | `tools/documentation/` | Documentation build and validation scripts |
 | `firmware/` | Firmware sources and existing application/loader artifacts |
 | `drone-flasher-swd/` | SWD programming utility |
+
+The **Schematic PDFs** GitHub Actions workflow rebuilds and publishes release assets after schematic changes. See [schematic PDF generation](tools/schematics/README.md) for pull-request previews, automatic updates on `main`, and local export instructions.
 
 Documentation builds use only the manuals and their reference assets. See the [programming guide](documentation/source/som/firmware.md) for module programming interfaces.

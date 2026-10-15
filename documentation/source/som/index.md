@@ -1,5 +1,7 @@
 # BeagleConnect Torque
 
+[Download BeagleConnect Torque schematic PDF](https://github.com/embedconsult/quadesc/releases/download/schematic-pdfs/som_schematic.pdf). This release asset is generated from the latest revised KiCad schematics on `main`.
+
 Welcome to BeagleConnect Torque manual. This small controller module brings together an AM13E23019 microcontroller, CAN transceiver, power selection and accessible debug and expansion connections. Use it for sensing, timed outputs, communications or control on a carrier of your own. The module is reusable and can operate independently of BeagleConnect QuadESC.
 
 The module ships with **TI ROM BSL only**. Start with power and programming access, then load the application for your project. If you are designing a carrier, the interface and pad references help you connect the peripherals your project needs.

@@ -39,3 +39,8 @@ desktop.ini
 /.venv-docs/
 /.cache/pip/
 __pycache__/
+
+# Generated schematic PDFs are workflow artifacts and release assets, never Git source.
+/mainboard_schematic.pdf
+/som_schematic.pdf
+/build/schematic-pdfs/
