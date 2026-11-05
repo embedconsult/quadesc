@@ -2,7 +2,7 @@
 
 ## Product description
 
-BeagleConnect Torque is a compact processor module for motor control, motion control and CAN-based sensing, actuation and display designs. It combines a TI AM13E23019 200 MHz Arm Cortex-M33 microcontroller with 512 KB flash, 128 KB SRAM, a TinyEngine neural-network accelerator, a trigonometric math unit and hardware security capabilities.
+BeagleConnect Torque is a compact processor module for motor control, motion control and CAN-based sensing, actuation and display designs. It combines a TI AM13E23019 250 MHz Arm Cortex-M33 microcontroller with 512 KB flash, 128 KB SRAM, a TinyEngine neural-network accelerator, a trigonometric math unit and hardware security capabilities.
 
 Torque is the central controller in BeagleConnect QuadESC, a four-channel brushless DC motor electronic speed controller. The standalone solder-down module is intended for custom carriers, rapid prototyping and production designs. The motor gate drivers and power transistors are on BeagleConnect QuadESC, not on Torque.
 
@@ -29,7 +29,7 @@ Use the underside LGA interface to integrate Torque into a custom carrier. Beagl
 
 | Item | Value |
 |---|---|
-| MCU | TI AM13E23019, Arm Cortex-M33, 200 MHz; current PCB U1 is XAM13E23019GTPZ in a 100-pin package |
+| MCU | TI AM13E23019, Arm Cortex-M33, 250 MHz; current PCB U1 is XAM13E23019GTPZ in a 100-pin package |
 | Memory | 512 KB flash; 128 KB SRAM |
 | Acceleration | TinyEngine NPU, trigonometric math unit and floating-point unit |
 | Security | MCU secure boot, secure debug, secure firmware update and cryptographic acceleration; application configuration and provisioning required |
